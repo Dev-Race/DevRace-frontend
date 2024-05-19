@@ -1,0 +1,61 @@
+@import '../../styles/theme';
+
+.dropdown_selected_container {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown_item {
+  display: flex;
+  box-sizing: border-box;
+  margin: 0; /* 여백 명시적으로 0으로 설정 */
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* dropdown_container와 동일한 너비로 설정 */
+  border-top: 2px solid var(--black, #000);
+  -webkit-margin: 0;
+  -moz-margin: 0;
+  -o-margin: 0;
+  -ms-margin: 0;
+  &.selected {
+    background-color: black;
+    color: #fff;
+  }
+}
+
+.dropdown_container {
+  @include font-body1;
+  width: 108px;
+  flex-direction: column;
+  border-radius: 8px;
+  border: 2px solid var(--black, #000);
+  background: #fff;
+}
+
+.dropdown_item_container {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px;
+
+  border-top: 2px solid var(--black, #000);
+}
+
+.dropdown_item_container {
+  &.selected {
+    background-color: var(--black, #000);
+    color: #fff;
+  }
+}
+
+.dropdown_selected_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 8px;
+}

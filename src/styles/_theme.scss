@@ -3,85 +3,85 @@
 @mixin font-h1 {
   font-size: 54px;
   line-height: 80px;
-  font-weight: bold; // 혹은 700
+  font-weight: 700;
 }
 
 @mixin font-h2 {
   font-size: 40px;
   line-height: 70px;
-  font-weight: bold; // 혹은 700
+  font-weight: 700;
 }
 
 @mixin font-h3 {
   font-size: 32px;
   line-height: 48px;
-  font-weight: bold; // 혹은 700
+  font-weight: 700;
 }
 
 @mixin font-h4 {
   font-size: 24px;
   line-height: 36px;
-  font-weight: bold; // 혹은 700
+  font-weight: 700;
 }
 
 @mixin font-h5 {
   font-size: 20px;
   line-height: 30px;
-  font-weight: bold; // 혹은 700
+  font-weight: 700;
 }
 
 @mixin font-t1 {
   font-size: 20px;
   line-height: 30px;
-  font-weight: bold; // 혹은 700
+  font-weight: 500;
 }
 
 @mixin font-t2 {
   font-size: 16px;
   line-height: 22px;
-  font-weight: bold; // 혹은 700
+  font-weight: 700;
 }
 
 @mixin font-t3 {
   font-size: 16px;
   line-height: 20px;
-  font-weight: medium; // 혹은 500
+  font-weight: 500;
 }
 
 @mixin font-t4 {
   font-size: 16px;
   line-height: 20px;
-  font-weight: regular; // 혹은 400
+  font-weight: 400;
 }
 
 @mixin font-body1 {
   font-size: 14px;
   line-height: 20px;
-  font-weight: bold; // 혹은 700
+  font-weight: 700;
 }
 
 @mixin font-body2 {
   font-size: 14px;
   line-height: 20px;
-  font-weight: medium; // 혹은 500
+  font-weight: 500;
 }
 
 @mixin font-body3 {
   font-size: 14px;
   line-height: 20px;
-  font-weight: regular; // 혹은 400
+  font-weight: 400;
 }
 
 @mixin font-body4 {
   font-size: 12px;
   line-height: 18px;
-  font-weight: regular; // 혹은 400
+  font-weight: 400;
 }
 
 @mixin font-caption {
   font-size: 10px;
   line-height: 15px;
-  font-weight: regular; // 혹은 400
+  font-weight: 400;
 }
 
 // 색상 정의
