@@ -121,6 +121,14 @@ const TestPage = () => {
         error={isError}
       />
       <br />
+      <Input
+        type="chat"
+        placeHolder="메시지를 입력해주세요." // 소켓 연결 유무로 placholder 바뀜 -> disable과 짝
+        onChange={handleInputChange}
+        disable={false}
+        // onClick={}
+      />
+      <br />
       <Push type="profileEdit" />
       <br />
       <Push type="modeChange" />
