@@ -1,55 +1,49 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import '../../styles/common/DropDown.scss';
-import down_arrow from '../../assets/icons/down_arrow.svg';
+import DropdownArrow from '../../assets/icons/down_arrow.svg';
 
-/**
- * 드롭다운 타입 -> language , status
- * -> 선택된 option 은 부모 컴포넌트에서 onSelect 로 가져옴
- */
+const optionsData = {
+  language: ['JavaScript', 'C++', 'Java', 'Python'],
+  status: ['전체', '성공', '실패'],
+};
 
 const Dropdown = ({ type, onSelect }) => {
-  const languages = ['JavaScript', 'C++', 'Java', 'Python'];
-  const statuses = ['전체', '성공', '실패'];
-
-  const options = type === 'language' ? languages : statuses;
-
+  const options = optionsData[type] || [];
   const [isOpen, setIsOpen] = useState(false);
-
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
   const handleSelect = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
-    onSelect(option); // 부모 컴포넌트로 선택항목 전달
+    onSelect(option);
   };
 
   return (
-    <div className="dropdown_container">
-      <div className="dropdown_selected_container" onClick={toggleDropdown}>
-        <span>{selectedOption}</span>
-        <img src={down_arrow} alt="Dropdown arrow" />
+    <div className="Dropdown_Wrapper">
+      <div className="Dropdown_Selected_Item" onClick={toggleDropdown}>
+        <span className="Dropdown_Selected_Item_Text">{selectedOption}</span>
+        <img
+          src={DropdownArrow}
+          alt="Dropdown arrow"
+          className="Dropdown_ArrowIcon"
+        />
       </div>
-      {isOpen && (
-        <>
-          <div>
-            {options.map((option, index) => (
-              <li
-                key={index}
-                className={`dropdown_item_container ${
-                  selectedOption === option ? 'selected' : ''
-                }`}
-                onClick={() => handleSelect(option)}
-              >
-                {option}
-              </li>
-            ))}
-          </div>
-        </>
-      )}
+      {isOpen &&
+        options.map((option, index) =>
+          selectedOption !== option ? (
+            <div
+              key={index}
+              className="Dropdown_Item"
+              onClick={() => handleSelect(option)}
+            >
+              {option}
+            </div>
+          ) : (
+            <></>
+          ),
+        )}
     </div>
   );
 };
