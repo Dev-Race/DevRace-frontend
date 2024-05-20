@@ -7,8 +7,8 @@
 
 import React from 'react';
 import '../../styles/common/Pagination.scss';
-import prev_page from '../../icons/prev_page.svg';
-import next_page from '../../icons/next_page.svg';
+import prev_page from '../../assets/icons/prev_page.svg';
+import next_page from '../../assets/icons/next_page.svg';
 
 const Pagination = ({ currentPage, totalPages, onPageChange, mode }) => {
   const pages = [];

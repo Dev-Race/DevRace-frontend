@@ -1,7 +1,7 @@
 import Button from '../component/common/Button';
 import { useNavigate } from 'react-router-dom';
-import google_icon from '../icons/google_icon.svg';
-import git_icon from '../icons/git_icon.svg';
+import google_icon from '../assets/icons/google_icon.svg';
+import git_icon from '../assets/icons/git_icon.svg';
 import Pagination from '../component/common/Pagination';
 import { useState } from 'react';
 import Input from '../component/common/Input';

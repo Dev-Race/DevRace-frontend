@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import arrow_down_white from '../../icons/arrow_down_white.svg';
-import group_icon from '../../icons/group_icon.svg';
-import basic_small_image from '../../icons/basic_small_image.svg';
+import arrow_down_white from '../../assets/icons/arrow_down_white.svg';
+import group_icon from '../../assets/icons/group_icon.svg';
+import basic_small_image from '../../assets/icons/basic_small_image.svg';
 import '../../styles/common/RankList.scss';
 
 /**

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/common/Push.scss';
-import profile_edited from '../../icons/profile_edited.svg';
-import light_mode from '../../icons/light_mode.svg';
-import dark_mode from '../../icons/dark_mode.svg';
+import profile_edited from '../../assets/icons/profile_edited.svg';
+import light_mode from '../../assets/icons/light_mode.svg';
+import dark_mode from '../../assets/icons/dark_mode.svg';
 
 /**
  * 푸시 알림 타입 -> profileEdit, modeChange, inviteFriend

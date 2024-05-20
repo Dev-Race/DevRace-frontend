@@ -1,9 +1,9 @@
-import logo_light from '../../icons/logo_light.svg';
-import logo_dark from '../../icons/logo_dark.svg';
-import logo_icon_light from '../../icons/logo_icon_light.svg';
-import logo_icon_dark from '../../icons/logo_icon_dark.svg';
-import people_light from '../../icons/people_light.svg';
-import people_dark from '../../icons/people_dark.svg';
+import logo_light from '../../assets/icons/logo_light.svg';
+import logo_dark from '../../assets/icons/logo_dark.svg';
+import logo_icon_light from '../../assets/icons/logo_icon_light.svg';
+import logo_icon_dark from '../../assets/icons/logo_icon_dark.svg';
+import people_light from '../../assets/icons/people_light.svg';
+import people_dark from '../../assets/icons/people_dark.svg';
 
 import Toggle from '../common/Toggle';
 

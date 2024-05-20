@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import '../../styles/common/DropDown.scss';
-import down_arrow from '../../icons/down_arrow.svg';
+import down_arrow from '../../assets/icons/down_arrow.svg';
 
 /**
  * 드롭다운 타입 -> language , status

@@ -1,10 +1,10 @@
-import error_icon from '../../icons/error_icon.svg';
-import checked_icon from '../../icons/checked_icon.svg';
-import send_icon from '../../icons/send_icon.svg';
-import reset_icon from '../../icons/reset_icon.svg';
-import twinkle_icon from '../../icons/twinkle_icon.svg';
-import default_profile from '../../icons/default_profile.svg';
-import modal_close from '../../icons/modal_close.svg';
+import error_icon from '../../assets/icons/error_icon.svg';
+import checked_icon from '../../assets/icons/checked_icon.svg';
+import send_icon from '../../assets/icons/send_icon.svg';
+import reset_icon from '../../assets/icons/reset_icon.svg';
+import twinkle_icon from '../../assets/icons/twinkle_icon.svg';
+import default_profile from '../../assets/icons/default_profile.svg';
+import modal_close from '../../assets/icons/modal_close.svg';
 
 import '../../styles/common/Modal.scss';
 import Button from './Button';
