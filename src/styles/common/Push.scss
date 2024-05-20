@@ -1,0 +1,61 @@
+@import '../theme';
+
+.push--profileEdit {
+  @include font-body2;
+  display: flex;
+  width: 234px;
+  padding: 12px;
+
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  border-radius: 8px;
+  background: #f3ffdb;
+}
+
+.push--modeChange--light,
+.push--modeChange--dark {
+  @include font-body2;
+  display: flex;
+  width: 240px;
+  padding: 12px;
+
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  border-radius: 8px;
+}
+
+.push--modeChange--light {
+  background: var(--light-cool-gray, #f8f8ff);
+}
+
+.push--modeChange--dark {
+  background: var(--dark-blue-100, #ddebf7);
+}
+
+.push--inviteFriend--light,
+.push--inviteFriend--dark {
+  @include font-t3;
+  display: flex;
+  width: 267px;
+  padding: 24px;
+
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  border-radius: 0px 20px 20px 20px;
+
+  color: var(--white, #fff);
+}
+
+.push--inviteFriend--light {
+  background: var(--blue-light-300, #66f);
+}
+
+.push--inviteFriend--dark {
+  background: var(--dark-blue-500, #569cd6);
+}

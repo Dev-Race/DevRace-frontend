@@ -1,0 +1,141 @@
+// 폰트 스타일 정의
+// 적용하고 싶은 스타일 @include 사용해서 불러오기
+@mixin font-h1 {
+  font-size: 54px;
+  line-height: 80px;
+  font-weight: 700;
+}
+
+@mixin font-h2 {
+  font-size: 40px;
+  line-height: 70px;
+  font-weight: 700;
+}
+
+@mixin font-h3 {
+  font-size: 32px;
+  line-height: 48px;
+  font-weight: 700;
+}
+
+@mixin font-h4 {
+  font-size: 24px;
+  line-height: 36px;
+  font-weight: 700;
+}
+
+@mixin font-h5 {
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 700;
+}
+
+@mixin font-t1 {
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 500;
+}
+
+@mixin font-t2 {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 700;
+}
+
+@mixin font-t3 {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+@mixin font-t4 {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+@mixin font-body1 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+@mixin font-body2 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+@mixin font-body3 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+@mixin font-body4 {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+}
+
+@mixin font-caption {
+  font-size: 10px;
+  line-height: 15px;
+  font-weight: 400;
+}
+
+// 색상 정의
+// GrayScale
+$gray-100: #f6f6f6;
+$gray-200: #e3e4e5;
+$gray-300: #bdbfc4;
+$gray-400: #8f9298;
+$gray-500: #73777f;
+$gray-600: #5c5f65;
+$gray-700: #45474c;
+$gray-800: #2e2f33;
+
+// Dim
+$dim-90: rgba(0, 0, 0, 0.9);
+$dim-70: rgba(0, 0, 0, 0.7);
+$dim-50: rgba(0, 0, 0, 0.5);
+$dim-30: rgba(0, 0, 0, 0.3);
+$white: #ffffff;
+$black: #000000;
+
+// Error
+$error-red: #ffb9aa;
+$error-green: #c8ffa7;
+
+// Point Color Light
+$blue-100-light: #ccccff;
+$blue-200-light: #9999ff;
+$blue-300-light: #6666ff;
+$blue-400-light: #3333ff;
+$blue-500-light: #0000ff;
+$blue-600-light: #241f87;
+$blue-700-light: #241f87;
+$blue-800-light: #000066;
+$blue-900-light: #000033;
+$blue-green: #237893;
+$warm-gray: #999988;
+$cool-gray: #f8f8ff;
+$green: #309331;
+$yellow: #fffeeb;
+
+// Point Color Dark
+$blue-100-dark: #ddebf7;
+$blue-200-dark: #bbd7ef;
+$blue-300-dark: #9ac4e6;
+$blue-400-dark: #78b0de;
+$blue-500-dark: #569cd6;
+$blue-600-dark: #457dab;
+$blue-700-dark: #345e80;
+$blue-800-dark: #223e56;
+$blue-900-dark: #111f2b;
+$green-100: #b5cea8;
+$green-200: #608b4e;
+$deep-blue: #000067;
+$back: #0d0d0d;
+$pink: #da70d6;
+$yellow-dark: #ffd602;

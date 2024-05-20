@@ -1,0 +1,45 @@
+@import '../theme';
+
+.pagination_container {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  @include font-t4;
+  gap: 25px;
+}
+
+.pagination--light,
+.pagination--dark {
+  border: none;
+  outline: none;
+  background-color: inherit;
+  cursor: pointer;
+  gap: 25px;
+}
+
+.pagination--light:hover {
+  color: var(--blue-light-200, #99f);
+}
+
+.pagination--light:active,
+.pagination--light:disabled {
+  color: var(--blue-light-300, #66f);
+}
+
+.pagination--dark {
+  color: $white;
+
+  img {
+    filter: brightness(0) invert(1);
+  }
+}
+.pagination--dark:hover {
+  color: var(--dark-blue-300, #9ac4e6);
+}
+
+.pagination--dark:active,
+.pagination--dark:disabled {
+  color: var(--dark-blue-500, #569cd6);
+}
