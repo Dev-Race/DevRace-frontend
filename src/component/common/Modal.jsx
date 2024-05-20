@@ -6,7 +6,7 @@ import twinkle_icon from '../../icons/twinkle_icon.svg';
 import default_profile from '../../icons/default_profile.svg';
 import modal_close from '../../icons/modal_close.svg';
 
-import './Modal.scss';
+import '../../styles/common/Modal.scss';
 import Button from './Button';
 import { useNavigate } from 'react-router-dom';
 

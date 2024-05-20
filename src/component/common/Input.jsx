@@ -1,4 +1,4 @@
-import './Input.scss';
+import '../../styles/common/Input.scss';
 /**
  * 인풋 타입 -> nomal , chat_input
  * 라이트 / 다크 모드 -> light, dark

@@ -1,4 +1,4 @@
-import './PageNation.scss';
+import '../../styles/common/PageNation.scss';
 import prev_page from '../../icons/prev_page.svg';
 import next_page from '../../icons/next_page.svg';
 

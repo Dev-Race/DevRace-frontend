@@ -8,6 +8,10 @@ import Input from '../component/common/Input';
 import Dropdown from '../component/common/DropDown';
 import Push from '../component/common/Push';
 import Modal from '../component/common/Modal';
+import Header from '../component/layout/Header';
+import Footer from '../component/layout/Footer';
+import Toggle from '../component/common/Toggle';
+import RankList from '../component/common/RankList';
 
 const TestPage = () => {
   const navigate = useNavigate();
@@ -15,6 +19,12 @@ const TestPage = () => {
   const [isError, setIsError] = useState(false);
   const [text, setText] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
+
+  const [mode, setMode] = useState('light');
+
+  const handleToggleChange = (isOn) => {
+    setMode(isOn ? 'dark' : 'light');
+  };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -227,6 +237,33 @@ const TestPage = () => {
       <br />
       <br />
       <Modal type="edit_image_modal" />
+      <br />
+      <br />
+      <Header mode={mode} leftContent="내 코드 페이지" />
+      <br />
+      <br />
+      <Header
+        mode={mode}
+        onToggleChange={handleToggleChange}
+        type="with_right_items"
+        buttonTexts={['내 코드', '로그아웃']}
+        leftContent="rogo"
+      />
+      <br />
+      <br />
+      <Footer mode="light" />
+      <br />
+      <br />
+      <Footer mode={mode} />
+      <br />
+      <br />
+      <Footer mode="none" />
+      <br />
+      <br />
+      <Toggle isOn={mode === 'dark'} onToggleChange={handleToggleChange} />
+      <br />
+      <br />
+      <RankList mode={mode} />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import './Button.scss';
+import '../../styles/common/Button.scss';
 
 /**
  * 버튼 타입 -> small, normal(1,2,3), large, modal

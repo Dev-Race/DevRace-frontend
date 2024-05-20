@@ -1,4 +1,4 @@
-import './Push.scss';
+import '../../styles/common/Push.scss';
 import profile_edited from '../../icons/profile_edited.svg';
 import light_mode from '../../icons/light_mode.svg';
 import dark_mode from '../../icons/dark_mode.svg';

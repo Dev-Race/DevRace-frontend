@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './DropDown.scss';
+import '../../styles/common/DropDown.scss';
 import down_arrow from '../../icons/down_arrow.svg';
 
 /**
