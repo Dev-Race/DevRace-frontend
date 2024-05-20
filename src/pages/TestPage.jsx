@@ -25,10 +25,6 @@ const TestPage = () => {
     { rank: '-', name: 'qwer' },
   ];
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
   const handleInputChange = (e) => {
     setText(e.target.value);
   };
@@ -108,11 +104,7 @@ const TestPage = () => {
         icon="google"
       />
       <br />
-      <Pagination
-        currentPage={currentPage}
-        totalPages="100"
-        onPageChange={handlePageChange}
-      />
+      <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <br />
       <Input
         type="normal"
