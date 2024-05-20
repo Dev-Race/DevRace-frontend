@@ -1,7 +1,5 @@
 import Button from '../component/common/Button';
 import { useNavigate } from 'react-router-dom';
-import google_icon from '../assets/icons/google_icon.svg';
-import git_icon from '../assets/icons/git_icon.svg';
 import Pagination from '../component/common/Pagination';
 import { useState } from 'react';
 import Input from '../component/common/Input';
@@ -96,10 +94,18 @@ const TestPage = () => {
       <br />
       <Button
         onClick={() => navigate('/aaa')}
-        type="leftIcon"
+        type="login"
         shape="angle"
         text="Log in with Github"
-        icon={git_icon}
+        icon="github"
+      />
+      <br />
+      <Button
+        onClick={() => navigate('/aaa')}
+        type="login"
+        shape="angle"
+        text="Log in with Google"
+        icon="google"
       />
       <br />
       <Pagination
@@ -117,9 +123,9 @@ const TestPage = () => {
       <br />
       <Push type="profileEdit" />
       <br />
-      <Push type="modeChange"/>
+      <Push type="modeChange" />
       <br />
-      <Push type="inviteFriend"/>
+      <Push type="inviteFriend" />
       <br />
       <Modal type="regist_modal" />
       <br />
