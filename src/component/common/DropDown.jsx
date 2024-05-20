@@ -7,7 +7,8 @@ const optionsData = {
   status: ['전체', '성공', '실패'],
 };
 
-const Dropdown = ({ type, onSelect }) => {
+const Dropdown = (props) => {
+  const { type, onSelect } = props;
   const options = optionsData[type] || [];
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
