@@ -8,6 +8,7 @@ import people_dark from '../../icons/people_dark.svg';
 import Toggle from '../common/Toggle';
 
 import '../../styles/layout/Header.scss';
+
 /**
  * 헤더 모드 -> 다크, 라이트
  * 헤더에서 토글(화면모드 변경) 을 포함한다면
@@ -20,26 +21,16 @@ import '../../styles/layout/Header.scss';
  */
 
 const Header = ({ mode, onToggleChange, type, buttonTexts, leftContent }) => {
-  let logo, logo_icon, people_icon;
-
-  // mode에 따라 이미지 결정
-  if (mode === 'light') {
-    logo = logo_light;
-    logo_icon = logo_icon_light;
-    people_icon = people_light;
-  } else if (mode === 'dark') {
-    logo = logo_dark;
-    logo_icon = logo_icon_dark;
-    people_icon = people_dark;
-  }
-
   return (
     <div className={`header_container--${mode}`}>
       <div className="header_left_items">
         {leftContent === 'logo' ? (
           <>
-            <img src={logo_icon} alt="Rogo icon" />
-            <img src={logo} alt="Rogo" />
+            <img
+              src={mode === 'light' ? logo_icon_light : logo_icon_dark}
+              alt="Logo icon"
+            />
+            <img src={mode === 'light' ? logo_light : logo_dark} alt="Logo" />
           </>
         ) : (
           <div className={`header_title--${mode}`}>{leftContent}</div>
@@ -53,7 +44,10 @@ const Header = ({ mode, onToggleChange, type, buttonTexts, leftContent }) => {
               {text}
             </button>
           ))}
-          <img src={people_icon} alt="People icon" />
+          <img
+            src={mode === 'light' ? people_light : people_dark}
+            alt="People icon"
+          />
         </div>
       )}
     </div>

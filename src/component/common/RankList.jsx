@@ -6,18 +6,11 @@ import '../../styles/common/RankList.scss';
 
 /**
  * 랭크 리스트 -> 다크, 라이트모드 설정 가능
+ * rankings 객체 부모 컴포넌트에서 가져오기
  */
 
-const RankList = ({ mode }) => {
+const RankList = ({ mode, rankings }) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const rankings = [
-    { rank: 1, name: 'qwer' },
-    { rank: 2, name: 'qwer' },
-    { rank: 3, name: 'qwer' },
-    { rank: '-', name: 'qwer' },
-    { rank: '-', name: 'qwer' },
-  ];
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
