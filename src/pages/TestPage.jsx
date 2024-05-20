@@ -23,7 +23,7 @@ const TestPage = () => {
     { rank: 1, name: 'qwer' },
     { rank: 2, name: 'qwer' },
     { rank: 3, name: 'qwer' },
-    { rank: '-', name: 'qwer' },
+    { rank: '4', name: 'qwer' },
     { rank: '-', name: 'qwer' },
   ];
 
