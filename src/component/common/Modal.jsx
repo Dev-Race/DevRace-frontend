@@ -21,10 +21,10 @@ const Modal = ({ type, setIsActive, rank }) => {
   const navigate = useNavigate();
 
   const handleBack = () => navigate(-1);
-  const handle_Move_To_Regist = () => console.log('회원가입으로 이동');
-  const handle_Move_To_Link = () => console.log('백준 페이지로 이동');
-  const handle_Move_To_Main = () => console.log('메인 페이지로 이동');
-  const handle_Rejoin_Room = () => console.log('참여중인 페이지로 이동');
+  const handleMoveToRegist = () => console.log('회원가입으로 이동');
+  const handleMoveToLink = () => console.log('백준 페이지로 이동');
+  const handleMoveToMain = () => console.log('메인 페이지로 이동');
+  const handleRejoinRoom = () => console.log('참여중인 페이지로 이동');
 
   const getContent = () => {
     switch (type) {
@@ -34,7 +34,7 @@ const Modal = ({ type, setIsActive, rank }) => {
           icon: error_icon,
           body: '가입되지 않은 계정입니다.',
           buttonVisible: true,
-          buttonAction: handle_Move_To_Regist,
+          buttonAction: handleMoveToRegist,
         };
       case 'id_link_modal':
         return {
@@ -42,7 +42,7 @@ const Modal = ({ type, setIsActive, rank }) => {
           icon: error_icon,
           body: 'solved를 연동시켜주세요.',
           buttonVisible: true,
-          buttonAction: handle_Move_To_Link,
+          buttonAction: handleMoveToLink,
         };
       case 'confirm_regist_modal':
         return {
@@ -50,7 +50,7 @@ const Modal = ({ type, setIsActive, rank }) => {
           icon: checked_icon,
           body: null,
           buttonVisible: true,
-          buttonAction: handle_Move_To_Main,
+          buttonAction: handleMoveToMain,
         };
       case 'rejoin_modal':
         return {
@@ -58,7 +58,7 @@ const Modal = ({ type, setIsActive, rank }) => {
           icon: error_icon,
           body: '기존의 문제풀이 페이지로 재참여합니다.',
           buttonVisible: true,
-          buttonAction: handle_Rejoin_Room,
+          buttonAction: handleRejoinRoom,
         };
       case 'exit_modal':
         return {
@@ -66,7 +66,7 @@ const Modal = ({ type, setIsActive, rank }) => {
           icon: error_icon,
           body: '해당 문제는 코드 목록에 실패로 저장됩니다.',
           buttonVisible: true,
-          buttonAction: handle_Move_To_Main,
+          buttonAction: handleMoveToMain,
         };
       case 'submit_code_modal':
         return {
@@ -116,7 +116,7 @@ const Modal = ({ type, setIsActive, rank }) => {
           icon: twinkle_icon,
           body: '방에서 자동 퇴장됩니다.',
           buttonVisible: true,
-          buttonAction: handle_Move_To_Main,
+          buttonAction: handleMoveToMain,
         };
       case 'edit_image_modal':
         return {

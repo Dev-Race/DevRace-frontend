@@ -2,7 +2,7 @@ import Button from '../component/common/Button';
 import { useNavigate } from 'react-router-dom';
 import google_icon from '../icons/google_icon.svg';
 import git_icon from '../icons/git_icon.svg';
-import Pagination from '../component/common/PageNation';
+import Pagination from '../component/common/Pagination';
 import { useState } from 'react';
 import Input from '../component/common/Input';
 import Dropdown from '../component/common/DropDown';
@@ -19,6 +19,13 @@ const TestPage = () => {
   const [isError, setIsError] = useState(false);
   const [text, setText] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
+  const rankings = [
+    { rank: 1, name: 'qwer' },
+    { rank: 2, name: 'qwer' },
+    { rank: 3, name: 'qwer' },
+    { rank: '-', name: 'qwer' },
+    { rank: '-', name: 'qwer' },
+  ];
 
   const [mode, setMode] = useState('light');
 
@@ -180,7 +187,7 @@ const TestPage = () => {
       <br />
       <Pagination
         currentPage={currentPage}
-        totalPages="10"
+        totalPages="100"
         onPageChange={handlePageChange}
         mode="light"
       />
@@ -247,7 +254,7 @@ const TestPage = () => {
         onToggleChange={handleToggleChange}
         type="with_right_items"
         buttonTexts={['내 코드', '로그아웃']}
-        leftContent="rogo"
+        leftContent="logo"
       />
       <br />
       <br />
@@ -263,7 +270,7 @@ const TestPage = () => {
       <Toggle isOn={mode === 'dark'} onToggleChange={handleToggleChange} />
       <br />
       <br />
-      <RankList mode={mode} />
+      <RankList mode={mode} rankings={rankings} />
     </>
   );
 };

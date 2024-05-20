@@ -1,4 +1,4 @@
-import '../../styles/common/PageNation.scss';
+import '../../styles/common/Pagination.scss';
 import prev_page from '../../icons/prev_page.svg';
 import next_page from '../../icons/next_page.svg';
 
@@ -15,7 +15,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, mode }) => {
   for (let i = 1; i <= totalPages; i++) {
     pages.push(
       <button
-        className={`page_nation--${mode}`}
+        className={`pagination--${mode}`}
         key={i}
         disabled={i === currentPage}
         onClick={() => onPageChange(i)}
@@ -26,10 +26,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange, mode }) => {
   }
 
   return (
-    <div className="page_nation_container">
+    <div className="pagination_container">
       {/* 이전 페이지 버튼 */}
       <div
-        className={`page_nation--${mode}`}
+        className={`pagination--${mode}`}
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
@@ -43,7 +43,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, mode }) => {
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`page_nation--${mode}`}
+        className={`pagination--${mode}`}
       >
         <img src={next_page} alt="Next page" />
       </button>

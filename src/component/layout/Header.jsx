@@ -1,7 +1,7 @@
-import rogo_light from '../../icons/rogo_light.svg';
-import rogo_dark from '../../icons/rogo_dark.svg';
-import rogo_icon_light from '../../icons/rogo_icon_light.svg';
-import rogo_icon_dark from '../../icons/rogo_icon_dark.svg';
+import logo_light from '../../icons/logo_light.svg';
+import logo_dark from '../../icons/logo_dark.svg';
+import logo_icon_light from '../../icons/logo_icon_light.svg';
+import logo_icon_dark from '../../icons/logo_icon_dark.svg';
 import people_light from '../../icons/people_light.svg';
 import people_dark from '../../icons/people_dark.svg';
 
@@ -20,26 +20,26 @@ import '../../styles/layout/Header.scss';
  */
 
 const Header = ({ mode, onToggleChange, type, buttonTexts, leftContent }) => {
-  let rogo, rogo_icon, people_icon;
+  let logo, logo_icon, people_icon;
 
   // mode에 따라 이미지 결정
   if (mode === 'light') {
-    rogo = rogo_light;
-    rogo_icon = rogo_icon_light;
+    logo = logo_light;
+    logo_icon = logo_icon_light;
     people_icon = people_light;
   } else if (mode === 'dark') {
-    rogo = rogo_dark;
-    rogo_icon = rogo_icon_dark;
+    logo = logo_dark;
+    logo_icon = logo_icon_dark;
     people_icon = people_dark;
   }
 
   return (
     <div className={`header_container--${mode}`}>
       <div className="header_left_items">
-        {leftContent === 'rogo' ? (
+        {leftContent === 'logo' ? (
           <>
-            <img src={rogo_icon} alt="Rogo icon" />
-            <img src={rogo} alt="Rogo" />
+            <img src={logo_icon} alt="Rogo icon" />
+            <img src={logo} alt="Rogo" />
           </>
         ) : (
           <div className={`header_title--${mode}`}>{leftContent}</div>

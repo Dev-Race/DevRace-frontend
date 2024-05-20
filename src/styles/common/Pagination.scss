@@ -1,6 +1,6 @@
 @import '../theme';
 
-.page_nation_container {
+.pagination_container {
   display: flex;
 
   justify-content: center;
@@ -10,8 +10,8 @@
   gap: 25px;
 }
 
-.page_nation--light,
-.page_nation--dark {
+.pagination--light,
+.pagination--dark {
   border: none;
   outline: none;
   background-color: inherit;
@@ -19,27 +19,27 @@
   gap: 25px;
 }
 
-.page_nation--light:hover {
+.pagination--light:hover {
   color: var(--blue-light-200, #99f);
 }
 
-.page_nation--light:active,
-.page_nation--light:disabled {
+.pagination--light:active,
+.pagination--light:disabled {
   color: var(--blue-light-300, #66f);
 }
 
-.page_nation--dark {
+.pagination--dark {
   color: $white;
 
   img {
     filter: brightness(0) invert(1);
   }
 }
-.page_nation--dark:hover {
+.pagination--dark:hover {
   color: var(--dark-blue-300, #9ac4e6);
 }
 
-.page_nation--dark:active,
-.page_nation--dark:disabled {
+.pagination--dark:active,
+.pagination--dark:disabled {
   color: var(--dark-blue-500, #569cd6);
 }
