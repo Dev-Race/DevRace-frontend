@@ -48,6 +48,12 @@ const TestPage = () => {
     <>
       <br />
       <br />
+      <Dropdown type="language" onSelect={handleSelect} />
+      <br />
+      <br />
+      <Dropdown type="status" onSelect={handleSelect} />
+      <br />
+      <br />
       <Button
         onClick={() => navigate('/aaa')}
         type="small"
@@ -217,12 +223,6 @@ const TestPage = () => {
         onChange={handleInputChange}
         error={isError}
       />
-      <br />
-      <br />
-      <Dropdown type="language" onSelect={handleSelect} />
-      <br />
-      <br />
-      <Dropdown type="status" onSelect={handleSelect} />
       <br />
       <br />
       <Push type="profileEdit" />
