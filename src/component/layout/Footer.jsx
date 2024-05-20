@@ -1,5 +1,6 @@
 import '../../styles/layout/Footer.scss';
 import Button from '../common/Button';
+import { useSelector } from 'react-redux';
 
 /**
  * 푸터 타입 -> light dark none
@@ -7,7 +8,8 @@ import Button from '../common/Button';
  * 타입 -> none 으로 지정해주기
  */
 
-const Footer = ({ mode }) => {
+const Footer = () => {
+  const { mode } = useSelector((state) => state.toggle);
   if (mode === 'none') {
     return (
       <div className={`footer_container--${mode}`}>

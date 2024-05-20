@@ -3,15 +3,16 @@ import '../../styles/common/Push.scss';
 import profile_edited from '../../assets/icons/profile_edited.svg';
 import light_mode from '../../assets/icons/light_mode.svg';
 import dark_mode from '../../assets/icons/dark_mode.svg';
+import { useSelector } from 'react-redux';
 
 /**
  * 푸시 알림 타입 -> profileEdit, modeChange, inviteFriend
  * profileEdit 일땐 mode 선택 필요가 없으므로 무시
  * 3초 간 렌더링 후 사라짐
  */
-const Push = ({ type, mode }) => {
+const Push = ({ type }) => {
   const [isVisible, setIsVisible] = useState(true);
-
+const { mode } = useSelector((state) => state.toggle);
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(false);

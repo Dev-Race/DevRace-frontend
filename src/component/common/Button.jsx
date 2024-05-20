@@ -1,5 +1,5 @@
 import '../../styles/common/Button.scss';
-
+import { useSelector } from 'react-redux';
 /**
  * 버튼 타입 -> small, normal(1,2,3), large, modal
  * 라이트 / 다크 모드 -> light, dark
@@ -12,7 +12,8 @@ import '../../styles/common/Button.scss';
  * default 값은 false이므로, false인 경우에는 props로 넘겨주지 않아도 됨
  */
 
-const Button = ({ type, mode, shape, text, icon, onClick, disable }) => {
+const Button = ({ type, shape, text, icon, onClick, disable }) => {
+  const { mode } = useSelector((state) => state.toggle);
   return (
     <button
       className={`btn--${type}--${mode}--${shape}`}

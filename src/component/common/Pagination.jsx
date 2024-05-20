@@ -6,11 +6,13 @@
  */
 
 import React from 'react';
+import { useSelector } from 'react-redux';
 import '../../styles/common/Pagination.scss';
 import prev_page from '../../assets/icons/prev_page.svg';
 import next_page from '../../assets/icons/next_page.svg';
 
-const Pagination = ({ currentPage, totalPages, onPageChange, mode }) => {
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const { mode } = useSelector((state) => state.toggle);
   const pages = [];
   const pagesPerGroup = 9;
 

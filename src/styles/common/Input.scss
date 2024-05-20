@@ -1,9 +1,9 @@
 @import '../theme';
 
-.input--nomal--light,
-.input--nomal--dark,
-.input--nomal--light--error,
-.input--nomal--dark--error {
+.input--normal--light,
+.input--normal--dark,
+.input--normal--light--error,
+.input--normal--dark--error {
   @include font-t4;
   display: flex;
   width: 316px;
@@ -20,17 +20,17 @@
   background: var(--white, #fff);
 }
 
-.input--nomal--light:focus {
+.input--normal--light:focus {
   outline: none;
   border: 2px solid var(--blue-light-200, #99f);
 }
 
-.input--nomal--dark:focus {
+.input--normal--dark:focus {
   outline: none;
   border: 2px solid var(--dark-blue-500, #569cd6);
 }
 
-.input--nomal--light--error,
-.input--nomal--dark--error {
+.input--normal--light--error,
+.input--normal--dark--error {
   border: 2px solid var(--Error, #f35956);
 }

@@ -27,12 +27,6 @@ const TestPage = () => {
     { rank: '-', name: 'qwer' },
   ];
 
-  const [mode, setMode] = useState('light');
-
-  const handleToggleChange = (isOn) => {
-    setMode(isOn ? 'dark' : 'light');
-  };
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -47,230 +41,103 @@ const TestPage = () => {
   return (
     <>
       <br />
-      <br />
       <Dropdown type="language" onSelect={handleSelect} />
-      <br />
       <br />
       <Dropdown type="status" onSelect={handleSelect} />
       <br />
-      <br />
       <Button
         onClick={() => navigate('/aaa')}
         type="small"
-        mode="light"
         shape="angle"
         text="문제확인"
       />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="small"
-        mode="dark"
-        shape="angle"
-        text="문제확인"
-      />
-      <br />
       <br />
       <Button
         onClick={() => navigate('/aaa')}
         type="modal"
-        mode="light"
         shape="angle"
         text="확인"
       />
       <br />
-      <br />
       <Button
         onClick={() => navigate('/aaa')}
         type="large"
-        mode="light"
         shape="angle"
         text="확인"
       />
       <br />
-      <br />
       <Button
         onClick={() => navigate('/aaa')}
         type="large"
-        mode="dark"
-        shape="angle"
-        text="확인"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="large"
-        mode="light"
         shape="non-angle"
         text="시작하기"
       />
       <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="large"
-        mode="dark"
-        shape="non-angle"
-        text="시작하기"
-      />
-      <br />
-      <br />
       <Button
         onClick={() => navigate('/aaa')}
         type="normal1"
-        mode="light"
         shape="angle"
         text="시작하기"
       />
-      <br />
       <br />
       <Button
         onClick={() => navigate('/aaa')}
         type="normal2"
-        mode="light"
         shape="angle"
         text="시작하기"
       />
-      <br />
       <br />
       <Button
         onClick={() => navigate('/aaa')}
         type="normal3"
-        mode="light"
         shape="angle"
         text="시작하기"
       />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="normal1"
-        mode="dark"
-        shape="angle"
-        text="시작하기"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="normal2"
-        mode="dark"
-        shape="angle"
-        text="시작하기"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="normal3"
-        mode="dark"
-        shape="angle"
-        text="시작하기"
-      />
-      <br />
       <br />
       <Button
         onClick={() => navigate('/aaa')}
         type="leftIcon"
-        mode="dark"
-        shape="angle"
-        text="Log in with Google"
-        icon={google_icon}
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="leftIcon"
-        mode="light"
         shape="angle"
         text="Log in with Github"
         icon={git_icon}
       />
       <br />
-      <br />
       <Pagination
         currentPage={currentPage}
         totalPages="100"
         onPageChange={handlePageChange}
-        mode="light"
       />
-      <br />
-      <br />
-      <Pagination
-        currentPage={currentPage}
-        totalPages="10"
-        onPageChange={handlePageChange}
-        mode="dark"
-      />
-      <br />
       <br />
       <Input
-        type="nomal"
-        mode="light"
+        type="normal"
         placeHolder="이름을 입력하세요."
         onChange={handleInputChange}
         error={isError}
       />
       <br />
-      <br />
-      <Input
-        type="nomal"
-        mode="dark"
-        placeHolder="이메일을 제외한 아이디만 적어주세요."
-        onChange={handleInputChange}
-        error={isError}
-      />
-      <br />
-      <br />
       <Push type="profileEdit" />
       <br />
+      <Push type="modeChange"/>
       <br />
-      <Push type="modeChange" mode="light" />
-      <br />
-      <br />
-      <Push type="modeChange" mode="dark" />
-      <br />
-      <br />
-      <Push type="inviteFriend" mode="light" />
-      <br />
-      <br />
-      <Push type="inviteFriend" mode="dark" />
-      <br />
+      <Push type="inviteFriend"/>
       <br />
       <Modal type="regist_modal" />
       <br />
-      <br />
       <Modal type="edit_image_modal" />
       <br />
-      <br />
-      <Header mode={mode} leftContent="내 코드 페이지" />
-      <br />
+      <Header leftContent="내 코드 페이지" />
       <br />
       <Header
-        mode={mode}
-        onToggleChange={handleToggleChange}
         type="with_right_items"
         buttonTexts={['내 코드', '로그아웃']}
         leftContent="logo"
       />
       <br />
+      <Footer />
       <br />
-      <Footer mode="light" />
+      <Toggle />
       <br />
-      <br />
-      <Footer mode={mode} />
-      <br />
-      <br />
-      <Footer mode="none" />
-      <br />
-      <br />
-      <Toggle isOn={mode === 'dark'} onToggleChange={handleToggleChange} />
-      <br />
-      <br />
-      <RankList mode={mode} rankings={rankings} />
+      <RankList rankings={rankings} />
     </>
   );
 };

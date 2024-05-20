@@ -8,6 +8,7 @@ import people_dark from '../../assets/icons/people_dark.svg';
 import Toggle from '../common/Toggle';
 
 import '../../styles/layout/Header.scss';
+import { useSelector } from 'react-redux';
 
 /**
  * 헤더 모드 -> 다크, 라이트
@@ -20,7 +21,8 @@ import '../../styles/layout/Header.scss';
  * -> 버튼이 1개일땐 buttonTexts={['로그아웃']}
  */
 
-const Header = ({ mode, onToggleChange, type, buttonTexts, leftContent }) => {
+const Header = ({onToggleChange, type, buttonTexts, leftContent }) => {
+  const { mode } = useSelector((state) => state.toggle);
   return (
     <div className={`header_container--${mode}`}>
       <div className="header_left_items">

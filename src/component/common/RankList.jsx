@@ -3,15 +3,16 @@ import arrow_down_white from '../../assets/icons/arrow_down_white.svg';
 import group_icon from '../../assets/icons/group_icon.svg';
 import basic_small_image from '../../assets/icons/basic_small_image.svg';
 import '../../styles/common/RankList.scss';
+import { useSelector } from 'react-redux';
 
 /**
  * 랭크 리스트 -> 다크, 라이트모드 설정 가능
  * rankings 객체 부모 컴포넌트에서 가져오기
  */
 
-const RankList = ({ mode, rankings }) => {
+const RankList = ({ rankings }) => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { mode } = useSelector((state) => state.toggle);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };

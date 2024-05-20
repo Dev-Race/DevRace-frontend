@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import '../../styles/common/Input.scss';
 /**
  * 인풋 타입 -> nomal , chat_input
@@ -6,7 +7,8 @@ import '../../styles/common/Input.scss';
  * -> onChange 이벤트 부모 컴포넌트에서 전달
  */
 
-const Input = ({ type, mode, placeHolder, onChange, error }) => {
+const Input = ({ type, placeHolder, onChange, error }) => {
+  const { mode } = useSelector((state) => state.toggle);
   return (
     <input
       className={`input--${type}--${mode}${error ? '--error' : ''}`}
