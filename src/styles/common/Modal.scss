@@ -1,25 +1,63 @@
 @import '../theme';
 
-.modal_container {
-  display: flex;
+.modal--container {
   position: relative;
-  width: 380px;
+  display: flex;
   flex-direction: column;
-  align-items: center;
+
+  width: 380px;
+  height: auto;
+
   border-radius: 16px;
   box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.06);
-  padding: 8px;
-  gap: 24px;
+
+  z-index: 0;
 }
 
-.modal_close_btn {
+.modal--close {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 24px;
+  right: 22px;
+
+  z-index: 1;
 }
-.modal_title {
+
+.modal--wrapper {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal--Profile {
+  width: 100px;
+  height: 100px;
+  margin-top : 48px;
+  margin-bottom: 24px;
+}
+
+.modal-Icon {
+  width: 64px;
+  height: 64px;
+
+  margin-top : 48px;
+  margin-bottom: 24px;
+}
+
+.modal--title {
   @include font-h5;
+  margin-bottom: 4px;
 }
-.modal_body {
+.modal--content {
   @include font-t4;
+  margin-bottom: 24px;
+}
+
+.modal--buttons {
+  display: flex;
+  flex-direction: row;
+  gap : 16px;
+  margin-bottom: 24px;
 }

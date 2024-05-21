@@ -12,12 +12,20 @@ import Toggle from '../component/common/Toggle';
 import RankList from '../component/common/RankList';
 import { useSelector } from 'react-redux';
 
+import error_icon from '../assets/icons/error_icon.svg';
+import checked_icon from '../assets/icons/checked_icon.svg';
+import send_icon from '../assets/icons/send_icon.svg';
+import reset_icon from '../assets/icons/reset_icon.svg';
+import twinkle_icon from '../assets/icons/twinkle_icon.svg';
+import default_profile from '../assets/icons/default_profile.svg';
+
 const TestPage = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [isError, setIsError] = useState(false);
   const [text, setText] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
+  const [isActive, setIsActive] = useState(true);
   const { mode } = useSelector((state) => state.toggle);
   const rankings = [
     { rank: 1, name: 'qwer' },
@@ -25,6 +33,26 @@ const TestPage = () => {
     { rank: 3, name: 'qwer' },
     { rank: '4', name: 'qwer' },
     { rank: '-', name: 'qwer' },
+  ];
+  const buttons = [
+    <Button
+      onClick={() => navigate('/aaa')}
+      type="normal1"
+      shape="angle"
+      text="문제확인"
+    />,
+    <Button
+      onClick={() => navigate('/aaa')}
+      type="normal2"
+      shape="angle"
+      text="문제확인"
+    />,
+    // <Button
+    //   onClick={() => navigate('/aaa')}
+    //   type="modal"
+    //   shape="angle"
+    //   text="문제확인"
+    // />,
   ];
 
   const handleInputChange = (e) => {
@@ -36,6 +64,14 @@ const TestPage = () => {
   };
   return (
     <>
+      <Modal
+        // imageSource={reset_icon}
+        // title="문제풀이에 실패했어요."
+        // content="재도전을 위해 문제풀이로 돌아갑니다."
+        buttons={buttons}
+        isActive={isActive}
+        setIsActive={setIsActive}
+      />
       <br />
       <Dropdown type="language" onSelect={handleSelect} />
       <br />
@@ -135,10 +171,6 @@ const TestPage = () => {
       />
       <br />
       <Push type="inviteFriend" text="친구들에게 초대링크를 보내세요!" />
-      <br />
-      <Modal type="regist_modal" />
-      <br />
-      <Modal type="edit_image_modal" />
       <br />
       <Header leftContent="내 코드 페이지" />
       <br />
