@@ -225,9 +225,13 @@
 .btn--normal1--light--angle,
 .btn--normal2--light--angle,
 .btn--normal3--light--angle,
+.btn--modalBtn1--light--angle,
+.btn--modalBtn2--light--angle,
 .btn--normal1--dark--angle,
 .btn--normal2--dark--angle,
-.btn--normal3--dark--angle {
+.btn--normal3--dark--angle,
+.btn--modalBtn1--dark--angle
+.btn--modalBtn2--dark--angle {
   display: flex;
   width: 160px;
   height: 40px;
@@ -239,6 +243,20 @@
   @include font-t3;
 
   border-radius: 8px;
+}
+
+.btn--modalBtn1--light--angle,
+.btn--modalBtn1--dark--angle {
+  color: white;
+  border: 2px solid var(--gray-300, #BDBFC4);
+  background: var(--gray-300, #BDBFC4);
+}
+
+.btn--modalBtn2--light--angle,
+.btn--modalBtn2--dark--angle {
+  color: white;
+  border: 2px solid var(--black, #000);
+  background: var(--black, #000);
 }
 
 .btn--normal1--light--angle {

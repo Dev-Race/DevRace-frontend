@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import google_icon from '../../assets/icons/google_icon.svg';
 import git_icon from '../../assets/icons/git_icon.svg';
 /**
- * 버튼 타입 -> small, normal(1,2,3), large, modal, login
+ * 버튼 타입 -> small, normal(1,2,3), large, modal, login, modalBtn(1,2)
  * 라이트 / 다크 모드 -> light, dark
  * 버튼 모양 -> angle, non-angle
  * 버튼 내용 -> text, icon (optional)

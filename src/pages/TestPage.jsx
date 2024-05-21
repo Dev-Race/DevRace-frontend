@@ -37,13 +37,13 @@ const TestPage = () => {
   const buttons = [
     <Button
       onClick={() => navigate('/aaa')}
-      type="normal1"
+      type="modalBtn1"
       shape="angle"
       text="문제확인"
     />,
     <Button
       onClick={() => navigate('/aaa')}
-      type="normal2"
+      type="modalBtn2"
       shape="angle"
       text="문제확인"
     />,
