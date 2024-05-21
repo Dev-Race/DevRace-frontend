@@ -10,6 +10,7 @@ import Header from '../component/layout/Header';
 import Footer from '../component/layout/Footer';
 import Toggle from '../component/common/Toggle';
 import RankList from '../component/common/RankList';
+import { useSelector } from 'react-redux';
 
 const TestPage = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const TestPage = () => {
   const [isError, setIsError] = useState(false);
   const [text, setText] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
+  const { mode } = useSelector((state) => state.toggle);
   const rankings = [
     { rank: 1, name: 'qwer' },
     { rank: 2, name: 'qwer' },
@@ -121,11 +123,18 @@ const TestPage = () => {
         // onClick={}
       />
       <br />
-      <Push type="profileEdit" />
+      <Push type="profileEdit" text="프로필 수정이 완료되었습니다." />
       <br />
-      <Push type="modeChange" />
+      <Push
+        type="modeChange"
+        text={
+          mode === 'light'
+            ? '라이트모드로 변경되었습니다!'
+            : '다크모드로 변경되었습니다!'
+        }
+      />
       <br />
-      <Push type="inviteFriend" />
+      <Push type="inviteFriend" text="친구들에게 초대링크를 보내세요!" />
       <br />
       <Modal type="regist_modal" />
       <br />
