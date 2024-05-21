@@ -109,6 +109,8 @@ const TestPage = () => {
       <Header headerType="default" text="프로필 수정" />
       <br />
       <Footer />
+      <br />
+      <Footer type="default"/>
     </>
   );
 };
