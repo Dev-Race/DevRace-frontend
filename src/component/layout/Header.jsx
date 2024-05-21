@@ -9,51 +9,142 @@ import Toggle from '../common/Toggle';
 
 import '../../styles/layout/Header.scss';
 import { useSelector } from 'react-redux';
+import RankList from '../common/RankList';
+import { useState } from 'react';
+import Dropdown from '../common/DropDown';
+
 
 /**
- * 헤더 모드 -> 다크, 라이트
- * 헤더에서 토글(화면모드 변경) 을 포함한다면
- * 부모 컴포넌트에서 onToggleChange 이벤트 받아오기
- * 헤더 타입 -> 부모 컴포넌트에서 type 넘겨주지 않으면 기본 스타일(왼쪽에만 아이템 존재)
- *  -> type="with_right_items" 이면 양쪽에 아이템 존재 하는 스타일로 지정 가능
- * 부모 컴포넌트에서 버튼에 들어갈 텍스트인 buttonTexts 를 넘겨주면 됨
- * -> 버튼이 2개일땐 buttonTexts={['내 코드', '로그아웃']}
- * -> 버튼이 1개일땐 buttonTexts={['로그아웃']}
+ * headerType : login, main, create, wait, solve, review, mycode, default
  */
-
-const Header = ({onToggleChange, type, buttonTexts, leftContent }) => {
+const Header = (props) => {
+  const { headerType, text } = props;
   const { mode } = useSelector((state) => state.toggle);
-  return (
-    <div className={`header_container--${mode}`}>
-      <div className="header_left_items">
-        {leftContent === 'logo' ? (
-          <>
+  const [selectedOption, setSelectedOption] = useState('');
+
+  const rankings = [
+    { rank: 1, name: 'qwer' },
+    { rank: 2, name: 'qwer' },
+    { rank: 3, name: 'qwer' },
+    { rank: '4', name: 'qwer' },
+    { rank: '-', name: 'qwer' },
+  ];
+
+  const handleSelect = (select) => {
+    setSelectedOption(select);
+  };
+
+  switch (headerType) {
+    case 'login':
+      return (
+        <>
+          <div className={`header--${mode}--container`}>
+            <img 
+              src={mode === 'light' ? logo_icon_light : logo_icon_dark} 
+              alt='logo'
+              className='header--logo'
+              />
+            <img
+              src={mode === 'light' ? logo_light : logo_dark} 
+              alt='logo_text'
+              className='header--logo--text'
+              />
+          </div>
+        </>
+      );
+    case 'main': case 'create': case 'wait':
+      return (
+        <>
+          <div
+            className={
+              headerType === 'main'
+                ? `header--${mode}--container--main`
+                : `header--${mode}--container`
+            }
+          >
             <img
               src={mode === 'light' ? logo_icon_light : logo_icon_dark}
-              alt="Logo icon"
+              alt="logo"
+              className="header--logo"
             />
-            <img src={mode === 'light' ? logo_light : logo_dark} alt="Logo" />
-          </>
-        ) : (
-          <div className={`header_title--${mode}`}>{leftContent}</div>
-        )}
-      </div>
-      {type === 'with_right_items' && (
-        <div className="header_right_items">
-          <Toggle isOn={mode === 'dark'} onToggleChange={onToggleChange} />
-          {buttonTexts.map((text, index) => (
-            <button key={index} className={`header_text--${mode}`}>
-              {text}
-            </button>
-          ))}
-          <img
-            src={mode === 'light' ? people_light : people_dark}
-            alt="People icon"
-          />
-        </div>
-      )}
-    </div>
-  );
+            <img
+              src={mode === 'light' ? logo_light : logo_dark}
+              alt="logo_text"
+              className="header--logo--text"
+            />
+            <div className={`header--${mode}--btn--box`}>
+              <Toggle />
+              {headerType === 'main' && <button className={`header--${mode}--btn`}>내 코드</button>}
+              <button className={`header--${mode}--btn`}>로그인</button>
+              { headerType === 'wait' && <button className={`header--${mode}--btn`}>초대링크</button>}
+              <img
+                src={mode === 'light' ? people_light : people_dark}
+                alt="logo_text"
+                className="header--logo--text"
+              />
+            </div>
+          </div>
+        </>
+      );
+    case 'solve': case 'review':
+      return (
+        <>
+          <div
+            className={
+              headerType === 'main'
+                ? `header--${mode}--container--main`
+                : `header--${mode}--container`
+            }
+          >
+            <div className={`header--${mode}--problemNum`}>{text}</div>
+            <div className={`header--${mode}--btn--box`}>
+              <Toggle />
+              <RankList rankings={rankings} />
+              {headerType === 'solve' && (
+                <Dropdown type="language" onSelect={handleSelect} />
+              )}
+              {headerType === 'solve' && (
+                <button className={`header--${mode}--btn`}>초대링크</button>
+              )}
+              {headerType === 'solve' && (<div className={`header--${mode}--btn`}>여기에는 언어</div>)}
+              <button className={`header--${mode}--btn`}>나가기</button>
+            </div>
+          </div>
+        </>
+      );
+    case 'mycode':
+      return (
+        <>
+          <div
+            className={
+              headerType === 'main'
+                ? `header--${mode}--container--main`
+                : `header--${mode}--container`
+            }
+          >
+            <div className={`header--${mode}--problemNum`}>{text}</div>
+            <div className={`header--${mode}--btn--box`}>
+              <Dropdown type="status" onSelect={handleSelect} />
+            </div>
+          </div>
+        </>
+      );
+    default:
+      return (
+        <>
+          <div
+            className={
+              headerType === 'main'
+                ? `header--${mode}--container--main`
+                : `header--${mode}--container`
+            }
+          >
+            <div className={`header--${mode}--problemNum`}>{text}</div>
+          </div>
+        </>
+      );
+  }
 };
 
 export default Header;
+

@@ -6,14 +6,29 @@
   flex-direction: column;
 
   width: 108px;
-
   border-radius: 8px;
-  border: 2px solid var(--black, #000);
+  
+  position: relative; // 부모 컨테이너를 기준으로 절대 위치를 지정하기 위해 추가
 
+  font-family: "Spoqa Han Sans Neo";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px;
+
+  &--light {
+    border: 2px solid #000;
+    color : #000;
+  }
+
+  &--dark {
+    border: 2px solid #FFF;
+    color: #FFF;
+  }
 }
 
-.Dropdown_Selected_Item,
-.Dropdown_Item {
+.Dropdown_Selected_Item {
+  position: relative;
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -23,21 +38,61 @@
 }
 
 .Dropdown_Selected_Item_Text {
-  margin-left : auto;
+  margin-left: auto;
   margin-right: auto;
 }
 
 .Dropdown_ArrowIcon {
-  margin-right : 8px;
+  margin-right: 8px;
+}
+
+.Dropdown_List {
+  position: absolute;
+  top: 34px; 
+  left: -2px; 
+  width: 100%; 
+  border-top: none; 
+  z-index: 1000; 
+  border-radius: 0 0 8px 8px; 
+  
+  &--light {
+    background: #fff;
+    border: 2px solid #000;
+  }
+
+  &--dark {
+    background: none;
+    border: 2px solid #FFF;
+  }
 }
 
 .Dropdown_Item {
+  display: flex;
   align-items: center;
   justify-content: center;
-  border-top: 2px solid var(--black, #000);
+  height: 36px;
+  box-sizing: border-box;
+  width: 100%;
+  
+
+  &--light {
+    background: #fff;
+    border-top: 2px solid #000;
+  }
+
+  &--dark {
+    background: none;
+    border-top: 2px solid #FFF;
+  }
 }
 
-.Dropdown_Item:hover{
+.Dropdown_Item--light:hover {
   background: var(--black, #000);
   color: #fff;
 }
+
+.Dropdown_Item--dark:hover {
+  background: #FFF;
+  color: #000;
+}
+        

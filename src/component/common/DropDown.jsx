@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import '../../styles/common/DropDown.scss';
-import DropdownArrow from '../../assets/icons/down_arrow.svg';
+import BlackDropdownArrow from '../../assets/icons/black_down_arrow.svg';
+import WhiteDropdownArrow from '../../assets/icons/white_down_arrow.svg';
 
 const optionsData = {
   language: ['JavaScript', 'C++', 'Java', 'Python'],
@@ -8,6 +10,7 @@ const optionsData = {
 };
 
 const Dropdown = (props) => {
+  const { mode } = useSelector((state) => state.toggle);
   const { type, onSelect } = props;
   const options = optionsData[type] || [];
   const [isOpen, setIsOpen] = useState(false);
@@ -22,29 +25,30 @@ const Dropdown = (props) => {
   };
 
   return (
-    <div className="Dropdown_Wrapper">
+    <div className={`Dropdown_Wrapper Dropdown_Wrapper--${mode}`}>
       <div className="Dropdown_Selected_Item" onClick={toggleDropdown}>
         <span className="Dropdown_Selected_Item_Text">{selectedOption}</span>
         <img
-          src={DropdownArrow}
+          src={(mode !== 'dark') ? BlackDropdownArrow : WhiteDropdownArrow}
           alt="Dropdown arrow"
           className="Dropdown_ArrowIcon"
         />
       </div>
-      {isOpen &&
-        options.map((option, index) =>
-          selectedOption !== option ? (
-            <div
-              key={index}
-              className="Dropdown_Item"
-              onClick={() => handleSelect(option)}
-            >
-              {option}
-            </div>
-          ) : (
-            <></>
-          ),
-        )}
+      {isOpen && (
+        <div className={`Dropdown_List Dropdown_List--${mode}`}>
+          {options.map((option, index) =>
+            selectedOption !== option ? (
+              <div
+                key={index}
+                className={`Dropdown_Item Dropdown_Item--${mode}`}
+                onClick={() => handleSelect(option)}
+              >
+                {option}
+              </div>
+            ) : null,
+          )}
+        </div>
+      )}
     </div>
   );
 };

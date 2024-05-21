@@ -15,7 +15,7 @@ const RankList = ({ rankings }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div>
+    <>
       <div
         className={`rank-container rank-container--${mode}`}
         onClick={() => setIsOpen(!isOpen)}
@@ -24,24 +24,24 @@ const RankList = ({ rankings }) => {
           <img src={group_icon} alt="Group Icon" />
           <img src={arrow_down_white} alt="Dropdown arrow" />
         </div>
+        {isOpen && (
+          <div className={`rank-list rank-list--${mode}`}>
+            {rankings.map((ranking, index) => (
+              <div
+                key={index}
+                className={`rank-item ${
+                  ranking.rank === '-' ? 'rank-item--inactive' : ''
+                }`}
+              >
+                {ranking.rank}
+                <img src={basic_small_image} alt="Basic img" />
+                {ranking.name}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-      {isOpen && (
-        <div className={`rank-list rank-list--${mode}`}>
-          {rankings.map((ranking, index) => (
-            <li
-              key={index}
-              className={`rank-item ${
-                ranking.rank === '-' ? 'rank-item--inactive' : ''
-              }`}
-            >
-              {ranking.rank}
-              <img src={basic_small_image} alt="Basic img" />
-              {ranking.name}
-            </li>
-          ))}
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 
