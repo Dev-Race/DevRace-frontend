@@ -1,13 +1,13 @@
 @import '../theme';
 
-.input--nomal--light,
-.input--nomal--dark,
-.input--nomal--light--error,
-.input--nomal--dark--error {
+.input--normal--light,
+.input--normal--dark,
+.input--normal--light--error,
+.input--normal--dark--error {
   @include font-t4;
   display: flex;
-  width: 348px;
-  height: 48px;
+  width: 316px;
+  height: 24px;
 
   align-items: center;
   flex-shrink: 0;
@@ -20,17 +20,57 @@
   background: var(--white, #fff);
 }
 
-.input--nomal--light:focus {
+.input--normal--light:focus {
   outline: none;
   border: 2px solid var(--blue-light-200, #99f);
 }
 
-.input--nomal--dark:focus {
+.input--normal--dark:focus {
   outline: none;
   border: 2px solid var(--dark-blue-500, #569cd6);
 }
 
-.input--nomal--light--error,
-.input--nomal--dark--error {
+.input--normal--light--error,
+.input--normal--dark--error {
   border: 2px solid var(--Error, #f35956);
+}
+
+.input--chat--light--wrapper,
+.input--chat--dark--wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 296px;
+  height: 32px;
+  padding: 10px 12px;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.input--chat--light--wrapper {
+  border-radius: 0px 0px 8px 8px;
+  background: var(--blue-300, #626CE5);
+  box-shadow: 0px -4px 20px 0px rgba(0, 0, 0, 0.08);
+}
+
+.input--chat--dark--wrapper {
+  border-radius: 0px 0px 8px 8px;
+  background: var(--dark-blue-500, #569CD6);
+  box-shadow: 0px -4px 20px 0px rgba(0, 0, 0, 0.08);
+}
+
+.input--chat--light,
+.input--chat--dark {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  padding: 6px 8px;
+  gap: 10.4px;
+  flex: 1 0 0;
+
+  border: none;
+  border-radius: 8px;
+  background: var(--gray-100, #F6F6F6);
 }

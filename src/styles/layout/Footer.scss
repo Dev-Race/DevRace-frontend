@@ -3,11 +3,10 @@
 .footer_container--light,
 .footer_container--dark {
   display: flex;
-  width: 1440px;
+  width: 100%;
   height: 68px;
-  padding: 24px 80px;
 
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 
   gap: 48px;
@@ -22,6 +21,7 @@
 
   justify-content: center;
 }
+
 .footer_text_container {
   @include font-body3;
   color: var(--gray-400, #8f9298);
@@ -29,9 +29,13 @@
 
 .footer_left_items {
   display: flex;
+  margin-left : 80px;
+  margin-right : auto;
 }
 
 .footer_right_items {
   display: flex;
   gap: 12px;
+  margin-left : auto;
+  margin-right : 80px;
 }

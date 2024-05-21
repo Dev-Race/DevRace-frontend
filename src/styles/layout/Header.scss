@@ -1,58 +1,88 @@
-@import '../theme';
-
-.header_container--light,
-.header_container--dark {
+.header--light--container,
+.header--light--container--main,
+.header--dark--container,
+.header--dark--container--main {
   display: flex;
-  width: 1440px;
+  flex-direction: row;
+
+  width: 100%;
   height: 76px;
-  padding: 16px 80px;
 
   align-items: center;
-  justify-content: space-between;
-
-  gap: 24px;
-  flex-shrink: 0;
 }
 
-.header_container--dark {
-  background: var(--black, #000);
+.header--light--container {
+  background-color: #FFF;
 }
 
-.header_title--light,
-.header_title--dark {
-  @include font-h4;
+.header--light--container--main {
+  background-color: none;
 }
 
-.header_text--light,
-.header_text--dark {
-  @include font-t2;
-  cursor: pointer;
-  border: 0;
-  background-color: transparent;
+.header--dark--container {
+  background-color: #000;
 }
 
-.header_text--light,
-.header_title--light {
-  color: var(--black, #000);
-}
-.header_text--dark,
-.header_title--dark {
-  color: var(--white, #fff);
+.header--dark--container--main {
+  background-color: #000;
+  // background-color: none;
 }
 
-.header_text--light:hover {
-  color: var(--blue-light-300, #66f);
-}
-.header_text--dark:hover {
-  color: var(--dark-blue-500, #569cd6);
+.header--logo {
+  margin-left : 80px;
+  margin-right: 8px;
 }
 
-.header_left_items {
+.header--logo--text {
+  margin-right: auto;
+}
+
+.header--light--btn--box,
+.header--dark--btn--box {
   display: flex;
-  gap: 8px;
+  flex-direction: row;
+
+  gap : 64px;
+  margin-right : 80px;
+
+  align-items: center;
+  justify-content: center;
 }
 
-.header_right_items {
-  display: flex;
-  gap: 32px;
+.header--light--btn,
+.header--dark--btn {
+  border : none;
+  background: none;
+
+  font-family: "Spoqa Han Sans Neo";
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 22px; 
+}
+
+.header--light--btn {
+  color : #000
+}
+
+.header--dark--btn {
+  color : #FFF
+}
+
+.header--light--problemNum,
+.header--dark--problemNum {
+  margin-left : 80px;
+  margin-right : auto;
+
+  font-family: "Spoqa Han Sans Neo";
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 22px; 
+}
+
+.header--light--problemNum {
+  color : #000;
+}
+
+.header--dark--problemNum {
+  color: #FFF
 }

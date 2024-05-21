@@ -101,8 +101,8 @@
 .btn--large--light--angle,
 .btn--large--light--non-angle,
 .btn--large--dark--non-angle,
-.btn--leftIcon--dark--angle,
-.btn--leftIcon--light--angle {
+.btn--login--dark--angle,
+.btn--login--light--angle {
   display: flex;
   width: 348px;
   height: 48px;
@@ -199,8 +199,8 @@
   background: var(--dark-blue-300, #9ac4e6);
 }
 
-.btn--leftIcon--dark--angle,
-.btn--leftIcon--light--angle {
+.btn--login--dark--angle,
+.btn--login--light--angle {
   border-radius: 8px;
   @include font-t3;
   color: $gray-800;
@@ -211,13 +211,13 @@
   gap: 16px;
 }
 
-.btn--leftIcon--dark--angle:hover,
-.btn--leftIcon--light--angle:hover {
+.btn--login--dark--angle:hover,
+.btn--login--light--angle:hover {
   background: var(--gray-300, #bdbfc4);
 }
 
-.btn--leftIcon--dark--angle:active,
-.btn--leftIcon--light--angle:active {
+.btn--login--dark--angle:active,
+.btn--login--light--angle:active {
   border: 2px solid var(--gray-400, #8f9298);
   background: var(--gray-300, #bdbfc4);
 }
@@ -225,9 +225,13 @@
 .btn--normal1--light--angle,
 .btn--normal2--light--angle,
 .btn--normal3--light--angle,
+.btn--modalBtn1--light--angle,
+.btn--modalBtn2--light--angle,
 .btn--normal1--dark--angle,
 .btn--normal2--dark--angle,
-.btn--normal3--dark--angle {
+.btn--normal3--dark--angle,
+.btn--modalBtn1--dark--angle
+.btn--modalBtn2--dark--angle {
   display: flex;
   width: 160px;
   height: 40px;
@@ -239,6 +243,20 @@
   @include font-t3;
 
   border-radius: 8px;
+}
+
+.btn--modalBtn1--light--angle,
+.btn--modalBtn1--dark--angle {
+  color: white;
+  border: 2px solid var(--gray-300, #BDBFC4);
+  background: var(--gray-300, #BDBFC4);
+}
+
+.btn--modalBtn2--light--angle,
+.btn--modalBtn2--dark--angle {
+  color: white;
+  border: 2px solid var(--black, #000);
+  background: var(--black, #000);
 }
 
 .btn--normal1--light--angle {

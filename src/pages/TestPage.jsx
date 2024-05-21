@@ -1,276 +1,116 @@
 import Button from '../component/common/Button';
 import { useNavigate } from 'react-router-dom';
-import google_icon from '../icons/google_icon.svg';
-import git_icon from '../icons/git_icon.svg';
 import Pagination from '../component/common/Pagination';
 import { useState } from 'react';
 import Input from '../component/common/Input';
-import Dropdown from '../component/common/DropDown';
 import Push from '../component/common/Push';
 import Modal from '../component/common/Modal';
 import Header from '../component/layout/Header';
 import Footer from '../component/layout/Footer';
-import Toggle from '../component/common/Toggle';
-import RankList from '../component/common/RankList';
+import { useSelector } from 'react-redux';
+import reset_icon from '../assets/icons/reset_icon.svg';
+
 
 const TestPage = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [isError, setIsError] = useState(false);
   const [text, setText] = useState('');
-  const [selectedOption, setSelectedOption] = useState('');
-  const rankings = [
-    { rank: 1, name: 'qwer' },
-    { rank: 2, name: 'qwer' },
-    { rank: 3, name: 'qwer' },
-    { rank: '-', name: 'qwer' },
-    { rank: '-', name: 'qwer' },
+  const [isActive, setIsActive] = useState(true);
+  const { mode } = useSelector((state) => state.toggle);
+
+  const buttons1 = [
+    <Button
+      onClick={() => navigate('/aaa')}
+      type="modalBtn1"
+      shape="angle"
+      text="문제확인"
+    />,
+    <Button
+      onClick={() => navigate('/aaa')}
+      type="modalBtn2"
+      shape="angle"
+      text="문제확인"
+    />,
   ];
 
-  const [mode, setMode] = useState('light');
-
-  const handleToggleChange = (isOn) => {
-    setMode(isOn ? 'dark' : 'light');
-  };
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+  const buttons2 = [
+    <Button
+      onClick={() => navigate('/aaa')}
+      type="modal"
+      shape="angle"
+      text="문제확인"
+    />,
+  ];
 
   const handleInputChange = (e) => {
     setText(e.target.value);
   };
 
-  const handleSelect = (select) => {
-    setSelectedOption(select);
-  };
   return (
     <>
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="small"
-        mode="light"
-        shape="angle"
-        text="문제확인"
+      <Modal buttons={buttons1} isActive={isActive} setIsActive={setIsActive} />
+      <Modal
+        imageSource={reset_icon}
+        title="문제풀이에 실패했어요."
+        content="재도전을 위해 문제풀이로 돌아갑니다."
+        buttons={buttons2}
+        isActive={isActive}
+        setIsActive={setIsActive}
       />
       <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="small"
-        mode="dark"
-        shape="angle"
-        text="문제확인"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="modal"
-        mode="light"
-        shape="angle"
-        text="확인"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="large"
-        mode="light"
-        shape="angle"
-        text="확인"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="large"
-        mode="dark"
-        shape="angle"
-        text="확인"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="large"
-        mode="light"
-        shape="non-angle"
-        text="시작하기"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="large"
-        mode="dark"
-        shape="non-angle"
-        text="시작하기"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="normal1"
-        mode="light"
-        shape="angle"
-        text="시작하기"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="normal2"
-        mode="light"
-        shape="angle"
-        text="시작하기"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="normal3"
-        mode="light"
-        shape="angle"
-        text="시작하기"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="normal1"
-        mode="dark"
-        shape="angle"
-        text="시작하기"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="normal2"
-        mode="dark"
-        shape="angle"
-        text="시작하기"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="normal3"
-        mode="dark"
-        shape="angle"
-        text="시작하기"
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="leftIcon"
-        mode="dark"
-        shape="angle"
-        text="Log in with Google"
-        icon={google_icon}
-      />
-      <br />
-      <br />
-      <Button
-        onClick={() => navigate('/aaa')}
-        type="leftIcon"
-        mode="light"
-        shape="angle"
-        text="Log in with Github"
-        icon={git_icon}
-      />
-      <br />
-      <br />
-      <Pagination
-        currentPage={currentPage}
-        totalPages="100"
-        onPageChange={handlePageChange}
-        mode="light"
-      />
-      <br />
-      <br />
-      <Pagination
-        currentPage={currentPage}
-        totalPages="10"
-        onPageChange={handlePageChange}
-        mode="dark"
-      />
-      <br />
+      <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <br />
       <Input
-        type="nomal"
-        mode="light"
+        type="normal"
         placeHolder="이름을 입력하세요."
         onChange={handleInputChange}
         error={isError}
       />
       <br />
-      <br />
       <Input
-        type="nomal"
-        mode="dark"
-        placeHolder="이메일을 제외한 아이디만 적어주세요."
+        type="chat"
+        placeHolder="메시지를 입력해주세요." // 소켓 연결 유무로 placholder 바뀜 -> disable과 짝
         onChange={handleInputChange}
-        error={isError}
+        disable={false}
+        // onClick={}
       />
       <br />
+      <Push type="profileEdit" text="프로필 수정이 완료되었습니다." />
       <br />
-      <Dropdown type="language" onSelect={handleSelect} />
-      <br />
-      <br />
-      <Dropdown type="status" onSelect={handleSelect} />
-      <br />
-      <br />
-      <Push type="profileEdit" />
-      <br />
-      <br />
-      <Push type="modeChange" mode="light" />
-      <br />
-      <br />
-      <Push type="modeChange" mode="dark" />
-      <br />
-      <br />
-      <Push type="inviteFriend" mode="light" />
-      <br />
-      <br />
-      <Push type="inviteFriend" mode="dark" />
-      <br />
-      <br />
-      <Modal type="regist_modal" />
-      <br />
-      <br />
-      <Modal type="edit_image_modal" />
-      <br />
-      <br />
-      <Header mode={mode} leftContent="내 코드 페이지" />
-      <br />
-      <br />
-      <Header
-        mode={mode}
-        onToggleChange={handleToggleChange}
-        type="with_right_items"
-        buttonTexts={['내 코드', '로그아웃']}
-        leftContent="logo"
+      <Push
+        type="modeChange"
+        text={
+          mode === 'light'
+            ? '라이트모드로 변경되었습니다!'
+            : '다크모드로 변경되었습니다!'
+        }
       />
       <br />
+      <Push type="inviteFriend" text="친구들에게 초대링크를 보내세요!" />
+      {/*  * headerType : login, main, create, wait, solve, review, mycode, default */}
       <br />
-      <Footer mode="light" />
+      <Header headerType="login" />
       <br />
+      <Header headerType="main" />
       <br />
-      <Footer mode={mode} />
+      <Header headerType="create" />
       <br />
+      <Header headerType="wait" />
       <br />
-      <Footer mode="none" />
+      <Header headerType="solve" text="1244.cpp" />
       <br />
+      <Header headerType="review" text="1244.cpp" />
       <br />
-      <Toggle isOn={mode === 'dark'} onToggleChange={handleToggleChange} />
+      <Header headerType="mycode" text="내 코드 페이지" />
       <br />
+      <Header headerType="default" text="마이 페이지" />
       <br />
-      <RankList mode={mode} rankings={rankings} />
+      <Header headerType="default" text="프로필 수정" />
+      <br />
+      <Footer />
+      <br />
+      <Footer type="default"/>
     </>
   );
 };
