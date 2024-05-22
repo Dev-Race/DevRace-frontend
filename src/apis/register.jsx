@@ -1,23 +1,19 @@
 import Apis from './Api';
 
-export const signUpApi = (file, nickname, bojId, isImageChange) => {
+export const signUpApi = async (file, nickname, bojId, isImageChange) => {
     const formData = new FormData();
+    console.log(file)
 
-    formData.append('imageFile', file);
+    formData.append('imageFile', file || null);
     formData.append(
       'signupRequestDto',
-      new Blob(
-        [
-          JSON.stringify({
-            nickname: nickname,
-            bojId: bojId,
-            isImageChange: isImageChange,
-          }),
-        ],
-        { type: 'application/json' },
-      ),
+      JSON.stringify({
+        nickname: nickname,
+        bojId: bojId,
+        isImageChange: isImageChange,
+      }),
     );
 
-    const response = Apis.post(`/signup`, formData);
-    return response;
+    const response = await Apis.post(`/signup`, formData);
+    return response.data;
 };

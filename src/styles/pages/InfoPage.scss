@@ -35,7 +35,7 @@
     position: relative;
 
     width: 444px;
-    height: 491px;
+    
 
     border-radius: 16px;
     background: var(--white, #FFF);
@@ -68,6 +68,13 @@
     margin-bottom: 68px;
 }
 
+.Info--Image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+}
+
 .Info--EditImage {
     position: absolute;
     width: 32px;
@@ -96,4 +103,22 @@
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
+}
+
+.Info--Nickname {
+    color: var(--gray-900, #171819);
+    font-family: "Spoqa Han Sans Neo";
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 36px;
+    margin-bottom: 8px;
+}
+
+.Info--bojId {
+    color: var(--gray-700, #45474C);
+    font-family: "Spoqa Han Sans Neo";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20px;
+    margin-bottom: 48px;
 }

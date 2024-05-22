@@ -15,28 +15,28 @@ import Input from '../component/common/Input';
 import { signUpApi } from '../apis/register';
 
 const InfoPage = () => {
-  const [response, setResponse] = useState(null);
+    const [infoActive, setInfoActive] = useState(false);
+    const [imageEditActive, setImageEditActive] = useState(false);
+    const [bojActive, setBojActive] = useState(false);
+    const [completeActive, setCompleteActive] = useState(false);
+    const [signUpState, setSignUpState] = useState(false);
 
-  const [infoActive, setInfoActive] = useState(false);
-  const [imageEditActive, setImageEditActive] = useState(false);
-  const [bojActive, setBojActive] = useState(false);
+    const [imageUrl, setImageUrl] = useState(null);
+    const [preview, setPreview] = useState(null);
+    const imgRef = useRef();
 
-  const [imageUrl, setImageUrl] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const imgRef = useRef();
+    const [name, setName] = useState('');
+    const [bojId, setBojId] = useState('');
 
-  const [name, setName] = useState('');
-  const [bojId, setBojId] = useState('');
+    const [nameError, setNameError] = useState(false);
+    const [bojIdError, setBojIdError] = useState(false);
 
-  const [nameError, setNameError] = useState(false);
-  const [bojIdError, setBojIdError] = useState(false);
+    const [nameTouched, setNameTouched] = useState(false);
+    const [bojIdTouched, setBojIdTouched] = useState(false);
 
-  const [nameTouched, setNameTouched] = useState(false);
-  const [bojIdTouched, setBojIdTouched] = useState(false);
-
-  const navigate = useNavigate();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
 
   const { mode } = useSelector((state) => state.toggle);
 
@@ -63,13 +63,17 @@ const InfoPage = () => {
     setPreview(null);
   };
 
-  const onSumbit = (file, nickname, bojId, isImageChange) => {
+  const onSumbit = async (file, nickname, bojId, isImageChange) => {
     setNameTouched(true);
     setBojIdTouched(true);
 
     if (name && bojId) {
-      let res = signUpApi(file, nickname, bojId, isImageChange);
-      setResponse(res.data.data);
+      let res = await signUpApi(file, nickname, bojId, isImageChange);
+      console.log(res)
+      
+      sessionStorage.setItem('bojId', res.data.userResponseDto.bojId);
+      sessionStorage.setItem('imageUrl', res.data.userResponseDto.imageUrl);
+      sessionStorage.setItem('nickname', res.data.userResponseDto.nickname);
       setBojActive(true);
     }
   };
@@ -108,6 +112,19 @@ const InfoPage = () => {
       onClick={() => {
         window.open('https://solved.ac/', '_blank');
         setBojActive(false);
+        setSignUpState(true);
+      }}
+    />,
+  ];
+
+  const completeButton = [
+    <Button
+      type="modal"
+      shape="angle"
+      text="확인"
+      onClick={() => {
+        setCompleteActive(false)
+        navigate('/')
       }}
     />,
   ];
@@ -117,12 +134,15 @@ const InfoPage = () => {
     const accessTokenExpiresIn = searchParams.get('accessTokenExpiresIn');
     const refreshToken = searchParams.get('refreshToken');
 
-    sessionStorage.setItem('accessToken', accessToken);
-    sessionStorage.setItem('expirationTime', accessTokenExpiresIn);
-    sessionStorage.setItem('refreshToken', refreshToken);
+    if (accessToken && accessTokenExpiresIn && refreshToken) {
+        sessionStorage.setItem('accessToken', accessToken);
+        sessionStorage.setItem('expirationTime', accessTokenExpiresIn);
+        sessionStorage.setItem('refreshToken', refreshToken);
+    }
     navigate('/info');
-    setInfoActive(true);
+    setInfoActive(true); 
   }, []);
+
 
   useEffect(() => {
     if (nameTouched && (name === '' || name === null)) {
@@ -177,57 +197,100 @@ const InfoPage = () => {
           />
         </div>
       )}
+      {completeActive && (
+        <div className="Info--Modal--Wrapper">
+          <Modal
+            imageSource={errorIcon}
+            title="가입이 완료되었습니다."
+            buttons={completeButton}
+            isActive={completeActive}
+            setIsActive={setCompleteActive}
+          />
+        </div>
+      )}
       <div className={`Info--Container--${mode}`}>
         <div className="Info--InputForm">
           <div className="Info--InputForm--Text">Sign Up</div>
-          <img
-            src={preview ? preview : noProfile}
-            className="Info--InputImage"
-            alt="profileImage"
-          />
-          <input
-            type="file"
-            ref={imgRef}
-            onChange={onChangeImage}
-            style={{ display: 'none' }}
-          />
-          <img
-            src={imageEdit}
-            alt="imageEdit"
-            className="Info--EditImage"
-            onClick={() => setImageEditActive(!imageEditActive)}
-          />
-          <div className="Info--InputBox--label">이름을 작성해주세요.</div>
-          <div className="Info--InputBox">
-            <Input
-              type="normal"
-              placeHolder="이름을 입력하세요."
-              onChange={(e) => {
-                setName(e.target.value);
-                if (!nameTouched) setNameTouched(true);
-              }}
-              error={nameTouched && nameError}
-            />
-          </div>
-          <div className="Info--InputBox--label">백준 id를 입력해주세요.</div>
-          <div className="Info--InputBox">
-            <Input
-              type="normal"
-              placeHolder="백준 ID를 입력하세요."
-              onChange={(e) => {
-                setBojId(e.target.value);
-                if (!bojIdTouched) setBojIdTouched(true);
-              }}
-              error={bojIdTouched && bojIdError}
-            />
-          </div>
-          <Button
-            type="modal"
-            shape="angle"
-            text="설정 완료하기"
-            onClick={() => onSumbit(imageUrl, name, bojId, 0)}
-            disable={nameError || bojIdError}
-          />
+          {!signUpState ? (
+            <>
+              <img
+                src={preview ? preview : noProfile}
+                className="Info--InputImage"
+                alt="profileImage"
+              />
+              <input
+                type="file"
+                ref={imgRef}
+                onChange={onChangeImage}
+                style={{ display: 'none' }}
+              />
+              <img
+                src={imageEdit}
+                alt="imageEdit"
+                className="Info--EditImage"
+                onClick={() => setImageEditActive(!imageEditActive)}
+              />
+              <div className="Info--InputBox--label">이름을 작성해주세요.</div>
+              <div className="Info--InputBox">
+                <Input
+                  type="normal"
+                  placeHolder="이름을 입력하세요."
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    if (!nameTouched) setNameTouched(true);
+                  }}
+                  error={nameTouched && nameError}
+                />
+              </div>
+              <div className="Info--InputBox--label">
+                백준 id를 입력해주세요.
+              </div>
+              <div className="Info--InputBox">
+                <Input
+                  type="normal"
+                  placeHolder="백준 ID를 입력하세요."
+                  onChange={(e) => {
+                    setBojId(e.target.value);
+                    if (!bojIdTouched) setBojIdTouched(true);
+                  }}
+                  error={bojIdTouched && bojIdError}
+                />
+              </div>
+              <Button
+                type="modal"
+                shape="angle"
+                text="설정 완료하기"
+                onClick={() => onSumbit(imageUrl, name, bojId, 1)}
+                disable={nameError || bojIdError}
+              />
+            </>
+          ) : (
+            <>
+              <img
+                src={
+                  sessionStorage.getItem('imageUrl')
+                    ? sessionStorage.getItem('imageUrl')
+                    : noProfile
+                }
+                className="Info--Image"
+                alt="profileImage"
+              />
+              <div className="Info--Nickname">
+                {sessionStorage.getItem('nickname')}
+              </div>
+              <div className="Info--bojId">
+                {sessionStorage.getItem('bojId')}
+              </div>
+              <Button
+                type="modal"
+                shape="angle"
+                text="가입 완료하기"
+                onClick={() => {
+                  setCompleteActive(!completeActive);
+                }}
+              />
+            </>
+          )}
         </div>
       </div>
       <Footer type="default" />
