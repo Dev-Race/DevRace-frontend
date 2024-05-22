@@ -35,7 +35,7 @@ Apis.interceptors.response.use(
     ) {
       try {
         const response = await axios.post(
-          import.meta.env.VITE_ENDPOINT + '/api/v1/auth/access',
+          import.meta.env.VITE_ENDPOINT + '/reissue',
           refreshTokenReqDto,
         );
         if (response) {
