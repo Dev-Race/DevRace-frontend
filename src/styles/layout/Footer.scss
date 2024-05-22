@@ -10,16 +10,11 @@
   align-items: center;
 
   gap: 48px;
-  flex-shrink: 0;
 }
 
-.footer_container--none {
-  display: flex;
-  width: 1440px;
-  height: 68px;
-  padding: 24px 80px;
-
-  justify-content: center;
+.footer_container--default {
+  position: absolute;
+  bottom: 0;
 }
 
 .footer_text_container {

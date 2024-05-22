@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import TestPage from '../pages/TestPage';
+import LoginPage from '../pages/LoginPage';
 
 /**
  *
@@ -14,6 +15,10 @@ const Router = createBrowserRouter([
     path: '/test',
     element: <TestPage />,
   },
+  {
+    path: '/login',
+    element: <LoginPage />,
+  }
 ]);
 
 export default Router;

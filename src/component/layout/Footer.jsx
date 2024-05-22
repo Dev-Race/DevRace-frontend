@@ -13,7 +13,7 @@ const Footer = (props) => {
   const { mode } = useSelector((state) => state.toggle);
   if (type === 'default') {
     return (
-      <div className={`footer_container--${mode}`}>
+      <div className={`footer_container--${mode} footer_container--default`}>
         <div className="footer_text_container">
           Dev Race @ 2024. All rights reserved.
         </div>
