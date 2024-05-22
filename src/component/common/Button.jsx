@@ -19,16 +19,20 @@ import git_icon from '../../assets/icons/git_icon.svg';
 const Button = (props) => {
   const { type, shape, text, icon, onClick, disable } = props;
   const { mode } = useSelector((state) => state.toggle);
-
+  
   return (
-    <button
-      className={`btn--${type}--${mode}--${shape}`}
-      onClick={onClick}
-      disabled={disable ? disable : false}
-    >
-      {type === 'login' && <img src={icon === 'google' ? google_icon : git_icon} alt={text} />}
-      {text}
-    </button>
+    <>
+      <button
+        className={`btn--${type}--${mode}--${shape}`}
+        onClick={onClick}
+        disabled={disable ? disable : false}
+      >
+        {type === 'login' && (
+          <img src={icon === 'google' ? google_icon : git_icon} alt={text} />
+        )}
+        {text}
+      </button>
+    </>
   );
 };
 

@@ -38,7 +38,7 @@ const Header = (props) => {
     case 'login':
       return (
         <>
-          <div className={`header--${mode}--container`}>
+          <div className={`header--${mode}--container`} style={{background: 'none'}}>
             <img 
               src={mode === 'light' ? logo_icon_light : logo_icon_dark} 
               alt='logo'

@@ -65,36 +65,15 @@
   @include font-t3;
 }
 
-.btn--modal--light--angle:hover {
-  background: var(--gray-600, #5c5f65);
-  border: 2px solid var(--gray-600, #5c5f65);
-}
-
-.btn--small_modal--dark--angle,
-.btn--small_modal--light--angle {
-  display: flex;
-  width: 166px;
-  height: 48px;
-
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-
-  border-radius: 8px;
-
-  color: var(--Default-White, #fff);
-
-  @include font-t3;
-}
-
-.btn--small_modal--dark--angle {
+.btn--modal--dark--angle:disabled,
+.btn--modal--light--angle:disabled {
   border: 2px solid var(--gray-300, #bdbfc4);
   background: var(--gray-300, #bdbfc4);
 }
 
-.btn--small_modal--light--angle {
-  border: 2px solid var(--black, #000);
-  background: var(--black, #000);
+.btn--modal--light--angle:hover {
+  background: var(--gray-600, #5c5f65);
+  border: 2px solid var(--gray-600, #5c5f65);
 }
 
 .btn--large--dark--angle,
@@ -230,7 +209,7 @@
 .btn--normal1--dark--angle,
 .btn--normal2--dark--angle,
 .btn--normal3--dark--angle,
-.btn--modalBtn1--dark--angle
+.btn--modalBtn1--dark--angle,
 .btn--modalBtn2--dark--angle {
   display: flex;
   width: 160px;
