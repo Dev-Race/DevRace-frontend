@@ -25,7 +25,8 @@ Apis.interceptors.response.use(
   },
   async function (err) {
     const originalConfig = err.config;
-    let refreshTokenReqDto = {
+    let reissueRequestDto = {
+      accessToken: sessionStorage.getItem('accessToken'),
       refreshToken: sessionStorage.getItem('refreshToken'),
     };
     if (
@@ -35,8 +36,8 @@ Apis.interceptors.response.use(
     ) {
       try {
         const response = await axios.post(
-          import.meta.env.VITE_ENDPOINT + '/reissue',
-          refreshTokenReqDto,
+          process.env.REACT_APP_ENDPOINT + '/reissue',
+          reissueRequestDto,
         );
         if (response) {
           sessionStorage.setItem('accessToken', response.data.data.accessToken);
