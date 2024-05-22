@@ -10,6 +10,7 @@ import Footer from '../component/layout/Footer';
 import Button from '../component/common/Button';
 
 import imageEdit from '../assets/icons/setting.svg';
+import yes from '../assets/icons/yes_black.svg';
 import noProfile from '../assets/noProfile.png';
 import Input from '../component/common/Input';
 import { signUpApi } from '../apis/register';
@@ -30,6 +31,7 @@ const InfoPage = () => {
 
     const [nameError, setNameError] = useState(false);
     const [bojIdError, setBojIdError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const [nameTouched, setNameTouched] = useState(false);
     const [bojIdTouched, setBojIdTouched] = useState(false);
@@ -68,13 +70,21 @@ const InfoPage = () => {
     setBojIdTouched(true);
 
     if (name && bojId) {
-      let res = await signUpApi(file, nickname, bojId, isImageChange);
-      console.log(res)
-      
-      sessionStorage.setItem('bojId', res.data.userResponseDto.bojId);
-      sessionStorage.setItem('imageUrl', res.data.userResponseDto.imageUrl);
-      sessionStorage.setItem('nickname', res.data.userResponseDto.nickname);
-      setBojActive(true);
+      let res = await signUpApi(
+        file,
+        nickname,
+        bojId,
+        isImageChange,
+        setBojIdError,
+        setErrorMessage,
+      );
+      console.log(res);
+      if(res !== null) {
+        sessionStorage.setItem('bojId', res.userResponseDto.bojId);
+        sessionStorage.setItem('imageUrl', res.userResponseDto.imageUrl);
+        sessionStorage.setItem('nickname', res.userResponseDto.nickname);
+        setBojActive(true);
+      }
     }
   };
 
@@ -93,7 +103,7 @@ const InfoPage = () => {
     <Button
       type="modalBtn1"
       shape="angle"
-      text="기존 프로필로 변경"
+      text="기본 프로필로 변경"
       onClick={onClickDefaultImage}
     />,
     <Button
@@ -110,7 +120,7 @@ const InfoPage = () => {
       shape="angle"
       text="확인"
       onClick={() => {
-        window.open('https://solved.ac/', '_blank');
+        window.open('https://www.acmicpc.net/setting/solved.ac', '_blank');
         setBojActive(false);
         setSignUpState(true);
       }}
@@ -200,7 +210,7 @@ const InfoPage = () => {
       {completeActive && (
         <div className="Info--Modal--Wrapper">
           <Modal
-            imageSource={errorIcon}
+            imageSource={yes}
             title="가입이 완료되었습니다."
             buttons={completeButton}
             isActive={completeActive}
@@ -255,6 +265,9 @@ const InfoPage = () => {
                   }}
                   error={bojIdTouched && bojIdError}
                 />
+                {bojIdError && (
+                  <div className="Info--InputBox--error">{errorMessage}</div>
+                )}
               </div>
               <Button
                 type="modal"
