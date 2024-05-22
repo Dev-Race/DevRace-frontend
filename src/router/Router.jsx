@@ -1,7 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
 import TestPage from '../pages/TestPage';
+
 import LoginPage from '../pages/LoginPage';
+
 import InfoPage from '../pages/InfoPage';
+
+import MainPage from '../pages/MainPage';
+import CreateRoomPage from '../pages/CreateRoomPage';
 
 /**
  *
@@ -23,6 +28,14 @@ const Router = createBrowserRouter([
   {
     path: '/info',
     element: <InfoPage />,
+  },
+  {
+    path: '/main',
+    element: <MainPage />,
+  },
+  {
+    path: '/main/create',
+    element: <CreateRoomPage />,
   },
 ]);
 
