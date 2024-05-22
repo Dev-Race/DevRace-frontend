@@ -8,6 +8,9 @@ import InfoPage from '../pages/InfoPage';
 import MainPage from '../pages/MainPage';
 import CreateRoomPage from '../pages/CreateRoomPage';
 
+import ProfilePage from '../pages/ProfilePage';
+import MyCodePage from '../pages/MyCodePage';
+
 /**
  *
  * TODO
@@ -36,6 +39,14 @@ const Router = createBrowserRouter([
   {
     path: '/main/create',
     element: <CreateRoomPage />,
+  },
+  {
+    path: '/mycode',
+    element: <MyCodePage />,
+  },
+  {
+    path: '/profile',
+    element: <ProfilePage />,
   },
 ]);
 

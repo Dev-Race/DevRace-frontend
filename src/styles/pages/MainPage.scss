@@ -50,3 +50,12 @@
 .main_text_caption--dark {
   color: var(--dark-blue-100, #ddebf7);
 }
+
+.main_push_container {
+  display: flex;
+  width: 100%;
+
+  position: absolute;
+  justify-content: center;
+  bottom: 64px;
+}
