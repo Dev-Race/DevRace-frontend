@@ -4,9 +4,8 @@ import noProfile from '../../assets/noProfile.png';
 import '../../styles/common/Modal.scss';
 
 const Modal = (props) => {
-  const {imageSource, title, content, buttons, isActive, setIsActive} = props;
+  const {imageSource, title, content, buttons, isActive, setIsActive, preview} = props;
   
-  console.log(isActive)
   return (
     <>
       {isActive && (
@@ -21,7 +20,7 @@ const Modal = (props) => {
             <img
               src={
                 ((title === undefined) && (content === undefined))
-                  ? noProfile
+                  ? (preview ? preview : noProfile)
                   : imageSource
               }
               alt="imageSource"

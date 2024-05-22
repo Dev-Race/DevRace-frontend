@@ -6,20 +6,16 @@
   flex-direction: column;
 
   width: 380px;
-  height: auto;
 
+  background-color: #FFF;
   border-radius: 16px;
   box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.06);
-
-  z-index: 0;
 }
 
 .modal--close {
   position: absolute;
   top: 24px;
   right: 22px;
-
-  z-index: 1;
 }
 
 .modal--wrapper {
@@ -34,6 +30,7 @@
 .modal--Profile {
   width: 100px;
   height: 100px;
+  border-radius: 50px;
   margin-top : 48px;
   margin-bottom: 24px;
 }
@@ -58,6 +55,9 @@
 .modal--buttons {
   display: flex;
   flex-direction: row;
+
+  width: 100%;
+  justify-content: center;
   gap : 16px;
   margin-bottom: 24px;
 }
