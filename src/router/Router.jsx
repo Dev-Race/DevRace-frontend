@@ -1,7 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom';
 import TestPage from '../pages/TestPage';
+
 import LoginPage from '../pages/LoginPage';
+
 import InfoPage from '../pages/InfoPage';
+
+import MainPage from '../pages/MainPage';
+import CreateRoomPage from '../pages/CreateRoomPage';
+
+import ProfilePage from '../pages/ProfilePage';
+import MyCodePage from '../pages/MyCodePage';
 
 /**
  *
@@ -17,12 +25,28 @@ const Router = createBrowserRouter([
     element: <TestPage />,
   },
   {
+    path: '/',
+    element: <MainPage />,
+  },
+  {
     path: '/login',
     element: <LoginPage />,
   },
   {
     path: '/info',
     element: <InfoPage />,
+  },
+  {
+    path: '/main/create',
+    element: <CreateRoomPage />,
+  },
+  {
+    path: '/mycode',
+    element: <MyCodePage />,
+  },
+  {
+    path: '/profile',
+    element: <ProfilePage />,
   },
 ]);
 

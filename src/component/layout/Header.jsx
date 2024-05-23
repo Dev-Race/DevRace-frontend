@@ -10,9 +10,9 @@ import Toggle from '../common/Toggle';
 import '../../styles/layout/Header.scss';
 import { useSelector } from 'react-redux';
 import RankList from '../common/RankList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Dropdown from '../common/DropDown';
-
+import { useNavigate } from 'react-router-dom';
 
 /**
  * headerType : login, main, create, wait, solve, review, mycode, default
@@ -21,6 +21,7 @@ const Header = (props) => {
   const { headerType, text } = props;
   const { mode } = useSelector((state) => state.toggle);
   const [selectedOption, setSelectedOption] = useState('');
+  const navigate = useNavigate();
 
   const rankings = [
     { rank: 1, name: 'qwer' },
@@ -34,25 +35,42 @@ const Header = (props) => {
     setSelectedOption(select);
   };
 
+  const handleLogIn = () => {
+    navigate('/login');
+  };
+
+  const handleLogOut = () => {
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('imageUrl');
+    sessionStorage.removeItem('nickname');
+    sessionStorage.removeItem('bojId');
+    navigate('/login');
+  };
+
   switch (headerType) {
     case 'login':
       return (
         <>
-          <div className={`header--${mode}--container`} style={{background: 'none'}}>
-            <img 
-              src={mode === 'light' ? logo_icon_light : logo_icon_dark} 
-              alt='logo'
-              className='header--logo'
-              />
+          <div
+            className={`header--${mode}--container`}
+            style={{ background: 'none' }}
+          >
             <img
-              src={mode === 'light' ? logo_light : logo_dark} 
-              alt='logo_text'
-              className='header--logo--text'
-              />
+              src={mode === 'light' ? logo_icon_light : logo_icon_dark}
+              alt="logo"
+              className="header--logo"
+            />
+            <img
+              src={mode === 'light' ? logo_light : logo_dark}
+              alt="logo_text"
+              className="header--logo--text"
+            />
           </div>
         </>
       );
-    case 'main': case 'create': case 'wait':
+    case 'main':
+    case 'create':
+    case 'wait':
       return (
         <>
           <div
@@ -74,19 +92,35 @@ const Header = (props) => {
             />
             <div className={`header--${mode}--btn--box`}>
               <Toggle />
-              {headerType === 'main' && <button className={`header--${mode}--btn`}>내 코드</button>}
-              <button className={`header--${mode}--btn`}>로그인</button>
-              { headerType === 'wait' && <button className={`header--${mode}--btn`}>초대링크</button>}
+              {headerType === 'main' && (
+                <button
+                  className={`header--${mode}--btn`}
+                  onClick={() => navigate('/mycode')}
+                >
+                  내 코드
+                </button>
+              )}
+              <button
+                className={`header--${mode}--btn`}
+                onClick={text === '로그아웃' ? handleLogOut : handleLogIn}
+              >
+                {text}
+              </button>
+              {headerType === 'wait' && (
+                <button className={`header--${mode}--btn`}>초대링크</button>
+              )}
               <img
                 src={mode === 'light' ? people_light : people_dark}
                 alt="logo_text"
                 className="header--logo--text"
+                onClick={() => navigate('/profile')}
               />
             </div>
           </div>
         </>
       );
-    case 'solve': case 'review':
+    case 'solve':
+    case 'review':
       return (
         <>
           <div
@@ -106,7 +140,9 @@ const Header = (props) => {
               {headerType === 'solve' && (
                 <button className={`header--${mode}--btn`}>초대링크</button>
               )}
-              {headerType === 'solve' && (<div className={`header--${mode}--btn`}>여기에는 언어</div>)}
+              {headerType === 'solve' && (
+                <div className={`header--${mode}--btn`}>여기에는 언어</div>
+              )}
               <button className={`header--${mode}--btn`}>나가기</button>
             </div>
           </div>
@@ -147,4 +183,3 @@ const Header = (props) => {
 };
 
 export default Header;
-

@@ -13,7 +13,7 @@
 }
 
 .header--light--container {
-  background-color: #FFF;
+  background-color: #fff;
 }
 
 .header--light--container--main {
@@ -25,12 +25,11 @@
 }
 
 .header--dark--container--main {
-  background-color: #000;
-  // background-color: none;
+  background-color: none;
 }
 
 .header--logo {
-  margin-left : 80px;
+  margin-left: 80px;
   margin-right: 8px;
 }
 
@@ -43,8 +42,8 @@
   display: flex;
   flex-direction: row;
 
-  gap : 64px;
-  margin-right : 80px;
+  gap: 64px;
+  margin-right: 80px;
 
   align-items: center;
   justify-content: center;
@@ -52,38 +51,38 @@
 
 .header--light--btn,
 .header--dark--btn {
-  border : none;
+  border: none;
   background: none;
 
-  font-family: "Spoqa Han Sans Neo";
+  font-family: 'Spoqa Han Sans Neo';
   font-size: 16px;
   font-weight: 700;
-  line-height: 22px; 
+  line-height: 22px;
 }
 
 .header--light--btn {
-  color : #000
+  color: #000;
 }
 
 .header--dark--btn {
-  color : #FFF
+  color: #fff;
 }
 
 .header--light--problemNum,
 .header--dark--problemNum {
-  margin-left : 80px;
-  margin-right : auto;
+  margin-left: 80px;
+  margin-right: auto;
 
-  font-family: "Spoqa Han Sans Neo";
+  font-family: 'Spoqa Han Sans Neo';
   font-size: 24px;
   font-weight: 700;
-  line-height: 22px; 
+  line-height: 22px;
 }
 
 .header--light--problemNum {
-  color : #000;
+  color: #000;
 }
 
 .header--dark--problemNum {
-  color: #FFF
+  color: #fff;
 }
