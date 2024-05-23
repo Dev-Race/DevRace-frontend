@@ -14,7 +14,7 @@ import yes from '../assets/icons/yes_black.svg';
 import noProfile from '../assets/noProfile.png';
 import Input from '../component/common/Input';
 import { signUpApi } from '../apis/register';
-import { member } from '../apis/member';
+import { memberInfo } from '../apis/member';
 
 const InfoPage = () => {
     const [infoActive, setInfoActive] = useState(false);
@@ -160,7 +160,7 @@ const InfoPage = () => {
         sessionStorage.setItem('expirationTime', accessTokenExpiresIn);
         sessionStorage.setItem('refreshToken', refreshToken);
     }
-    member();
+    memberInfo();
 
     navigate('/info');
     setInfoActive(true); 

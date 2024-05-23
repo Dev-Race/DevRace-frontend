@@ -1,6 +1,6 @@
 import Apis from './Api';
 
-export const member = async () => {
+export const memberInfo = async () => {
   let res;
 
   await Apis.get('/users')
