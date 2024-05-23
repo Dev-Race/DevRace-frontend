@@ -14,6 +14,7 @@ import yes from '../assets/icons/yes_black.svg';
 import noProfile from '../assets/noProfile.png';
 import Input from '../component/common/Input';
 import { signUpApi } from '../apis/register';
+import { member } from '../apis/member';
 
 const InfoPage = () => {
     const [infoActive, setInfoActive] = useState(false);
@@ -24,6 +25,7 @@ const InfoPage = () => {
 
     const [imageUrl, setImageUrl] = useState(null);
     const [preview, setPreview] = useState(null);
+    const [isChangeImage, setIsChangeImage] = useState(0);
     const imgRef = useRef();
 
     const [name, setName] = useState('');
@@ -52,7 +54,7 @@ const InfoPage = () => {
       // 이미지를 미리보기로 설정
       setPreview(reader.result);
     };
-
+    setIsChangeImage(1);
     reader.readAsDataURL(file);
   };
 
@@ -61,11 +63,12 @@ const InfoPage = () => {
   };
 
   const onClickDefaultImage = () => {
+    setIsChangeImage(1);
     setImageUrl(null);
     setPreview(null);
   };
 
-  const onSumbit = async (file, nickname, bojId, isImageChange) => {
+  const onSumbit = async (file, nickname, bojId, isChangeImage) => {
     setNameTouched(true);
     setBojIdTouched(true);
 
@@ -74,18 +77,26 @@ const InfoPage = () => {
         file,
         nickname,
         bojId,
-        isImageChange,
+        isChangeImage,
         setBojIdError,
         setErrorMessage,
       );
-      console.log(res);
-      if(res !== null) {
+      if (res !== null) {
         sessionStorage.setItem('bojId', res.userResponseDto.bojId);
         sessionStorage.setItem('imageUrl', res.userResponseDto.imageUrl);
         sessionStorage.setItem('nickname', res.userResponseDto.nickname);
         setBojActive(true);
       }
     }
+  };
+
+  const convertURLtoFile = async (url) => {
+    const response = await fetch(url);
+    const data = await response.blob();
+    const ext = url.split('.').pop(); 
+    const filename = url.split('/').pop();
+    const metadata = { type: `image/${ext}` };
+    return new File([data], filename, metadata);
   };
 
   const infoButton = [
@@ -149,10 +160,25 @@ const InfoPage = () => {
         sessionStorage.setItem('expirationTime', accessTokenExpiresIn);
         sessionStorage.setItem('refreshToken', refreshToken);
     }
+    member();
+
     navigate('/info');
     setInfoActive(true); 
   }, []);
 
+  useEffect(() => {
+    const image = sessionStorage.getItem('imageUrl');
+    const nickname = sessionStorage.getItem('nickname');
+
+    if (image !== null) {
+      setPreview(image);
+      setImageUrl(convertURLtoFile(image));
+    }
+
+    if (nickname !== null) {
+      setName(nickname);
+    }
+  }, [infoActive])
 
   useEffect(() => {
     if (nameTouched && (name === '' || name === null)) {
@@ -250,6 +276,7 @@ const InfoPage = () => {
                     if (!nameTouched) setNameTouched(true);
                   }}
                   error={nameTouched && nameError}
+                  value={name}
                 />
               </div>
               <div className="Info--InputBox--label">
@@ -273,7 +300,7 @@ const InfoPage = () => {
                 type="modal"
                 shape="angle"
                 text="설정 완료하기"
-                onClick={() => onSumbit(imageUrl, name, bojId, 1)}
+                onClick={() => onSumbit(imageUrl, name, bojId, isChangeImage)}
                 disable={nameError || bojIdError}
               />
             </>
