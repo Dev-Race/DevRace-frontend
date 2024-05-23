@@ -53,7 +53,10 @@ Apis.interceptors.response.use(
         redirectToLogin(); // 토큰 재발급 실패 시 로그인 화면으로 이동
       }
       return Promise.reject(err);
-    }
+    } else if (err.response.data.status === 401){
+      sessionStorage.clear()
+      redirectToLogin();
+    } 
     return Promise.reject(err);
   },
 );

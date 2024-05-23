@@ -1,16 +1,10 @@
-import Apis from '../../apis/Api';
+import Apis from './Api';
 
-export const member = async (accessToken) => {
+export const member = async () => {
   let res;
 
-  await Apis.get('/users', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  })
+  await Apis.get('/users')
     .then((response) => {
-      console.log(response);
-      console.log(response.data.data);
       res = response.data.data;
 
       sessionStorage.setItem('imageUrl', response.data.data.imageUrl);

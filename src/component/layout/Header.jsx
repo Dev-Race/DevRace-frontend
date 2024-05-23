@@ -35,18 +35,6 @@ const Header = (props) => {
     setSelectedOption(select);
   };
 
-  const handleLogIn = () => {
-    navigate('/login');
-  };
-
-  const handleLogOut = () => {
-    sessionStorage.removeItem('accessToken');
-    sessionStorage.removeItem('imageUrl');
-    sessionStorage.removeItem('nickname');
-    sessionStorage.removeItem('bojId');
-    navigate('/login');
-  };
-
   switch (headerType) {
     case 'login':
       return (
@@ -102,7 +90,7 @@ const Header = (props) => {
               )}
               <button
                 className={`header--${mode}--btn`}
-                onClick={text === '로그아웃' ? handleLogOut : handleLogIn}
+                onClick={text === '로그아웃' ?  () => {navigate('/'); sessionStorage.clear()}: () => navigate('/login')}
               >
                 {text}
               </button>
