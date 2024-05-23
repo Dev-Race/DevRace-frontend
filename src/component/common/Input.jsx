@@ -9,7 +9,7 @@ import sendIcon from '../../assets/icons/sendIcon.svg';
  */
 
 const Input = (props) => {
-  const { type, placeHolder, onChange, error, disable, onClick } = props;
+  const { type, placeHolder, onChange, error, disable, onClick, value } = props;
   const { mode } = useSelector((state) => state.toggle);
 
   return (
@@ -19,6 +19,7 @@ const Input = (props) => {
         placeholder={placeHolder}
         onChange={onChange}
         disabled={disable}
+        value={value}
       />
       {type === 'chat' ? <img src={sendIcon} alt='sendIcon' onClick={onClick}/> : <></>}
     </div>

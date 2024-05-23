@@ -10,7 +10,6 @@ export const signUpApi = async (
 ) => {
   let res;
   const formData = new FormData();
-  console.log(file);
 
   formData.append('imageFile', file || null);
   formData.append(
@@ -22,9 +21,8 @@ export const signUpApi = async (
     }),
   );
 
-  await Apis.post(`/signup`, formData)
+  await Apis.put(`/signup`, formData)
     .then((response) => {
-      console.log(response.data.data)
       res = response.data.data;
     })
     .catch((err) => {
