@@ -31,17 +31,20 @@ const MainPage = () => {
       sessionStorage.setItem('accessToken', accessToken);
       sessionStorage.setItem('expirationTime', accessTokenExpiresIn);
       sessionStorage.setItem('refreshToken', refreshToken);
-      getInfo();
     }
     navigate('/');
   }, []);
 
-  const getInfo = async () => {
-    const res = await member();
-    if (res) {
+  useEffect(() => {
+    const accessToken = sessionStorage.getItem('accessToken');
+    const accessTokenExpiresIn = sessionStorage.getItem('expirationTime');
+    const refreshToken = sessionStorage.getItem('refreshToken');
+
+    if (accessToken && accessTokenExpiresIn && refreshToken) {
+      member();
       setIsLoggedIn(true);
     }
-  };
+  },[])
 
   useEffect(() => {
     if (isMounted && mode !== isChangedMode) {
