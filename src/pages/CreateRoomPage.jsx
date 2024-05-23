@@ -17,8 +17,12 @@ const CreateRoomPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!sessionStorage.getItem('accessToken')) {
-      navigate('/login');
+    const accessToken = sessionStorage.getItem('accessToken');
+    const accessTokenExpiresIn = sessionStorage.getItem('accessTokenExpiresIn');
+    const refreshToken = sessionStorage.getItem('refreshToken');
+    if (!accessToken || !accessTokenExpiresIn || !refreshToken) {
+      sessionStorage.clear();
+      navigate('/');
     } else return;
   }, []);
 
