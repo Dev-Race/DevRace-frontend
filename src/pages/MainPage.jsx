@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Push from '../component/common/Push';
 
-import { member } from '../reducers/member/member';
+import { member } from '../apis/member';
 
 const MainPage = () => {
   const { mode } = useSelector((state) => state.toggle);
@@ -20,18 +20,24 @@ const MainPage = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const accessToken = queryParams.get('accessToken');
-    if (accessToken) {
-      sessionStorage.setItem('accessToken', accessToken);
-      getInfo(accessToken);
-    }
-  }, [location]);
+    const accessToken = searchParams.get('accessToken');
+    const accessTokenExpiresIn = searchParams.get('accessTokenExpiresIn');
+    const refreshToken = searchParams.get('refreshToken');
 
-  const getInfo = async (token) => {
-    const res = await member(token);
+    if (accessToken && accessTokenExpiresIn && refreshToken) {
+      sessionStorage.setItem('accessToken', accessToken);
+      sessionStorage.setItem('expirationTime', accessTokenExpiresIn);
+      sessionStorage.setItem('refreshToken', refreshToken);
+      getInfo();
+    }
+    navigate('/');
+  }, []);
+
+  const getInfo = async () => {
+    const res = await member();
     if (res) {
       setIsLoggedIn(true);
     }
