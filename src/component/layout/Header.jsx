@@ -10,7 +10,7 @@ import Toggle from '../common/Toggle';
 import '../../styles/layout/Header.scss';
 import { useSelector } from 'react-redux';
 import RankList from '../common/RankList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Dropdown from '../common/DropDown';
 import { useNavigate } from 'react-router-dom';
 
@@ -33,6 +33,16 @@ const Header = (props) => {
 
   const handleSelect = (select) => {
     setSelectedOption(select);
+  };
+
+  const handleLogIn = () => {
+    navigate('/login');
+  };
+
+  const handleLogOut = () => {
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('myInfo');
+    navigate('/login');
   };
 
   switch (headerType) {
@@ -90,9 +100,9 @@ const Header = (props) => {
               )}
               <button
                 className={`header--${mode}--btn`}
-                onClick={() => navigate('/login')}
+                onClick={text === '로그아웃' ? handleLogOut : handleLogIn}
               >
-                로그아웃
+                {text}
               </button>
               {headerType === 'wait' && (
                 <button className={`header--${mode}--btn`}>초대링크</button>
