@@ -41,7 +41,9 @@ const Header = (props) => {
 
   const handleLogOut = () => {
     sessionStorage.removeItem('accessToken');
-    sessionStorage.removeItem('myInfo');
+    sessionStorage.removeItem('imageUrl');
+    sessionStorage.removeItem('nickname');
+    sessionStorage.removeItem('bojId');
     navigate('/login');
   };
 

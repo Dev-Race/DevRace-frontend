@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Push from '../component/common/Push';
 
-import Apis from '../apis/Api';
+import { member } from '../reducers/member/member';
 
 const MainPage = () => {
   const { mode } = useSelector((state) => state.toggle);
@@ -19,48 +19,23 @@ const MainPage = () => {
 
   const navigate = useNavigate();
 
-  const accessToken = sessionStorage.getItem('accessToken');
-
   const location = useLocation();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const accessToken = queryParams.get('accessToken');
-    console.log(accessToken);
-    sessionStorage.setItem('accessToken', accessToken);
+    if (accessToken) {
+      sessionStorage.setItem('accessToken', accessToken);
+      getInfo(accessToken);
+    }
   }, [location]);
 
-  const getUserInfo = async () => {
-    try {
-      const response = await Apis.get('/users', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      console.log(response);
-      console.log(response.data.data);
-      const { imageUrl, nickname, bojId } = response.data.data;
-
-      const myInfo = {
-        imageUrl,
-        nickname,
-        bojId,
-      };
-
-      sessionStorage.setItem('myInfo', JSON.stringify(myInfo));
-      console.log(myInfo);
+  const getInfo = async (token) => {
+    const res = await member(token);
+    if (res) {
       setIsLoggedIn(true);
-    } catch (error) {
-      console.error(error);
-      setIsLoggedIn(false);
     }
   };
-
-  useEffect(() => {
-    setIsMounted(true);
-    getUserInfo();
-  }, []);
 
   useEffect(() => {
     if (isMounted && mode !== isChangedMode) {
@@ -68,6 +43,10 @@ const MainPage = () => {
       setIsChangedMode(mode);
     }
   }, [mode]);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <div className={`main_container--${mode}`}>
