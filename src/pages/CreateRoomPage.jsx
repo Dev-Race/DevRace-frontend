@@ -7,6 +7,7 @@ import plus_icon from '../assets/icons/plus_icon.svg';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createProblem } from '../apis/createProblem';
 
 const CreateRoomPage = () => {
   const { mode } = useSelector((state) => state.toggle);
@@ -30,14 +31,18 @@ const CreateRoomPage = () => {
     setInputText(e.target.value);
   };
 
-  const handleClicked = () => {
-    console.log(inputText);
+  const onSubmit = async (input) => {
+
     if (inputText === '' || inputText === null) {
       setInputError(true);
+      return;
     } else {
       setInputError(false);
     }
-  };
+
+    let res = await createProblem(input);
+    console.log(res)
+  }
 
   return (
     <div>
@@ -64,7 +69,8 @@ const CreateRoomPage = () => {
               type="modal"
               shape="angle"
               text="확인"
-              onClick={handleClicked}
+              disable={inputText === '' || inputText === null ? true : false}
+              onClick={() => onSubmit(inputText)}
             />
           </div>
         </div>

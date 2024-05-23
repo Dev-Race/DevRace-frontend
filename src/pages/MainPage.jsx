@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Push from '../component/common/Push';
 
-import { member } from '../apis/member';
+import { memberInfo } from '../apis/member';
 
 const MainPage = () => {
   const { mode } = useSelector((state) => state.toggle);
@@ -41,7 +41,7 @@ const MainPage = () => {
     const refreshToken = sessionStorage.getItem('refreshToken');
 
     if (accessToken && accessTokenExpiresIn && refreshToken) {
-      member();
+      memberInfo();
       setIsLoggedIn(true);
     }
   },[])
