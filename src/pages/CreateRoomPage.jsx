@@ -18,9 +18,9 @@ const CreateRoomPage = () => {
 
   useEffect(() => {
     const accessToken = sessionStorage.getItem('accessToken');
-    const accessTokenExpiresIn = sessionStorage.getItem('accessTokenExpiresIn');
+    const expirationTime = sessionStorage.getItem('expirationTime');
     const refreshToken = sessionStorage.getItem('refreshToken');
-    if (!accessToken || !accessTokenExpiresIn || !refreshToken) {
+    if (!accessToken || !expirationTime || !refreshToken) {
       sessionStorage.clear();
       navigate('/');
     } else return;
