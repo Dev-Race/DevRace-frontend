@@ -59,7 +59,7 @@ const MainPage = () => {
 
   return (
     <div className={`main_container--${mode}`}>
-      <Header headerType="main" text={isLoggedIn ? '로그아웃' : '로그인'} />
+      <Header headerType="main" text={isLoggedIn ? '로그아웃' : '로그인'} setIsLoggedIn={setIsLoggedIn}/>
       <div className="main_content_container">
         <span className={`main_text_caption--${mode}`}>
           DEV RACE를 이용해서

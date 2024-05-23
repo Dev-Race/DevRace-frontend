@@ -10,7 +10,7 @@ import Toggle from '../common/Toggle';
 import '../../styles/layout/Header.scss';
 import { useSelector } from 'react-redux';
 import RankList from '../common/RankList';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Dropdown from '../common/DropDown';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
  * headerType : login, main, create, wait, solve, review, mycode, default
  */
 const Header = (props) => {
-  const { headerType, text } = props;
+  const { headerType, text, setIsLoggedIn } = props;
   const { mode } = useSelector((state) => state.toggle);
   const [selectedOption, setSelectedOption] = useState('');
   const navigate = useNavigate();
@@ -90,7 +90,7 @@ const Header = (props) => {
               )}
               <button
                 className={`header--${mode}--btn`}
-                onClick={text === '로그아웃' ?  () => {navigate('/'); sessionStorage.clear()}: () => navigate('/login')}
+                onClick={text === '로그아웃' ?  () => {sessionStorage.clear();setIsLoggedIn(false); navigate('/'); } : () => navigate('/login')}
               >
                 {text}
               </button>
