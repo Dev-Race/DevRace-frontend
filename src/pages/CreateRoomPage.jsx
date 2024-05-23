@@ -5,13 +5,43 @@ import Button from '../component/common/Button';
 import '../styles/pages/CreateRoomPage.scss';
 import plus_icon from '../assets/icons/plus_icon.svg';
 import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CreateRoomPage = () => {
   const { mode } = useSelector((state) => state.toggle);
+  const [inputText, setInputText] = useState('');
+  const [inputError, setInputError] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!sessionStorage.getItem('accessToken')) {
+      navigate('/login');
+    } else return;
+  }, []);
+
+  const handleInputChange = (e) => {
+    setInputText(e.target.value);
+  };
+
+  const handleClicked = () => {
+    console.log(inputText);
+    if (inputText === '' || inputText === null) {
+      setInputError(true);
+    } else {
+      setInputError(false);
+    }
+  };
 
   return (
     <div>
-      <Header headerType="create" text={'로그아웃'} />
+      <Header
+        headerType="create"
+        text={'로그아웃'}
+        setIsLoggedIn={setIsLoggedIn}
+      />
       <div className={`Create--Container--${mode}`}>
         <div className="Create--InputForm">
           <img src={plus_icon} alt="Plus Icon" className="Create--Icon" />
@@ -20,8 +50,18 @@ const CreateRoomPage = () => {
             문제번호를 입력하여 방을 생성하세요!
           </span>
           <div className="Create--InputForm--Box">
-            <Input type="normal" placeHolder="문제 번호를 입력하세요 예)1234" />
-            <Button type="modal" shape="angle" text="확인" />
+            <Input
+              type="normal"
+              placeHolder="문제 번호를 입력하세요 예)1234"
+              onChange={handleInputChange}
+              error={inputError}
+            />
+            <Button
+              type="modal"
+              shape="angle"
+              text="확인"
+              onClick={handleClicked}
+            />
           </div>
         </div>
       </div>
