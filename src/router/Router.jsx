@@ -37,7 +37,7 @@ const Router = createBrowserRouter([
     element: <InfoPage />,
   },
   {
-    path: '/main/create',
+    path: '/create',
     element: <CreateRoomPage />,
   },
   {

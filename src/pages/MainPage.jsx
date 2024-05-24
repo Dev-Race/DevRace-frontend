@@ -72,7 +72,7 @@ const MainPage = () => {
           text="시작하기"
           mode={mode}
           shape="non-angle"
-          onClick={() => navigate('/main/create')}
+          onClick={isLoggedIn ? () => navigate('/create') : () => navigate('/login')}
         />
       </div>
       <div className="main_push_container">
