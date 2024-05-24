@@ -10,6 +10,7 @@ export const createProblem = async (number) => {
     })
     .catch((error) => {
       console.error(error);
+      res = error.response.data.status
     });
   return res;
 }

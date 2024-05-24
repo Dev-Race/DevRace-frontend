@@ -10,6 +10,7 @@ export const memberInfo = async () => {
       sessionStorage.setItem('imageUrl', response.data.data.imageUrl);
       sessionStorage.setItem('nickname', response.data.data.nickname);
       sessionStorage.setItem('bojId', response.data.data.bojId);
+      sessionStorage.setItem('userId', response.data.data.userId);
     })
     .catch((error) => {
       console.error(error);

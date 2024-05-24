@@ -52,7 +52,6 @@
 .Create--InputForm--Box {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   margin-top: 24px;
 }
 
@@ -79,4 +78,14 @@
   @include font-t4;
   color: var(--gray-700, #45474c);
   text-align: center;
+}
+
+.Create--ErrorMessage {
+  color: red;
+  font-family: 'Spoqa Han Sans Neo';
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+
+  margin-bottom: 8px;;
 }

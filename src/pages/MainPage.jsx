@@ -43,7 +43,12 @@ const MainPage = () => {
     if (accessToken && accessTokenExpiresIn && refreshToken) {
       memberInfo();
       setIsLoggedIn(true);
+      const redirectUrl = localStorage.getItem('redirectUrl');
+      if(redirectUrl) {
+        navigate(redirectUrl)
+      }
     }
+  
   },[])
 
   useEffect(() => {

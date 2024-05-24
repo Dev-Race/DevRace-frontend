@@ -85,6 +85,7 @@ const InfoPage = () => {
         sessionStorage.setItem('bojId', res.userResponseDto.bojId);
         sessionStorage.setItem('imageUrl', res.userResponseDto.imageUrl);
         sessionStorage.setItem('nickname', res.userResponseDto.nickname);
+        sessionStorage.setItem('userId', res.userResponseDto.userId);
         setBojActive(true);
       }
     }
