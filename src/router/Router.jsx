@@ -10,6 +10,7 @@ import CreateRoomPage from '../pages/CreateRoomPage';
 
 import ProfilePage from '../pages/ProfilePage';
 import MyCodePage from '../pages/MyCodePage';
+import WaitPage from '../pages/WaitPage';
 
 /**
  *
@@ -48,6 +49,10 @@ const Router = createBrowserRouter([
     path: '/profile',
     element: <ProfilePage />,
   },
+  {
+    path: '/wait/:roomId',
+    element: <WaitPage />
+  }
 ]);
 
 export default Router;
