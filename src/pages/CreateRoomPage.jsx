@@ -14,6 +14,7 @@ const CreateRoomPage = () => {
   const [inputText, setInputText] = useState('');
   const [inputError, setInputError] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const navigate = useNavigate();
 
@@ -21,10 +22,12 @@ const CreateRoomPage = () => {
     const accessToken = sessionStorage.getItem('accessToken');
     const expirationTime = sessionStorage.getItem('expirationTime');
     const refreshToken = sessionStorage.getItem('refreshToken');
+    
     if (!accessToken || !expirationTime || !refreshToken) {
       sessionStorage.clear();
       navigate('/');
-    } else return;
+    } 
+    setIsLoggedIn(true);
   }, []);
 
   const handleInputChange = (e) => {
@@ -42,13 +45,21 @@ const CreateRoomPage = () => {
 
     let res = await createProblem(input);
     console.log(res)
+    if(res === 404) {
+      setInputError(true);
+      setErrorMessage("존재하지 않는 백준 문제입니다.")
+      return;
+    }
+    navigate('/wait/' + res.roomId, {
+      state: { isManager: true },
+    });
   }
 
   return (
-    <div>
+    <>
       <Header
         headerType="create"
-        text={'로그아웃'}
+        text={isLoggedIn ? '로그아웃' : '로그인'}
         setIsLoggedIn={setIsLoggedIn}
       />
       <div className={`Create--Container--${mode}`}>
@@ -65,6 +76,7 @@ const CreateRoomPage = () => {
               onChange={handleInputChange}
               error={inputError}
             />
+            <div className='Create--ErrorMessage'>{errorMessage}</div>
             <Button
               type="modal"
               shape="angle"
@@ -76,7 +88,7 @@ const CreateRoomPage = () => {
         </div>
       </div>
       <Footer type="default" />
-    </div>
+    </>
   );
 };
 

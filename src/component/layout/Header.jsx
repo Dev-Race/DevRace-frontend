@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
  * headerType : login, main, create, wait, solve, review, mycode, default
  */
 const Header = (props) => {
-  const { headerType, text, setIsLoggedIn } = props;
+  const { headerType, text, setIsLoggedIn, leaveWaitRoom, invite } = props;
   const { mode } = useSelector((state) => state.toggle);
   const [selectedOption, setSelectedOption] = useState('');
   const navigate = useNavigate();
@@ -88,14 +88,36 @@ const Header = (props) => {
                   내 코드
                 </button>
               )}
+              {headerType === 'wait' && (
+                <button
+                  className={`header--${mode}--btn`}
+                  style={{ color: '#66F' }}
+                  onClick={invite}
+                >
+                  초대링크
+                </button>
+              )}
               <button
                 className={`header--${mode}--btn`}
-                onClick={text === '로그아웃' ?  () => {sessionStorage.clear();setIsLoggedIn(false); navigate('/'); } : () => navigate('/login')}
+                onClick={
+                  text === '로그아웃'
+                    ? () => {
+                        sessionStorage.clear();
+                        setIsLoggedIn(false);
+                        navigate('/');
+                      }
+                    : () => navigate('/login')
+                }
               >
                 {text}
               </button>
               {headerType === 'wait' && (
-                <button className={`header--${mode}--btn`}>초대링크</button>
+                <button
+                  className={`header--${mode}--btn`}
+                  onClick={()=>leaveWaitRoom()}
+                >
+                  나가기
+                </button>
               )}
               <img
                 src={mode === 'light' ? people_light : people_dark}

@@ -10,6 +10,9 @@ import CreateRoomPage from '../pages/CreateRoomPage';
 
 import ProfilePage from '../pages/ProfilePage';
 import MyCodePage from '../pages/MyCodePage';
+import WaitPage from '../pages/WaitPage';
+import SolvePage from '../pages/SolvePage';
+import RedirectPage from '../pages/RedirectPage';
 
 /**
  *
@@ -37,7 +40,7 @@ const Router = createBrowserRouter([
     element: <InfoPage />,
   },
   {
-    path: '/main/create',
+    path: '/create',
     element: <CreateRoomPage />,
   },
   {
@@ -47,6 +50,18 @@ const Router = createBrowserRouter([
   {
     path: '/profile',
     element: <ProfilePage />,
+  },
+  {
+    path: '/wait/:roomId',
+    element: <WaitPage />,
+  },
+  {
+    path: '/solve/:roomId',
+    element: <SolvePage />,
+  },
+  {
+    path: '/redirect/:link',
+    element: <RedirectPage />,
   },
 ]);
 

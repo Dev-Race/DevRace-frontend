@@ -43,7 +43,13 @@ const MainPage = () => {
     if (accessToken && accessTokenExpiresIn && refreshToken) {
       memberInfo();
       setIsLoggedIn(true);
+      const redirectUrl = localStorage.getItem('redirectUrl');
+      if(redirectUrl) {
+        navigate(redirectUrl)
+        localStorage.removeItem('redirectUrl');
+      }
     }
+  
   },[])
 
   useEffect(() => {
@@ -72,7 +78,7 @@ const MainPage = () => {
           text="시작하기"
           mode={mode}
           shape="non-angle"
-          onClick={() => navigate('/main/create')}
+          onClick={isLoggedIn ? (() => navigate('/create')) : (() => navigate('/login'))}
         />
       </div>
       <div className="main_push_container">
