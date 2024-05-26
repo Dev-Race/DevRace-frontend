@@ -17,10 +17,10 @@
     background: var(--black, #000);
 }
 
-.Wait--Push {
+.Wait--Push--Invite {
     position: absolute;
     top : 78px;
-    right : 50px;
+    right : 160px;
 }
 
 .Wait--Box {
@@ -62,9 +62,55 @@
     flex-direction: column;
 
     width: 216px;
-    min-height: 240px;
+    min-height: 48px;
+    max-height: 240px;
     margin-bottom: 24px;
 
     border-radius: 8px;
     background: var(--light-cool-gray, #F8F8FF);
+
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.Wait--List::-webkit-scrollbar {
+    display: none;
+}
+
+.Wait--List--item {
+    display: flex;
+    flex-direction: row;
+
+    width: 200px;
+    height: 48px;
+    align-items: center;
+}
+
+.Wait--List--item--img {
+    display: flex;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    margin-left : 8px;
+    margin-right : 4px;
+
+    justify-content: center;
+}
+
+.Wait--List--Item--order,
+.Wait--List--Item--name {
+    display: flex;
+    
+    color: var(--black, #000);
+    font-family: "Spoqa Han Sans Neo";
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+
+    justify-content: center;
+}
+
+.Wait--List--Item--order {
+    margin-left : 24px;
 }

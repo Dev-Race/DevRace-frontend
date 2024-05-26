@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
  * headerType : login, main, create, wait, solve, review, mycode, default
  */
 const Header = (props) => {
-  const { headerType, text, setIsLoggedIn } = props;
+  const { headerType, text, setIsLoggedIn, leaveWaitRoom } = props;
   const { mode } = useSelector((state) => state.toggle);
   const [selectedOption, setSelectedOption] = useState('');
   const navigate = useNavigate();
@@ -119,6 +119,14 @@ const Header = (props) => {
               >
                 {text}
               </button>
+              {headerType === 'wait' && (
+                <button
+                  className={`header--${mode}--btn`}
+                  onClick={()=>leaveWaitRoom()}
+                >
+                  나가기
+                </button>
+              )}
               <img
                 src={mode === 'light' ? people_light : people_dark}
                 alt="logo_text"

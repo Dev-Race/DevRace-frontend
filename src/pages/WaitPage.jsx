@@ -6,9 +6,10 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Push from '../component/common/Push';
 import waiting from '../assets/icons/wating_icon.svg';
+import roomManager from '../assets/icons/roomManager.svg';
 import Button from '../component/common/Button';
 import * as StompJs from '@stomp/stompjs';
-import { roomCheck } from '../apis/room';
+import { leaveWaitRoom, roomCheck } from '../apis/room';
 
 const WaitPage = () => {
   const navigate = useNavigate();
@@ -22,7 +23,6 @@ const WaitPage = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [waitList, setWaitList] = useState([]);
-
   const [client, setClient] = useState(null);
 
   useEffect(() => {
@@ -30,8 +30,8 @@ const WaitPage = () => {
       let res = await getWaitList();
       setWaitList(res.waitUserDtoList);
     };
-    if(client !== null){
-        fetchWaitList();
+    if (client !== null) {
+      fetchWaitList();
     }
   }, [client]);
 
@@ -45,6 +45,12 @@ const WaitPage = () => {
   const getWaitList = async () => {
     return await roomCheck(Number(params.roomId));
   };
+
+  const leaveRoom = async () => {
+    await leaveWaitRoom(Number(params.roomId));
+    alert('방을 떠났습니다!')
+    navigate('/')
+  }
 
   const connect = () => {
     if (client) disConnect();
@@ -63,7 +69,15 @@ const WaitPage = () => {
       clientdata.onConnect = function () {
         clientdata.subscribe(WAIT_SUB + params.roomId, (message) => {
           let jsonMessageBody = JSON.parse(message.body);
-          setWaitList(preWaitList => [...preWaitList, jsonMessageBody]);
+          setWaitList((prevWaitList) => {
+            const isDuplicate = prevWaitList.some(
+              (member) => member.userId === jsonMessageBody.userId,
+            );
+            if (!isDuplicate) {
+              return [...prevWaitList, jsonMessageBody];
+            }
+            return prevWaitList;
+          });
         });
         sendWait(clientdata); // 연결된 후에 발행
       };
@@ -91,7 +105,7 @@ const WaitPage = () => {
       body: JSON.stringify({
         roomId: params.roomId,
         userId: sessionStorage.getItem('userId'),
-        isManager: (state === null) ? false : state.isManager ,
+        isManager: state === null ? false : state.isManager,
         isEnter: false,
       }),
     });
@@ -115,8 +129,9 @@ const WaitPage = () => {
         headerType="wait"
         text={isLoggedIn ? '로그아웃' : '로그인'}
         setIsLoggedIn={setIsLoggedIn}
+        leaveWaitRoom={leaveRoom}
       />
-      <div className="Wait--Push">
+      <div className="Wait--Push--Invite">
         <Push type="inviteFriend" text="친구들에게 초대링크를 보내세요!" />
       </div>
       <div className={`Wait--${mode}--Wrapper`}>
@@ -125,9 +140,19 @@ const WaitPage = () => {
           <span className="Wait--Title">5명</span>
           <span className="Wait--Content">친구들을 기다리고 있어요!</span>
           <div className="Wait--List">
-            {waitList.map((waitMember, index) => 
-                <div key={index}>{waitMember.nickname}</div>
-            )}
+            {waitList.map((waitMember, index) => (
+              <div className="Wait--List--item" key={index}>
+                <div className="Wait--List--Item--order">{index + 1}</div>
+                <img
+                  src={index === 0 ? roomManager : waitMember.imageUrl}
+                  alt="waitMember_img"
+                  className="Wait--List--item--img"
+                />
+                <div className="Wait--List--Item--name">
+                  {waitMember.nickname}
+                </div>
+              </div>
+            ))}
           </div>
           <Button type="modal" shape="angle" text="확인" />
         </div>
