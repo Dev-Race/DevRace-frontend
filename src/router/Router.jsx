@@ -11,6 +11,8 @@ import CreateRoomPage from '../pages/CreateRoomPage';
 import ProfilePage from '../pages/ProfilePage';
 import MyCodePage from '../pages/MyCodePage';
 import WaitPage from '../pages/WaitPage';
+import SolvePage from '../pages/SolvePage';
+import RedirectPage from '../pages/RedirectPage';
 
 /**
  *
@@ -51,8 +53,16 @@ const Router = createBrowserRouter([
   },
   {
     path: '/wait/:roomId',
-    element: <WaitPage />
-  }
+    element: <WaitPage />,
+  },
+  {
+    path: '/solve/:roomId',
+    element: <SolvePage />,
+  },
+  {
+    path: '/redirect/:link',
+    element: <RedirectPage />,
+  },
 ]);
 
 export default Router;

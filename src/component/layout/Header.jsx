@@ -18,18 +18,10 @@ import { useNavigate } from 'react-router-dom';
  * headerType : login, main, create, wait, solve, review, mycode, default
  */
 const Header = (props) => {
-  const { headerType, text, setIsLoggedIn, leaveWaitRoom } = props;
+  const { headerType, text, setIsLoggedIn, leaveWaitRoom, invite } = props;
   const { mode } = useSelector((state) => state.toggle);
   const [selectedOption, setSelectedOption] = useState('');
   const navigate = useNavigate();
-
-  const currentUrl = window.location.href;
-
-  const handleCopyUrl = () => {
-    navigator.clipboard.writeText(currentUrl).then(() => {
-      console.log('클립보드에 복사되었습니다');
-    });
-  };
 
   const rankings = [
     { rank: 1, name: 'qwer' },
@@ -100,7 +92,7 @@ const Header = (props) => {
                 <button
                   className={`header--${mode}--btn`}
                   style={{ color: '#66F' }}
-                  onClick={handleCopyUrl}
+                  onClick={invite}
                 >
                   초대링크
                 </button>

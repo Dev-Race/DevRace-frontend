@@ -52,10 +52,27 @@
   color: var(--white, #fff);
 }
 
-.push--inviteFriend--light {
+.push--leaveWaitRoom--light,
+.push--leaveWaitRoom--dark {
+  @include font-t3;
+  display: flex;
+  width: 267px;
+  padding: 24px;
+
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  border-radius: 20px 0px 20px 20px;
+
+  color: var(--white, #fff);
+}
+.push--inviteFriend--light,
+.push--leaveWaitRoom--light {
   background: var(--blue-light-300, #66f);
 }
 
-.push--inviteFriend--dark {
+.push--inviteFriend--dark,
+.push--leaveWaitRoom--dark {
   background: var(--dark-blue-500, #569cd6);
 }
