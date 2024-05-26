@@ -46,6 +46,7 @@ const MainPage = () => {
       const redirectUrl = localStorage.getItem('redirectUrl');
       if(redirectUrl) {
         navigate(redirectUrl)
+        localStorage.removeItem('redirectUrl');
       }
     }
   

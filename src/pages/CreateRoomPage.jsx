@@ -50,7 +50,9 @@ const CreateRoomPage = () => {
       setErrorMessage("존재하지 않는 백준 문제입니다.")
       return;
     }
-    navigate('/wait/' + res.roomId)
+    navigate('/wait/' + res.roomId, {
+      state: { isManager: true },
+    });
   }
 
   return (
