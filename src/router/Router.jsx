@@ -25,7 +25,7 @@ import RedirectPage from '../pages/RedirectPage';
 const Router = createBrowserRouter([
   {
     path: '/test',
-    element: <TestPage />,
+    element: <SolvePage />,
   },
   {
     path: '/',
