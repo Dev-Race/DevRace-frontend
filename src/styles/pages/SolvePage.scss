@@ -1,11 +1,13 @@
 @import '../theme';
 
+body {
+  overflow: hidden;
+}
+
 .Solve--Container--light,
 .Solve--Container--dark {
   display: flex;
   width: 100%;
-  height: 100%;
-
   @include font-t2;
 }
 
@@ -78,9 +80,7 @@
   flex-direction: column;
   align-items: flex-start;
   background: none;
-  overflow: auto;
   position: relative;
-  overflow-y: hidden;
 }
 
 .Solve--ExampleInput--Header {
@@ -89,7 +89,8 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 0;
+  padding-bottom: 12px;
+  margin-top: 36px;
 }
 
 .Solve--ExampleInput--Title--light,
@@ -148,7 +149,8 @@
 }
 
 .Solve--Right--Container--Title {
-  padding: 12px 24px;
+  padding: 24px;
+  margin-left: 24px;
 }
 
 .Solve--ProblemSolving--Container {
@@ -164,17 +166,15 @@
 .Solve--ProblemSolving--Editor {
   display: flex;
   width: 1044px;
-  padding: 12px 24px;
-  margin-left: 24px;
+  padding: 24px;
 }
 
 .Solve--Output--Container {
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  padding-bottom: 24px;
   align-items: flex-start;
   background: none;
-  overflow: auto;
   position: relative;
 }
 
@@ -187,6 +187,8 @@
   padding: 12px 24px;
   margin: auto;
   border-radius: 8px;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .Solve--Output--Contents--light {

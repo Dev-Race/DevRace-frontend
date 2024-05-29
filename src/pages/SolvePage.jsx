@@ -11,9 +11,12 @@ import check_green from '../assets/icons/check_green.svg';
 import yes_black from '../assets/icons/yes_black.svg';
 import no_black from '../assets/icons/no_black.svg';
 
-import { Editor, useMonaco } from '@monaco-editor/react';
+import { useMonaco } from '@monaco-editor/react';
 import iPlasticTheme from 'monaco-themes/themes/iPlastic.json';
 import brillianceBlackTheme from 'monaco-themes/themes/Brilliance Black.json';
+import axios from 'axios';
+import Output from '../component/editor/Output';
+import CodeEditor from '../component/editor/CodeEditor';
 
 const javascriptDefault = `
 `;
@@ -36,13 +39,40 @@ const SolvePage = () => {
 
   const [isExampleSuccess, setIsExampleSuccess] = useState(false);
   const [code, setCode] = useState(javascriptDefault);
-  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('javascript');
+  const [outputDetails, setOutputDetails] = useState(null);
+  const [processing, setProcessing] = useState(false);
+
+  const editorRef = useRef();
+  const [languageId, setLanguageId] = useState(63);
 
   const handleSelect = (select) => {
     setSelectedLanguage(select);
-    console.log(select);
-    console.log(selectedLanguage);
   };
+  useEffect(() => {
+    switch (selectedLanguage) {
+      case 'C++':
+        setLanguageId(54);
+        break;
+      case 'Java':
+        setLanguageId(62);
+        break;
+      case 'Python':
+        setLanguageId(71);
+        break;
+      case 'javascript':
+        setLanguageId(63);
+        break;
+      default:
+        setLanguageId(63);
+        break;
+    }
+  }, [selectedLanguage]);
+
+  useEffect(() => {
+    console.log(languageId);
+  }, [languageId]);
+
   const handleMouseDownExplain = (e) => {
     setIsDraggingExplain(true);
     setStartYExplain(e.clientY);
@@ -84,7 +114,7 @@ const SolvePage = () => {
     };
   }, [isDraggingExplain, isDraggingSolve]);
 
-  const onChangeEditor = (action, data) => {
+  const onChange = (action, data) => {
     switch (action) {
       case 'code': {
         setCode(data);
@@ -109,6 +139,74 @@ const SolvePage = () => {
     }
   }, [monaco, mode]);
 
+  const onMount = (editor) => {
+    editorRef.current = editor;
+    editor.focus();
+  };
+
+  const handleCompile = async () => {
+    setProcessing(true);
+    const formData = {
+      language_id: languageId,
+      source_code: btoa(code),
+      stdin: '',
+    };
+
+    const options = {
+      method: 'POST',
+      url: process.env.REACT_APP_RAPID_API_URL,
+      params: { base64_encoded: 'true', fields: '*' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
+        'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+      },
+      data: formData,
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        const token = response.data.token;
+        checkStatus(token);
+      })
+      .catch((err) => {
+        let error = err.response ? err.response.data : err;
+        setProcessing(false);
+        console.log('catch block...', error);
+      });
+  };
+
+  const checkStatus = async (token) => {
+    const options = {
+      method: 'GET',
+      url: process.env.REACT_APP_RAPID_API_URL + '/' + token,
+      params: { base64_encoded: 'true', fields: '*' },
+      headers: {
+        'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
+        'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+      },
+    };
+
+    try {
+      let response = await axios.request(options);
+      let statusId = response.data.status?.id;
+
+      if (statusId === 1 || statusId === 2) {
+        setTimeout(() => {
+          checkStatus(token);
+        }, 2000);
+        return;
+      } else {
+        setProcessing(false);
+        setOutputDetails(response.data);
+        return;
+      }
+    } catch (err) {
+      setProcessing(false);
+    }
+  };
+
   return (
     <div>
       <Header headerType="solve" text="problem 이름" onSelect={handleSelect} />
@@ -117,7 +215,7 @@ const SolvePage = () => {
           <div className="Solve--Explain--Container" ref={explainRef}>
             <span>문제설명</span>
             <div className="Solve--Explain--Contents">
-              <text className={`Solve--Explain--Title--${mode}`}>문제</text>
+              <span className={`Solve--Explain--Title--${mode}`}>문제</span>
               <div className={`Solve--Explain--Text--${mode}`}>
                 Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
                 augue vitae feugiat. Aliquet sed sem consequat amet ultricies
@@ -125,7 +223,7 @@ const SolvePage = () => {
                 id facilisis cursus elit in leo in sed. Egestas ut mauris nec
                 aliquet adipiscing vitae lectus egestas.{' '}
               </div>
-              <text className={`Solve--Explain--Title--${mode}`}>입력</text>
+              <span className={`Solve--Explain--Title--${mode}`}>입력</span>
               <div className={`Solve--Explain--Text--${mode}`}>
                 Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
                 augue vitae feugiat. Aliquet sed sem consequat amet ultricies
@@ -133,7 +231,7 @@ const SolvePage = () => {
                 id facilisis cursus elit in leo in sed. Egestas ut mauris nec
                 aliquet adipiscing vitae lectus egestas.{' '}
               </div>
-              <text className={`Solve--Explain--Title--${mode}`}>출력</text>
+              <span className={`Solve--Explain--Title--${mode}`}>출력</span>
               <div className={`Solve--Explain--Text--${mode}`}>
                 Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
                 augue vitae feugiat. Aliquet sed sem consequat amet ultricies
@@ -143,22 +241,23 @@ const SolvePage = () => {
               </div>
             </div>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              background: mode === 'dark' ? '#2E2F33' : '',
-              cursor: 'ns-resize',
-            }}
-            onMouseDown={handleMouseDownExplain}
-          >
-            <img
-              src={mode === 'light' ? scroll_light : scroll_dark}
-              alt="Scroll Light"
-              style={{ height: '14px' }}
-            />
-          </div>
           <div className="Solve--ExampleInput--Container" ref={exampleRef}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                width: '100%',
+                background: mode === 'dark' ? '#2E2F33' : '#fff',
+                cursor: 'ns-resize',
+              }}
+              onMouseDown={handleMouseDownExplain}
+            >
+              <img
+                src={mode === 'light' ? scroll_light : scroll_dark}
+                alt="Scroll Light"
+                style={{ height: '14px' }}
+              />
+            </div>
             <div className="Solve--ExampleInput--Header">
               <span className="Solve--ExampleInput--HeaderText">예제 입력</span>
               <div style={{ display: 'flex', gap: '8px', marginRight: '24px' }}>
@@ -182,13 +281,13 @@ const SolvePage = () => {
               />
             </div>
             <div className={`Solve--ExampleInput--Contents--${mode}`}>
-              <text>입력</text>
+              <span>입력</span>
               <div className={`Solve--ExampleInput--Text--${mode}`}>
                 Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
                 augue vitae feugiat. Aliquet sed sem consequat amet ultricies
                 massa elit.
               </div>
-              <text>출력</text>
+              <span>출력</span>
               <div className={`Solve--ExampleInput--Text--${mode}`}>
                 Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
                 augue vitae feugiat. Aliquet sed sem consequat amet ultricies
@@ -199,39 +298,46 @@ const SolvePage = () => {
         </div>
         <div className="Solve--Right--Container">
           <div className="Solve--ProblemSolving--Container" ref={solvingRef}>
-            <span className="Solve--Right--Container--Title">문제 풀이</span>
+            <span style={{ marginLeft: '24px' }}>문제 풀이</span>
             <div className="Solve--ProblemSolving--Editor">
-              <Editor
-                height="532px"
-                onChange={onChangeEditor}
+              <CodeEditor
+                code={code}
+                onChange={onChange}
                 language={selectedLanguage}
-                theme={mode === 'light' ? 'iPlastic' : 'pastels-on-dark'}
+                theme={mode === 'light' ? 'iPlastic' : 'brilliance-black'}
+                onMount={onMount}
               />
             </div>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              width: '100%',
-              background: mode === 'dark' ? '#2E2F33' : '',
-              cursor: 'ns-resize',
-            }}
-            onMouseDown={handleMouseDownSolve}
-          >
-            <img
-              src={mode === 'light' ? large_scroll_light : large_scroll_dark}
-              alt="Scroll Light"
-              style={{ height: '14px' }}
-            />
-          </div>
           <div className="Solve--Output--Container" ref={outputRef}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                width: '100%',
+                background: mode === 'dark' ? '#2E2F33' : '#fff',
+                cursor: 'ns-resize',
+              }}
+              onMouseDown={handleMouseDownSolve}
+            >
+              <img
+                src={mode === 'light' ? large_scroll_light : large_scroll_dark}
+                alt="Scroll Light"
+                style={{ height: '14px' }}
+              />
+            </div>
             <span className="Solve--Right--Container--Title">출력 결과</span>
-            <div className={`Solve--Output--Contents--${mode}`}></div>
+            <div className={`Solve--Output--Contents--${mode}`}>
+              {processing ? (
+                <span>컴파일 진행 중입니다...</span>
+              ) : (
+                <Output outputDetails={outputDetails} />
+              )}
+            </div>
           </div>
         </div>
       </div>
-      <Footer mode={mode} />
+      <Footer mode={mode} handleCompile={handleCompile} />
     </div>
   );
 };

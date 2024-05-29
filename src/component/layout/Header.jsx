@@ -151,7 +151,7 @@ const Header = (props) => {
               {headerType === 'solve' && (
                 <button className={`header--${mode}--btn`}>초대링크</button>
               )}
-              {headerType === 'solve' && (
+              {headerType === 'review' && (
                 <div className={`header--${mode}--btn`}>여기에는 언어</div>
               )}
               <button className={`header--${mode}--btn`}>나가기</button>

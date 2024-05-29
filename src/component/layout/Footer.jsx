@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
  */
 
 const Footer = (props) => {
-  const { type } = props;
+  const { type, handleCompile } = props;
   const { mode } = useSelector((state) => state.toggle);
   if (type === 'default') {
     return (
@@ -27,7 +27,13 @@ const Footer = (props) => {
         <Button type="normal1" mode={mode} shape="angle" text="예제 채점" />
       </div>
       <div className="footer_right_items">
-        <Button type="normal2" mode={mode} shape="angle" text="출력 확인" />
+        <Button
+          type="normal2"
+          mode={mode}
+          shape="angle"
+          text="출력 확인"
+          onClick={handleCompile}
+        />
         <Button type="normal3" mode={mode} shape="angle" text="제출 하기" />
       </div>
     </div>
