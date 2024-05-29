@@ -11,7 +11,7 @@ export const signUpApi = async (
   let res;
   const formData = new FormData();
 
-  formData.append('imageFile', file || null);
+  formData.append('imageFile', (isImageChange !== 0 && file) ? file : null);
   formData.append(
     'signupRequestDto',
     JSON.stringify({
