@@ -146,7 +146,7 @@ const WaitPage = () => {
       body: JSON.stringify({
         roomId: params.roomId,
         userId: sessionStorage.getItem('userId'),
-        isManager: state === null ? false : state.isManager,
+        isManager: true,
         isEnter: true,
       }),
     });
