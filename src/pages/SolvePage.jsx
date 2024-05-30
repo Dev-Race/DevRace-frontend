@@ -18,6 +18,10 @@ import axios from 'axios';
 import Output from '../component/editor/Output';
 import CodeEditor from '../component/editor/CodeEditor';
 
+import OpenChatBtn from '../component/chat/OpenChatBtn';
+import ChatComponent from '../component/chat/ChatComponent';
+import { CSSTransition } from 'react-transition-group';
+
 const javascriptDefault = `
 `;
 
@@ -45,10 +49,13 @@ const SolvePage = () => {
 
   const editorRef = useRef();
   const [languageId, setLanguageId] = useState(63);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [transitionOpen, setTransitionOpen] = useState(false);
 
   const handleSelect = (select) => {
     setSelectedLanguage(select);
   };
+
   useEffect(() => {
     switch (selectedLanguage) {
       case 'C++':
@@ -207,10 +214,32 @@ const SolvePage = () => {
     }
   };
 
+  const handleOpenChat = () => {
+    setIsChatOpen(true);
+    setTransitionOpen(true);
+    console.log('open');
+  };
+
+  const handleCloseChat = () => {
+    setIsChatOpen(false);
+    setTransitionOpen(false);
+  };
+
   return (
     <div>
       <Header headerType="solve" text="problem 이름" onSelect={handleSelect} />
       <div className={`Solve--Container--${mode}`}>
+        <div>
+          {!isChatOpen && <OpenChatBtn onClick={handleOpenChat} />}
+          <CSSTransition
+            in={isChatOpen}
+            timeout={500}
+            classNames="slide"
+            unmountOnExit
+          >
+            <ChatComponent onClick={handleCloseChat} />
+          </CSSTransition>
+        </div>
         <div className="Solve--Left--Container">
           <div className="Solve--Explain--Container" ref={explainRef}>
             <span>문제설명</span>
@@ -296,7 +325,7 @@ const SolvePage = () => {
             </div>
           </div>
         </div>
-        <div className="Solve--Right--Container">
+        <div className={`Solve--Right--Container--${mode}`}>
           <div className="Solve--ProblemSolving--Container" ref={solvingRef}>
             <span style={{ marginLeft: '24px' }}>문제 풀이</span>
             <div className="Solve--ProblemSolving--Editor">
