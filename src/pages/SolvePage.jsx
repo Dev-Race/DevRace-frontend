@@ -21,6 +21,8 @@ import CodeEditor from '../component/editor/CodeEditor';
 import OpenChatBtn from '../component/chat/OpenChatBtn';
 import ChatComponent from '../component/chat/ChatComponent';
 import { CSSTransition } from 'react-transition-group';
+import { getProblem } from '../apis/problem';
+import { useParams } from 'react-router-dom';
 
 const javascriptDefault = `
 `;
@@ -52,7 +54,11 @@ const SolvePage = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [transitionOpen, setTransitionOpen] = useState(false);
   const [isFirstMounted, setIsFirstMounted] = useState(true);
-  const [top, setTop] = useState(180); // top 상태를 여기에서 관리
+  const [top, setTop] = useState(180);
+
+  const { roomId } = useParams();
+  const [problemData, setProblemData] = useState();
+  const [solvedExampleCount, setSolvedExampleCount] = useState(0);
 
   const handleSelect = (select) => {
     setSelectedLanguage(select);
@@ -229,9 +235,32 @@ const SolvePage = () => {
     setTransitionOpen(false);
   };
 
+  useEffect(() => {
+    const fetchProblemData = async () => {
+      try {
+        const data = await getProblem(roomId);
+        setProblemData(data);
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProblemData();
+  }, [roomId]);
+
+  function stripHTML(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || '';
+  }
+
   return (
     <>
-      <Header headerType="solve" text="problem 이름" onSelect={handleSelect} />
+      <Header
+        headerType="solve"
+        text={problemData?.problemResponseDto?.title}
+        onSelect={handleSelect}
+      />
       <div className={`Solve--Container--${mode}`}>
         <div>
           {!isChatOpen && (
@@ -261,27 +290,15 @@ const SolvePage = () => {
             <div className="Solve--Explain--Contents">
               <span className={`Solve--Explain--Title--${mode}`}>문제</span>
               <div className={`Solve--Explain--Text--${mode}`}>
-                Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
-                augue vitae feugiat. Aliquet sed sem consequat amet ultricies
-                massa elit. Vulputate blandit ipsum egestas urna. Tortor augue
-                id facilisis cursus elit in leo in sed. Egestas ut mauris nec
-                aliquet adipiscing vitae lectus egestas.{' '}
+                {stripHTML(problemData?.problemResponseDto?.content)}
               </div>
               <span className={`Solve--Explain--Title--${mode}`}>입력</span>
               <div className={`Solve--Explain--Text--${mode}`}>
-                Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
-                augue vitae feugiat. Aliquet sed sem consequat amet ultricies
-                massa elit. Vulputate blandit ipsum egestas urna. Tortor augue
-                id facilisis cursus elit in leo in sed. Egestas ut mauris nec
-                aliquet adipiscing vitae lectus egestas.{' '}
+                {stripHTML(problemData?.problemResponseDto?.problemInput)}
               </div>
               <span className={`Solve--Explain--Title--${mode}`}>출력</span>
               <div className={`Solve--Explain--Text--${mode}`}>
-                Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
-                augue vitae feugiat. Aliquet sed sem consequat amet ultricies
-                massa elit. Vulputate blandit ipsum egestas urna. Tortor augue
-                id facilisis cursus elit in leo in sed. Egestas ut mauris nec
-                aliquet adipiscing vitae lectus egestas.{' '}
+                {stripHTML(problemData?.problemResponseDto?.problemOutput)}
               </div>
             </div>
           </div>
@@ -300,38 +317,46 @@ const SolvePage = () => {
               <span className="Solve--ExampleInput--HeaderText">예제 입력</span>
               <div className="Solve--ExampleInput--SuccessCount">
                 <img src={check_green} alt="Right" />
-                4/10
+                {solvedExampleCount}/
+                {stripHTML(problemData?.problemResponseDto?.sampleInput.length)}
               </div>
             </div>
-            <div
-              className={`Solve--ExampleInput--Title--${mode}`}
-              style={
-                isExampleSuccess
-                  ? { background: '#C8FFA7' }
-                  : { background: '#FFB9AA' }
-              }
-            >
-              <span className="Solve--ExampleInput--HeaderText">예제 1</span>
-              <img
-                src={isExampleSuccess ? yes_black : no_black}
-                alt="Example Right"
-                style={{ marginRight: '24px' }}
-              />
-            </div>
-            <div className={`Solve--ExampleInput--Contents--${mode}`}>
-              <span>입력</span>
-              <div className={`Solve--ExampleInput--Text--${mode}`}>
-                Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
-                augue vitae feugiat. Aliquet sed sem consequat amet ultricies
-                massa elit.
-              </div>
-              <span>출력</span>
-              <div className={`Solve--ExampleInput--Text--${mode}`}>
-                Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
-                augue vitae feugiat. Aliquet sed sem consequat amet ultricies
-                massa elit.
-              </div>
-            </div>
+            {problemData?.problemResponseDto?.sampleInput.map(
+              (input, index) => (
+                <>
+                  <div
+                    className={`Solve--ExampleInput--Title--${mode}`}
+                    style={
+                      isExampleSuccess
+                        ? { background: '#C8FFA7' }
+                        : { background: '#FFB9AA' }
+                    }
+                    key={index}
+                  >
+                    <span className="Solve--ExampleInput--HeaderText">
+                      예제 {index + 1}
+                    </span>
+                    <img
+                      src={isExampleSuccess ? yes_black : no_black}
+                      alt="Example Right"
+                      style={{ marginRight: '24px' }}
+                    />
+                  </div>
+                  <div className={`Solve--ExampleInput--Contents--${mode}`}>
+                    <span>입력</span>
+                    <div className={`Solve--ExampleInput--Text--${mode}`}>
+                      {stripHTML(input)}
+                    </div>
+                    <span>출력</span>
+                    <div className={`Solve--ExampleInput--Text--${mode}`}>
+                      {stripHTML(
+                        problemData?.problemResponseDto?.sampleOutput[index],
+                      )}
+                    </div>
+                  </div>
+                </>
+              ),
+            )}
           </div>
         </div>
         <div className={`Solve--Right--Container--${mode}`}>
