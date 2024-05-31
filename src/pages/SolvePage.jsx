@@ -51,6 +51,8 @@ const SolvePage = () => {
   const [languageId, setLanguageId] = useState(63);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [transitionOpen, setTransitionOpen] = useState(false);
+  const [isFirstMounted, setIsFirstMounted] = useState(true);
+  const [top, setTop] = useState(180); // top 상태를 여기에서 관리
 
   const handleSelect = (select) => {
     setSelectedLanguage(select);
@@ -217,6 +219,8 @@ const SolvePage = () => {
   const handleOpenChat = () => {
     setIsChatOpen(true);
     setTransitionOpen(true);
+    setIsFirstMounted(false);
+    console.log(isFirstMounted);
     console.log('open');
   };
 
@@ -226,18 +230,29 @@ const SolvePage = () => {
   };
 
   return (
-    <div>
+    <>
       <Header headerType="solve" text="problem 이름" onSelect={handleSelect} />
       <div className={`Solve--Container--${mode}`}>
         <div>
-          {!isChatOpen && <OpenChatBtn onClick={handleOpenChat} />}
+          {!isChatOpen && (
+            <OpenChatBtn
+              onClick={handleOpenChat}
+              isFirstMounted={isFirstMounted}
+              top={top}
+              setTop={setTop}
+            />
+          )}
           <CSSTransition
             in={isChatOpen}
             timeout={500}
             classNames="slide"
             unmountOnExit
           >
-            <ChatComponent onClick={handleCloseChat} />
+            <ChatComponent
+              onClick={handleCloseChat}
+              top={top}
+              setTop={setTop}
+            />
           </CSSTransition>
         </div>
         <div className="Solve--Left--Container">
@@ -272,13 +287,7 @@ const SolvePage = () => {
           </div>
           <div className="Solve--ExampleInput--Container" ref={exampleRef}>
             <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                width: '100%',
-                background: mode === 'dark' ? '#2E2F33' : '#fff',
-                cursor: 'ns-resize',
-              }}
+              className={`Solve--ResizeBar--${mode}`}
               onMouseDown={handleMouseDownExplain}
             >
               <img
@@ -289,7 +298,7 @@ const SolvePage = () => {
             </div>
             <div className="Solve--ExampleInput--Header">
               <span className="Solve--ExampleInput--HeaderText">예제 입력</span>
-              <div style={{ display: 'flex', gap: '8px', marginRight: '24px' }}>
+              <div className="Solve--ExampleInput--SuccessCount">
                 <img src={check_green} alt="Right" />
                 4/10
               </div>
@@ -340,13 +349,7 @@ const SolvePage = () => {
           </div>
           <div className="Solve--Output--Container" ref={outputRef}>
             <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                width: '100%',
-                background: mode === 'dark' ? '#2E2F33' : '#fff',
-                cursor: 'ns-resize',
-              }}
+              className={`Solve--ResizeBar--${mode}`}
               onMouseDown={handleMouseDownSolve}
             >
               <img
@@ -367,7 +370,7 @@ const SolvePage = () => {
         </div>
       </div>
       <Footer mode={mode} handleCompile={handleCompile} />
-    </div>
+    </>
   );
 };
 

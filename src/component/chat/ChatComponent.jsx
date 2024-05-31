@@ -2,12 +2,11 @@ import '../../styles/components/ChatComponent.scss';
 import exit_white from '../../assets/icons/exit_white.svg';
 import { useSelector } from 'react-redux';
 import Input from '../common/Input';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
-const ChatComponent = ({ onClick }) => {
+const ChatComponent = ({ onClick, top, setTop }) => {
   const { mode } = useSelector((state) => state.toggle);
   const [opacity, setOpacity] = useState(1);
-  const [top, setTop] = useState(180);
   const chatRef = useRef(null);
   const startY = useRef(0);
   const startTop = useRef(0);
@@ -32,18 +31,11 @@ const ChatComponent = ({ onClick }) => {
   const handleMouseUp = () => {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
-    if (!hasDragged.current) {
-      onClick();
-    }
   };
 
   const handleSliderChange = (event) => {
     setOpacity(event.target.value / 100);
   };
-
-  useEffect(() => {
-    console.log(opacity);
-  }, [opacity]);
 
   return (
     <div
@@ -51,9 +43,9 @@ const ChatComponent = ({ onClick }) => {
       onMouseDown={handleMouseDown}
       className={`Chat--Container--${mode}`}
       style={{
-        '--opacity': opacity,
         top: `${top}px`,
         position: 'absolute',
+        '--opacity': opacity,
       }}
     >
       <div className={`Chat--Header--${mode}`}>

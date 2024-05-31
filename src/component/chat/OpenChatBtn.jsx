@@ -1,11 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import open_chat_icon from '../../assets/icons/open_chat_icon.svg';
 import '../../styles/components/ChatComponent.scss';
 
-const OpenChatBtn = ({ onClick }) => {
+const OpenChatBtn = ({ onClick, isFirstMounted, top, setTop }) => {
   const { mode } = useSelector((state) => state.toggle);
-  const [top, setTop] = useState(180);
   const btnRef = useRef(null);
   const startY = useRef(0);
   const startTop = useRef(0);
@@ -40,7 +39,10 @@ const OpenChatBtn = ({ onClick }) => {
       ref={btnRef}
       className={`Chat--Open--Btn--${mode}`}
       onMouseDown={handleMouseDown}
-      style={{ top: `${top}px`, position: 'absolute' }}
+      style={{
+        top: isFirstMounted ? '180px' : `${top}px`,
+        position: 'absolute',
+      }}
     >
       <img src={open_chat_icon} alt="Open Chat" />
     </div>

@@ -1,9 +1,5 @@
 @import '../theme';
 
-body {
-  overflow: hidden;
-}
-
 .Solve--Container--light,
 .Solve--Container--dark {
   display: flex;
@@ -28,9 +24,10 @@ body {
   flex-direction: column;
 
   width: 30%;
-  height: 100vh;
+  height: 90vh;
 
   margin-top: 77px;
+  overflow: hidden;
 }
 
 .Solve--Explain--Container {
@@ -152,6 +149,13 @@ body {
 .Solve--ExampleInput--HeaderText {
   margin-left: 24px;
 }
+
+.Solve--ExampleInput--SuccessCount {
+  display: flex;
+  gap: 8px;
+  margin-right: 24px;
+}
+
 .Solve--ExampleInput--Contents--light {
   color: var(--light-bule-green, #237893);
 }
@@ -170,9 +174,10 @@ body {
   flex-direction: column;
 
   width: 70%;
-  height: 100vh;
+  height: 90vh;
 
   margin-top: 77px;
+  overflow: hidden;
 }
 
 .Solve--Right--Container--light {
@@ -240,6 +245,23 @@ body {
 
 .Solve--Output--Contents--dark {
   background: var(--gray-800, #2e2f33);
+}
+
+.Solve--ResizeBar--light,
+.Solve--ResizeBar--dark {
+  display: flex;
+  width: 100%;
+
+  justify-content: center;
+  cursor: ns-resize;
+}
+
+.Solve--ResizeBar--light {
+  background: #fff;
+}
+
+.Solve--ResizeBar--dark {
+  background: #2e2f33;
 }
 
 .slide-enter {

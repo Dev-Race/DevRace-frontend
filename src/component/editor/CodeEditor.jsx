@@ -35,7 +35,7 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
   }, [compileLanguage]);
 
   return (
-    <div>
+    <>
       <Editor
         height="532px"
         width="1100px"
@@ -44,7 +44,7 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
         onChange={handleEditorChange}
         theme={theme}
       />
-    </div>
+    </>
   );
 };
 
