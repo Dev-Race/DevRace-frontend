@@ -1,0 +1,297 @@
+@import '../theme';
+
+.Solve--Container--light,
+.Solve--Container--dark {
+  display: flex;
+
+  width: 100%;
+
+  @include font-t2;
+}
+
+.Solve--Container--light {
+  background: var(--light-cool-gray, #f8f8ff);
+  color: var(--black, #000);
+}
+
+.Solve--Container--dark {
+  background: var(--black, #000);
+  color: var(--white, #fff);
+}
+
+.Solve--Left--Container {
+  display: flex;
+  flex-direction: column;
+
+  width: 30%;
+  height: 90vh;
+
+  margin-top: 77px;
+  overflow: hidden;
+}
+
+.Solve--Explain--Container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  align-items: flex-start;
+
+  height: 674px;
+  padding: 24px;
+
+  background: none;
+  overflow: auto;
+}
+
+.Solve--Explain--Contents {
+  display: flex;
+  flex-direction: column;
+
+  height: 196px;
+}
+
+.Solve--Explain--Title--light,
+.Solve--Explain--Title--dark {
+  @include font-body1;
+  padding: 12px 0;
+}
+
+.Solve--Explain--Text--light,
+.Solve--Explain--Text--dark {
+  @include font-body3;
+  padding: 12px 0;
+}
+
+.Solve--Explain--Text--light {
+  border-top: 2px solid #bdbfc4;
+}
+
+.Solve--Explain--Text--dark {
+  border-top: 2px solid #73777f;
+}
+
+.Solve--Explain--Title--light {
+  color: var(--light-bule-green, #237893);
+  font-feature-settings: 'clig' off, 'liga' off;
+}
+
+.Solve--Explain--Title--dark,
+.Solve--Explain--Text--dark {
+  color: var(--white, #fff);
+  font-feature-settings: 'clig' off, 'liga' off;
+}
+
+.Solve--Explain--Text--light {
+  color: var(--black, #000);
+  font-feature-settings: 'clig' off, 'liga' off;
+}
+
+.Solve--ExampleInput--Container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  align-items: flex-start;
+  background: none;
+}
+
+.Solve--ExampleInput--Header {
+  display: flex;
+  position: relative;
+
+  width: 100%;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding-bottom: 12px;
+  margin-top: 36px;
+}
+
+.Solve--ExampleInput--Title--light,
+.Solve--ExampleInput--Title--dark {
+  display: flex;
+  position: relative;
+
+  width: 100%;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 12px 0;
+}
+
+.Solve--ExampleInput--Title--light,
+.Solve--ExampleInput--Text--light {
+  color: var(--black, #000);
+  font-feature-settings: 'clig' off, 'liga' off;
+}
+
+.Solve--ExampleInput--Title--dark,
+.Solve--ExampleInput--Text--dark,
+.Solve--ExampleInput--Contents--dark {
+  color: var(--white, #fff);
+  font-feature-settings: 'clig' off, 'liga' off;
+}
+
+.Solve--ExampleInput--Contents--light,
+.Solve--ExampleInput--Contents--dark {
+  display: flex;
+  flex-direction: column;
+
+  padding: 12px;
+  gap: 10px;
+
+  @include font-body4;
+}
+
+.Solve--ExampleInput--HeaderText {
+  margin-left: 24px;
+}
+
+.Solve--ExampleInput--SuccessCount {
+  display: flex;
+  gap: 8px;
+  margin-right: 24px;
+}
+
+.Solve--ExampleInput--Contents--light {
+  color: var(--light-bule-green, #237893);
+}
+
+.Solve--ExampleInput--Text--light,
+.Solve--ExampleInput--Text--dark {
+  padding: 12px;
+
+  border-radius: 8px;
+  border: 1px solid var(--gray-200, #e3e4e5);
+}
+
+.Solve--Right--Container--light,
+.Solve--Right--Container--dark {
+  display: flex;
+  flex-direction: column;
+
+  width: 70%;
+  height: 90vh;
+
+  margin-top: 77px;
+  overflow: hidden;
+}
+
+.Solve--Right--Container--light {
+  border-left: 2px solid var(--gray-200, #e3e4e5);
+}
+
+.Solve--Right--Container--dark {
+  border-left: 2px solid var(--gray-500, #73777f);
+}
+
+.Solve--Right--Container--Title {
+  padding: 24px;
+  margin-left: 24px;
+}
+
+.Solve--ProblemSolving--Container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  padding: 24px;
+  align-items: flex-start;
+
+  background: none;
+  overflow: auto;
+}
+
+.Solve--ProblemSolving--Editor {
+  display: flex;
+
+  width: 1044px;
+  padding: 24px;
+}
+
+.Solve--Output--Container {
+  display: flex;
+  position: relative;
+
+  flex-direction: column;
+  align-items: flex-start;
+
+  padding-bottom: 24px;
+  background: none;
+}
+
+.Solve--Output--Contents--light,
+.Solve--Output--Contents--dark {
+  display: flex;
+
+  width: 1044px;
+  height: 90px;
+
+  align-items: center;
+  justify-content: flex-start;
+
+  padding: 12px 24px;
+  margin: auto;
+
+  border-radius: 8px;
+}
+
+.Solve--Output--Contents--light {
+  background: var(--white, #fff);
+}
+
+.Solve--Output--Contents--dark {
+  background: var(--gray-800, #2e2f33);
+}
+
+.Solve--ResizeBar--light,
+.Solve--ResizeBar--dark {
+  display: flex;
+  width: 100%;
+
+  justify-content: center;
+  cursor: ns-resize;
+}
+
+.Solve--ResizeBar--light {
+  background: #fff;
+}
+
+.Solve--ResizeBar--dark {
+  background: #2e2f33;
+}
+
+.slide-enter {
+  transform: translateX(-100%);
+}
+
+.slide-enter-active {
+  transform: translateX(0%);
+  transition: transform 0.5s ease;
+}
+
+.slide-exit {
+  transform: translateX(0%);
+}
+
+.slide-exit-active {
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--white, #fff);
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+  border-radius: 50px;
+}
