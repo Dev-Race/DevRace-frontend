@@ -15,3 +15,20 @@ export const getProblem = async (roomId) => {
     console.error(error);
   }
 };
+
+export const getSolvedCount = async () => {
+  const accessToken = sessionStorage.getItem('accessToken');
+
+  try {
+    const response = await Apis.get('/users/solved-count', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log(response.data.data.solvedCount);
+    sessionStorage.setItem('solvedCount', response.data.data.solvedCount);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

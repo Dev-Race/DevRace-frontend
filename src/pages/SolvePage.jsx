@@ -21,7 +21,7 @@ import CodeEditor from '../component/editor/CodeEditor';
 import OpenChatBtn from '../component/chat/OpenChatBtn';
 import ChatComponent from '../component/chat/ChatComponent';
 import { CSSTransition } from 'react-transition-group';
-import { getProblem } from '../apis/problem';
+import { getProblem, getSolvedCount } from '../apis/problem';
 import { useParams } from 'react-router-dom';
 
 const javascriptDefault = `
@@ -43,7 +43,7 @@ const SolvePage = () => {
   const [startYSolve, setStartYSolve] = useState(0);
   const [startHeightSolve, setStartHeightSolve] = useState(0);
 
-  const [isExampleSuccess, setIsExampleSuccess] = useState(false);
+  const [isExampleSuccess, setIsExampleSuccess] = useState([]);
   const [code, setCode] = useState(javascriptDefault);
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
   const [outputDetails, setOutputDetails] = useState(null);
@@ -163,7 +163,7 @@ const SolvePage = () => {
     setProcessing(true);
     const formData = {
       language_id: languageId,
-      source_code: btoa(code),
+      source_code: encodeURIComponent(code),
       stdin: '',
     };
 
@@ -254,11 +254,103 @@ const SolvePage = () => {
     return doc.body.textContent || '';
   }
 
+  const handleExampleCompile = async () => {
+    setProcessing(true);
+    let successArray = [];
+
+    const compileExample = async (input) => {
+      const formData = {
+        language_id: languageId,
+        source_code: encodeURIComponent(code),
+        stdin: encodeURIComponent(input),
+      };
+
+      const options = {
+        method: 'POST',
+        url: process.env.REACT_APP_RAPID_API_URL,
+        params: { base64_encoded: 'true', fields: '*' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
+          'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+        },
+        data: formData,
+      };
+
+      try {
+        const response = await axios.request(options);
+        const token = response.data.token;
+        const result = await checkStatus(token);
+        return result;
+      } catch (err) {
+        let error = err.response ? err.response.data : err;
+        setProcessing(false);
+        console.log('catch block...', error);
+        return null;
+      }
+    };
+
+    const checkStatus = async (token) => {
+      const options = {
+        method: 'GET',
+        url: `${process.env.REACT_APP_RAPID_API_URL}/${token}`,
+        params: { base64_encoded: 'true', fields: '*' },
+        headers: {
+          'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
+          'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+        },
+      };
+
+      try {
+        let response = await axios.request(options);
+        let statusId = response.data.status?.id;
+
+        if (statusId === 1 || statusId === 2) {
+          setTimeout(() => {
+            return checkStatus(token);
+          }, 2000);
+        } else {
+          setProcessing(false);
+          return response.data;
+        }
+      } catch (err) {
+        setProcessing(false);
+        return null;
+      }
+    };
+
+    await Promise.all(
+      problemData?.problemResponseDto?.sampleInput.map(async (input, index) => {
+        const expectedOutput =
+          problemData.problemResponseDto.sampleOutput[index];
+        const result = await compileExample(input);
+        if (result) {
+          const output = atob(result.stdout || '');
+          successArray[index] = output.trim() === expectedOutput.trim();
+        } else {
+          successArray[index] = false;
+        }
+      }),
+    );
+
+    setIsExampleSuccess(successArray);
+    setProcessing(false);
+  };
+
+  useEffect(() => {
+    getSolvedCount();
+  }, []);
+
+  const openProblemPage = (problemNumber) => {
+    const link = `https://www.acmicpc.net/submit/${problemNumber}`;
+    window.open(link, '_blank');
+  };
+
   return (
     <>
       <Header
         headerType="solve"
-        text={problemData?.problemResponseDto?.title}
+        text={`${problemData?.problemResponseDto?.number}.cpp`}
         onSelect={handleSelect}
       />
       <div className={`Solve--Container--${mode}`}>
@@ -317,27 +409,27 @@ const SolvePage = () => {
               <span className="Solve--ExampleInput--HeaderText">예제 입력</span>
               <div className="Solve--ExampleInput--SuccessCount">
                 <img src={check_green} alt="Right" />
-                {solvedExampleCount}/
-                {stripHTML(problemData?.problemResponseDto?.sampleInput.length)}
+                {isExampleSuccess.filter((success) => success).length}/
+                {problemData?.problemResponseDto?.sampleInput.length}
               </div>
             </div>
+
             {problemData?.problemResponseDto?.sampleInput.map(
               (input, index) => (
-                <>
+                <div key={index} style={{ width: '100%' }}>
                   <div
                     className={`Solve--ExampleInput--Title--${mode}`}
                     style={
-                      isExampleSuccess
+                      isExampleSuccess[index]
                         ? { background: '#C8FFA7' }
                         : { background: '#FFB9AA' }
                     }
-                    key={index}
                   >
                     <span className="Solve--ExampleInput--HeaderText">
                       예제 {index + 1}
                     </span>
                     <img
-                      src={isExampleSuccess ? yes_black : no_black}
+                      src={isExampleSuccess[index] ? yes_black : no_black}
                       alt="Example Right"
                       style={{ marginRight: '24px' }}
                     />
@@ -354,7 +446,7 @@ const SolvePage = () => {
                       )}
                     </div>
                   </div>
-                </>
+                </div>
               ),
             )}
           </div>
@@ -394,7 +486,14 @@ const SolvePage = () => {
           </div>
         </div>
       </div>
-      <Footer mode={mode} handleCompile={handleCompile} />
+      <Footer
+        mode={mode}
+        handleCompile={handleCompile}
+        handleExampleCompile={handleExampleCompile}
+        openProblemPage={() =>
+          openProblemPage(problemData?.problemResponseDto?.number)
+        }
+      />
     </>
   );
 };
