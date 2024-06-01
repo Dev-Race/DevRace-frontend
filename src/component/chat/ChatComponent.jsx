@@ -4,7 +4,9 @@ import { useSelector } from 'react-redux';
 import Input from '../common/Input';
 import { useRef, useState } from 'react';
 
-const ChatComponent = ({ onClick, top, setTop }) => {
+const ChatComponent = (props) => {
+  const { onClick, top, setTop, chat, sendMessage, onChangeChat, chatData } =
+    props;
   const { mode } = useSelector((state) => state.toggle);
   const [opacity, setOpacity] = useState(1);
   const chatRef = useRef(null);
@@ -64,18 +66,38 @@ const ChatComponent = ({ onClick, top, setTop }) => {
         </div>
       </div>
       <div className="Chat--Content--Container">
-        <span className={`Chat--Date--${mode}`}>2024.02.21.(수)</span>
-        <div className="Chat--MyChat--Container">
-          <div className="Chat--Chat--Time">16.50 </div>
-          <div className={`Chat--MyChat--TextBox--${mode}`}>Lorem ipsum</div>
-        </div>
-        <div className="Chat--OtherChat--Container">
-          <div className="Chat--OtherProfile--Container"></div>
-          <div className={`Chat--OtherChat--TextBox--${mode}`}>Lorem ipsum</div>
-          <div className="Chat--Chat--Time">16.50 </div>
-        </div>
+        {chatData &&
+          chatData.map((chat) =>
+            chat.senderId === Number(sessionStorage.getItem('userId')) ? (
+              <div className="Chat--MyChat--Container">
+                <div className="Chat--Chat--Time">{`${chat.createdTime[3]}:${chat.createdTime[4]}`}</div>
+                <div className={`Chat--MyChat--TextBox--${mode}`}>
+                  {chat.message}
+                </div>
+              </div>
+            ) : (
+              <div className="Chat--OtherChat--Container">
+                <img
+                  src={chat.senderImageUrl}
+                  alt="profileImg"
+                  className="Chat--OtherProfile--Container"
+                />
+                <div className={`Chat--OtherChat--TextBox--${mode}`}>
+                  {chat.message}
+                </div>
+                <div className="Chat--Chat--Time">{`${chat.createdTime[3]}:${chat.createdTime[4]}`}</div>
+              </div>
+            ),
+          )}
       </div>
-      <Input type="chat" mode={mode} placeHolder="채팅을 입력해주세요." />
+      <Input
+        type="chat"
+        mode={mode}
+        placeHolder="채팅을 입력해주세요."
+        value={chat}
+        sendMessage={sendMessage}
+        onChange={onChangeChat}
+      />
     </div>
   );
 };

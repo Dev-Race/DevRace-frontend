@@ -9,7 +9,7 @@ import sendIcon from '../../assets/icons/sendIcon.svg';
  */
 
 const Input = (props) => {
-  const { type, placeHolder, onChange, error, disable, onClick, value } = props;
+  const { type, placeHolder, onChange, error, disable, value, sendMessage } = props;
   const { mode } = useSelector((state) => state.toggle);
 
   return (
@@ -20,8 +20,17 @@ const Input = (props) => {
         onChange={onChange}
         disabled={disable}
         value={value}
+        onKeyDown={(e) => {
+          if ((mode === 'chat') && e.keyCode === 13) {
+            sendMessage(e);
+          }
+        }}
       />
-      {type === 'chat' ? <img src={sendIcon} alt='sendIcon' onClick={onClick}/> : <></>}
+      {type === 'chat' ? (
+        <img src={sendIcon} alt="sendIcon" onClick={(e) => sendMessage(e)} />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
