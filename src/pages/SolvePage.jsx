@@ -71,7 +71,16 @@ const SolvePage = () => {
   let [client, setClient] = useState(null);
   const [chat, setChat] = useState(''); // 입력된 chat을 받을 변수
   const [chatData, setChatData] = useState([]);
+  const [rank, setRank] = useState([]);
   const [page, setPage] = useState(0);
+  
+  if(rank.length < 1) {
+    setRank([
+      { rank: '-', name: 'none' },
+      { rank: '-', name: 'none' },
+      { rank: '-', name: 'none' },
+    ]);
+  }
 
   // Call Chat Data
   useEffect(() => {
@@ -105,7 +114,11 @@ const SolvePage = () => {
       clientdata.onConnect = function () {
         clientdata.subscribe(CHAT_SUB + roomId, (message) => {
           let jsonMessageBody = JSON.parse(message.body);
-          setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
+          if(jsonMessageBody.messageType === 'TALK') {
+            setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
+          } else if(jsonMessageBody.messageType === 'RANK'){
+            setRank((prevRank) => [...prevRank, jsonMessageBody])
+          }
         });
         sendWait(clientdata); // 연결된 후에 발행
       };
@@ -163,6 +176,31 @@ const SolvePage = () => {
   const onChangeChat = (e) => {
     setChat(e.target.value);
   };
+  /**************************************************************************/
+  const onSuccessCheck = () => {
+    let prevCount = Number(sessionStorage.getItem('solvedCount'));
+    let cureentCount;
+
+    if(prevCount === cureentCount) {
+      // 문제 풀이 실패 ( 카운트 갯수가 이전과 같음)
+      // 로직 작성
+    } else {
+      // 문제 풀이 성공 ( 카운트 갯수가 이전과 다름)
+      // 로직 작성
+      client.publish({
+        destination: CHAT_PUB,
+        headers: {
+          Authorization: `Bearer ` + sessionStorage.getItem('accessToken'),
+        },
+        body: JSON.stringify({
+          roomId: roomId,
+          senderId: sessionStorage.getItem('userId'),
+          messageType: 'RANK',
+          message: null
+        }),
+      });
+    }
+  }
 
   /**************************************************************************/
 
@@ -457,8 +495,9 @@ const SolvePage = () => {
   };
 
   const handleCopyUrl = () => {
-    navigator.clipboard
-      .writeText(`https://www.devrace.site/redirect/${problemData?.link}`)
+    navigator.clipboard.writeText(
+      `https://www.devrace.site/redirect/${problemData?.link}`,
+    );
   };
 
   return (
@@ -471,6 +510,7 @@ const SolvePage = () => {
         }
         onSelect={handleSelect}
         invite={handleCopyUrl}
+        rank={rank}
       />
       <div className={`Solve--Container--${mode}`}>
         <div>
