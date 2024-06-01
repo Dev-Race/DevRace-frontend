@@ -21,7 +21,7 @@ import CodeEditor from '../component/editor/CodeEditor';
 import OpenChatBtn from '../component/chat/OpenChatBtn';
 import ChatComponent from '../component/chat/ChatComponent';
 import { CSSTransition } from 'react-transition-group';
-import { getProblem, getSolvedCount } from '../apis/problem';
+import { getProblem, getProblemStatus, getSolvedCount } from '../apis/problem';
 import { useParams } from 'react-router-dom';
 
 const javascriptDefault = `
@@ -59,6 +59,7 @@ const SolvePage = () => {
   const { roomId } = useParams();
   const [problemData, setProblemData] = useState();
   const [solvedExampleCount, setSolvedExampleCount] = useState(0);
+  const [problemStatus, setProblemStatus] = useState();
 
   const handleSelect = (select) => {
     setSelectedLanguage(select);
@@ -249,6 +250,20 @@ const SolvePage = () => {
     fetchProblemData();
   }, [roomId]);
 
+  useEffect(() => {
+    const fetchProblemStatus = async () => {
+      try {
+        const res = await getProblemStatus(roomId);
+        setProblemStatus(res);
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProblemStatus();
+  }, []);
+
   function stripHTML(html) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
     return doc.body.textContent || '';
@@ -337,21 +352,29 @@ const SolvePage = () => {
     setProcessing(false);
   };
 
-  useEffect(() => {
-    getSolvedCount();
-  }, []);
-
   const openProblemPage = (problemNumber) => {
     const link = `https://www.acmicpc.net/submit/${problemNumber}`;
     window.open(link, '_blank');
+  };
+
+  const handleCopyUrl = () => {
+    navigator.clipboard
+      .writeText(`https://www.devrace.site/redirect/${problemData?.link}`)
+      .then(() => {
+        console.log('클립보드에 복사되었습니다');
+      });
   };
 
   return (
     <>
       <Header
         headerType="solve"
-        text={`${problemData?.problemResponseDto?.number}.cpp`}
+        text={
+          `${problemData?.problemResponseDto?.number}.` +
+          `${problemData?.language}`
+        }
         onSelect={handleSelect}
+        invite={handleCopyUrl}
       />
       <div className={`Solve--Container--${mode}`}>
         <div>

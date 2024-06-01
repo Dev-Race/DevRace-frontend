@@ -32,3 +32,19 @@ export const getSolvedCount = async () => {
     console.error(error);
   }
 };
+
+export const getProblemStatus = async (roomId) => {
+  const accessToken = sessionStorage.getItem('accessToken');
+
+  try {
+    const response = await Apis.get(`rooms/{roomId}/access-check`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
