@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Editor from '@monaco-editor/react';
 
 const CodeEditor = ({ onChange, language, code, theme }) => {
-  const [value, setValue] = useState(code || '');
+  const savedValue = localStorage.getItem('editorValue');
+  const [value, setValue] = useState(savedValue || code || '');
   const [compileLanguage, setCompileLanguage] = useState('');
 
   const handleEditorChange = (value) => {
@@ -33,6 +34,20 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
   useEffect(() => {
     console.log(compileLanguage);
   }, [compileLanguage]);
+
+  useEffect(() => {
+    const unloadHandler = (event) => {
+      localStorage.setItem('editorValue', value);
+      event.preventDefault();
+      event.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', unloadHandler);
+
+    return () => {
+      window.removeEventListener('beforeunload', unloadHandler);
+    };
+  }, [value]);
 
   return (
     <>

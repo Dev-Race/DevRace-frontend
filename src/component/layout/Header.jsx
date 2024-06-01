@@ -149,12 +149,26 @@ const Header = (props) => {
                 <Dropdown type="language" onSelect={handleSelect} />
               )}
               {headerType === 'solve' && (
-                <button className={`header--${mode}--btn`}>초대링크</button>
+                <button
+                  className={`header--${mode}--btn`}
+                  style={{ color: '#66F' }}
+                  onClick={invite}
+                >
+                  초대링크
+                </button>
               )}
               {headerType === 'review' && (
                 <div className={`header--${mode}--btn`}>여기에는 언어</div>
               )}
               <button className={`header--${mode}--btn`}>나가기</button>
+              {headerType === 'solve' && (
+                <img
+                  src={mode === 'light' ? people_light : people_dark}
+                  alt="logo_text"
+                  className="header--logo--text"
+                  onClick={() => navigate('/profile')}
+                />
+              )}
             </div>
           </div>
         </>

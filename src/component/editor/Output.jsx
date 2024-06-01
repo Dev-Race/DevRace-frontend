@@ -6,25 +6,25 @@ const Output = ({ outputDetails }) => {
 
     if (statusId === 6) {
       // 컴파일 에러 일때
-      return <pre>{atob(outputDetails?.compile_output)}</pre>;
+      return <span>{atob(outputDetails?.compile_output)}</span>;
     } else if (statusId === 3) {
       return (
-        <pre>
+        <span>
           {atob(outputDetails.stdout) !== null
             ? `${atob(outputDetails.stdout)}`
             : null}
-        </pre>
+        </span>
       );
     } else if (statusId === 5) {
-      return <pre>{`Time Limit Exceeded`}</pre>;
+      return <span>{`Time Limit Exceeded`}</span>;
     } else {
-      return <pre>{atob(outputDetails?.stderr)}</pre>;
+      return <span>{atob(outputDetails?.stderr)}</span>;
     }
   };
 
   return (
     <>
-      <div>{outputDetails ? <>{getOutput()}</> : null}</div>
+      <span>{outputDetails ? <>{getOutput()}</> : null}</span>
     </>
   );
 };

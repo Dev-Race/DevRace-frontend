@@ -21,6 +21,8 @@ import CodeEditor from '../component/editor/CodeEditor';
 import OpenChatBtn from '../component/chat/OpenChatBtn';
 import ChatComponent from '../component/chat/ChatComponent';
 import { CSSTransition } from 'react-transition-group';
+import { getProblem, getProblemStatus, getSolvedCount } from '../apis/problem';
+import { useParams } from 'react-router-dom';
 
 const javascriptDefault = `
 `;
@@ -41,7 +43,7 @@ const SolvePage = () => {
   const [startYSolve, setStartYSolve] = useState(0);
   const [startHeightSolve, setStartHeightSolve] = useState(0);
 
-  const [isExampleSuccess, setIsExampleSuccess] = useState(false);
+  const [isExampleSuccess, setIsExampleSuccess] = useState([]);
   const [code, setCode] = useState(javascriptDefault);
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
   const [outputDetails, setOutputDetails] = useState(null);
@@ -52,7 +54,12 @@ const SolvePage = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [transitionOpen, setTransitionOpen] = useState(false);
   const [isFirstMounted, setIsFirstMounted] = useState(true);
-  const [top, setTop] = useState(180); // top 상태를 여기에서 관리
+  const [top, setTop] = useState(180);
+
+  const { roomId } = useParams();
+  const [problemData, setProblemData] = useState();
+  const [solvedExampleCount, setSolvedExampleCount] = useState(0);
+  const [problemStatus, setProblemStatus] = useState();
 
   const handleSelect = (select) => {
     setSelectedLanguage(select);
@@ -157,7 +164,7 @@ const SolvePage = () => {
     setProcessing(true);
     const formData = {
       language_id: languageId,
-      source_code: btoa(code),
+      source_code: encodeURIComponent(code),
       stdin: '',
     };
 
@@ -229,9 +236,150 @@ const SolvePage = () => {
     setTransitionOpen(false);
   };
 
+  useEffect(() => {
+    const fetchProblemData = async () => {
+      try {
+        const data = await getProblem(roomId);
+        setProblemData(data);
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProblemData();
+  }, [roomId]);
+
+  useEffect(() => {
+    const fetchProblemStatus = async () => {
+      try {
+        const res = await getProblemStatus(roomId);
+        setProblemStatus(res);
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProblemStatus();
+  }, [roomId]);
+
+  function stripHTML(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || '';
+  }
+
+  const handleExampleCompile = async () => {
+    setProcessing(true);
+    let successArray = [];
+
+    const compileExample = async (input) => {
+      const formData = {
+        language_id: languageId,
+        source_code: encodeURIComponent(code),
+        stdin: encodeURIComponent(input),
+      };
+
+      const options = {
+        method: 'POST',
+        url: process.env.REACT_APP_RAPID_API_URL,
+        params: { base64_encoded: 'true', fields: '*' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
+          'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+        },
+        data: formData,
+      };
+
+      try {
+        const response = await axios.request(options);
+        const token = response.data.token;
+        const result = await checkStatus(token);
+        return result;
+      } catch (err) {
+        let error = err.response ? err.response.data : err;
+        setProcessing(false);
+        console.log('catch block...', error);
+        return null;
+      }
+    };
+
+    const checkStatus = async (token) => {
+      const options = {
+        method: 'GET',
+        url: `${process.env.REACT_APP_RAPID_API_URL}/${token}`,
+        params: { base64_encoded: 'true', fields: '*' },
+        headers: {
+          'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
+          'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+        },
+      };
+
+      try {
+        let response = await axios.request(options);
+        let statusId = response.data.status?.id;
+
+        if (statusId === 1 || statusId === 2) {
+          setTimeout(() => {
+            return checkStatus(token);
+          }, 2000);
+        } else {
+          setProcessing(false);
+          return response.data;
+        }
+      } catch (err) {
+        setProcessing(false);
+        return null;
+      }
+    };
+
+    await Promise.all(
+      problemData?.problemResponseDto?.sampleInput.map(async (input, index) => {
+        const expectedOutput =
+          problemData.problemResponseDto.sampleOutput[index];
+        const result = await compileExample(input);
+        if (result) {
+          const output = atob(result.stdout || '');
+          successArray[index] = output.trim() === expectedOutput.trim();
+        } else {
+          successArray[index] = false;
+        }
+      }),
+    );
+
+    setIsExampleSuccess(successArray);
+    setProcessing(false);
+  };
+
+  useEffect(() => {
+    getSolvedCount();
+  }, []);
+
+  const openProblemPage = (problemNumber) => {
+    const link = `https://www.acmicpc.net/submit/${problemNumber}`;
+    window.open(link, '_blank');
+  };
+
+  const handleCopyUrl = () => {
+    navigator.clipboard
+      .writeText(`https://www.devrace.site/redirect/${problemData?.link}`)
+      .then(() => {
+        console.log('클립보드에 복사되었습니다');
+      });
+  };
+
   return (
     <>
-      <Header headerType="solve" text="problem 이름" onSelect={handleSelect} />
+      <Header
+        headerType="solve"
+        text={
+          `${problemData?.problemResponseDto?.number}.` +
+          `${problemData?.language}`
+        }
+        onSelect={handleSelect}
+        invite={handleCopyUrl}
+      />
       <div className={`Solve--Container--${mode}`}>
         <div>
           {!isChatOpen && (
@@ -261,27 +409,15 @@ const SolvePage = () => {
             <div className="Solve--Explain--Contents">
               <span className={`Solve--Explain--Title--${mode}`}>문제</span>
               <div className={`Solve--Explain--Text--${mode}`}>
-                Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
-                augue vitae feugiat. Aliquet sed sem consequat amet ultricies
-                massa elit. Vulputate blandit ipsum egestas urna. Tortor augue
-                id facilisis cursus elit in leo in sed. Egestas ut mauris nec
-                aliquet adipiscing vitae lectus egestas.{' '}
+                {stripHTML(problemData?.problemResponseDto?.content)}
               </div>
               <span className={`Solve--Explain--Title--${mode}`}>입력</span>
               <div className={`Solve--Explain--Text--${mode}`}>
-                Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
-                augue vitae feugiat. Aliquet sed sem consequat amet ultricies
-                massa elit. Vulputate blandit ipsum egestas urna. Tortor augue
-                id facilisis cursus elit in leo in sed. Egestas ut mauris nec
-                aliquet adipiscing vitae lectus egestas.{' '}
+                {stripHTML(problemData?.problemResponseDto?.problemInput)}
               </div>
               <span className={`Solve--Explain--Title--${mode}`}>출력</span>
               <div className={`Solve--Explain--Text--${mode}`}>
-                Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
-                augue vitae feugiat. Aliquet sed sem consequat amet ultricies
-                massa elit. Vulputate blandit ipsum egestas urna. Tortor augue
-                id facilisis cursus elit in leo in sed. Egestas ut mauris nec
-                aliquet adipiscing vitae lectus egestas.{' '}
+                {stripHTML(problemData?.problemResponseDto?.problemOutput)}
               </div>
             </div>
           </div>
@@ -300,38 +436,46 @@ const SolvePage = () => {
               <span className="Solve--ExampleInput--HeaderText">예제 입력</span>
               <div className="Solve--ExampleInput--SuccessCount">
                 <img src={check_green} alt="Right" />
-                4/10
+                {isExampleSuccess.filter((success) => success).length}/
+                {problemData?.problemResponseDto?.sampleInput.length}
               </div>
             </div>
-            <div
-              className={`Solve--ExampleInput--Title--${mode}`}
-              style={
-                isExampleSuccess
-                  ? { background: '#C8FFA7' }
-                  : { background: '#FFB9AA' }
-              }
-            >
-              <span className="Solve--ExampleInput--HeaderText">예제 1</span>
-              <img
-                src={isExampleSuccess ? yes_black : no_black}
-                alt="Example Right"
-                style={{ marginRight: '24px' }}
-              />
-            </div>
-            <div className={`Solve--ExampleInput--Contents--${mode}`}>
-              <span>입력</span>
-              <div className={`Solve--ExampleInput--Text--${mode}`}>
-                Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
-                augue vitae feugiat. Aliquet sed sem consequat amet ultricies
-                massa elit.
-              </div>
-              <span>출력</span>
-              <div className={`Solve--ExampleInput--Text--${mode}`}>
-                Lorem ipsum dolor sit amet consectetur. Sit egestas sagittis nec
-                augue vitae feugiat. Aliquet sed sem consequat amet ultricies
-                massa elit.
-              </div>
-            </div>
+
+            {problemData?.problemResponseDto?.sampleInput.map(
+              (input, index) => (
+                <div key={index} style={{ width: '100%' }}>
+                  <div
+                    className={`Solve--ExampleInput--Title--${mode}`}
+                    style={
+                      isExampleSuccess[index]
+                        ? { background: '#C8FFA7' }
+                        : { background: '#FFB9AA' }
+                    }
+                  >
+                    <span className="Solve--ExampleInput--HeaderText">
+                      예제 {index + 1}
+                    </span>
+                    <img
+                      src={isExampleSuccess[index] ? yes_black : no_black}
+                      alt="Example Right"
+                      style={{ marginRight: '24px' }}
+                    />
+                  </div>
+                  <div className={`Solve--ExampleInput--Contents--${mode}`}>
+                    <span>입력</span>
+                    <div className={`Solve--ExampleInput--Text--${mode}`}>
+                      {stripHTML(input)}
+                    </div>
+                    <span>출력</span>
+                    <div className={`Solve--ExampleInput--Text--${mode}`}>
+                      {stripHTML(
+                        problemData?.problemResponseDto?.sampleOutput[index],
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ),
+            )}
           </div>
         </div>
         <div className={`Solve--Right--Container--${mode}`}>
@@ -369,7 +513,14 @@ const SolvePage = () => {
           </div>
         </div>
       </div>
-      <Footer mode={mode} handleCompile={handleCompile} />
+      <Footer
+        mode={mode}
+        handleCompile={handleCompile}
+        handleExampleCompile={handleExampleCompile}
+        openProblemPage={() =>
+          openProblemPage(problemData?.problemResponseDto?.number)
+        }
+      />
     </>
   );
 };

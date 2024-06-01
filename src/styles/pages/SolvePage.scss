@@ -90,10 +90,14 @@
 .Solve--ExampleInput--Container {
   display: flex;
   flex-direction: column;
+  width: 100%;
   position: relative;
 
   align-items: flex-start;
   background: none;
+  overflow-y: scroll;
+
+  margin-bottom: 30px;
 }
 
 .Solve--ExampleInput--Header {
@@ -228,7 +232,8 @@
   display: flex;
 
   width: 1044px;
-  height: 90px;
+  height: fit-content;
+  min-height: 90px;
 
   align-items: center;
   justify-content: flex-start;
