@@ -262,7 +262,7 @@ const SolvePage = () => {
     };
 
     fetchProblemStatus();
-  }, []);
+  }, [roomId]);
 
   function stripHTML(html) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -351,6 +351,10 @@ const SolvePage = () => {
     setIsExampleSuccess(successArray);
     setProcessing(false);
   };
+
+  useEffect(() => {
+    getSolvedCount();
+  }, []);
 
   const openProblemPage = (problemNumber) => {
     const link = `https://www.acmicpc.net/submit/${problemNumber}`;
