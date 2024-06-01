@@ -118,6 +118,8 @@ const SolvePage = () => {
             setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
           } else if(jsonMessageBody.messageType === 'RANK'){
             setRank((prevRank) => [...prevRank, jsonMessageBody])
+          } else {
+            
           }
         });
         sendWait(clientdata); // 연결된 후에 발행

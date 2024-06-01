@@ -85,7 +85,7 @@ const ChatComponent = (props) => {
                 <div className={`Chat--OtherChat--TextBox--${mode}`}>
                   {chat.message}
                 </div>
-                <div className="Chat--Chat--Time">{`${chat.createdTime[3]}:${chat.createdTime[4]}`}</div>
+                <div className="Chat--Chat--Time">{`${chat.createdTime[4]}:${chat.createdTime[3]}`}</div>
               </div>
             ),
           )}
