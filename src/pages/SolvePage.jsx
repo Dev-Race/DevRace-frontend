@@ -73,6 +73,8 @@ const SolvePage = () => {
   const [chatData, setChatData] = useState([]);
   const [rank, setRank] = useState([]);
   const [page, setPage] = useState(0);
+
+  console.log(chatData);
   
   if(rank.length < 1) {
     setRank([
@@ -86,12 +88,14 @@ const SolvePage = () => {
   useEffect(() => {
     Apis.get(`/rooms/${roomId}/chats`, {
       params: {
-        page: page,
+        page: 0,
       },
     }).then((response) => {
       setChatData(response.data.data.content);
     });
   }, []);
+
+  console.log(localStorage.getItem('hasConnected'))
 
   useEffect(() => {
     connect();
@@ -100,6 +104,10 @@ const SolvePage = () => {
 
   const connect = () => {
     if (client) disConnect();
+    if (localStorage.getItem('hasConnected') === null) {
+      localStorage.setItem('hasConnected', JSON.stringify(false));
+    }
+
     try {
       const clientdata = new StompJs.Client({
         brokerURL: CHAT_WS,
@@ -114,15 +122,21 @@ const SolvePage = () => {
       clientdata.onConnect = function () {
         clientdata.subscribe(CHAT_SUB + roomId, (message) => {
           let jsonMessageBody = JSON.parse(message.body);
-          if(jsonMessageBody.messageType === 'TALK') {
+          if (jsonMessageBody.messageType === 'TALK') {
             setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
-          } else if(jsonMessageBody.messageType === 'RANK'){
-            setRank((prevRank) => [...prevRank, jsonMessageBody])
-          } else {
-            
+          } else if (jsonMessageBody.messageType === 'RANK') {
+            setRank((prevRank) => [...prevRank, jsonMessageBody]);
+          } else if (jsonMessageBody.messageType === 'ENTER') {
+            setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
+          } else if (jsonMessageBody.messageType === 'LEAVE') {
+            // Do something if needed
           }
         });
-        sendWait(clientdata); // 연결된 후에 발행
+
+        if (JSON.parse(localStorage.getItem('hasConnected')) === false) {
+          localStorage.setItem('hasConnected', JSON.stringify(true));
+          sendWait(clientdata);
+        }
       };
 
       clientdata.activate();
