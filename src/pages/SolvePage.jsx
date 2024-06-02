@@ -88,12 +88,15 @@ const SolvePage = () => {
   useEffect(() => {
     Apis.get(`/rooms/${roomId}/chats`, {
       params: {
-        page: 0,
+        page: page,
       },
     }).then((response) => {
-      setChatData(response.data.data.content);
+      setChatData((prevChatData) => [
+        ...response.data.data.content,
+        ...prevChatData,
+      ]);
     });
-  }, []);
+  }, [page]);
 
   console.log(localStorage.getItem('hasConnected'))
 
@@ -552,6 +555,8 @@ const SolvePage = () => {
               chatData={chatData}
               sendMessage={sendMessage}
               onChangeChat={onChangeChat}
+              page={page}
+              setPage={setPage}
             />
           </CSSTransition>
         </div>
