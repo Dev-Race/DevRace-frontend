@@ -75,8 +75,8 @@ const SolvePage = () => {
   const [page, setPage] = useState(0);
 
   console.log(chatData);
-  
-  if(rank.length < 1) {
+
+  if (rank.length < 1) {
     setRank([
       { rank: '-', name: 'none' },
       { rank: '-', name: 'none' },
@@ -98,7 +98,7 @@ const SolvePage = () => {
     });
   }, [page]);
 
-  console.log(localStorage.getItem('hasConnected'))
+  console.log(localStorage.getItem('hasConnected'));
 
   useEffect(() => {
     connect();
@@ -130,9 +130,7 @@ const SolvePage = () => {
           } else if (jsonMessageBody.messageType === 'RANK') {
             setRank((prevRank) => [...prevRank, jsonMessageBody]);
           } else if (jsonMessageBody.messageType === 'ENTER') {
-            
           } else if (jsonMessageBody.messageType === 'LEAVE') {
-            
           }
         });
 
@@ -200,7 +198,7 @@ const SolvePage = () => {
     let prevCount = Number(sessionStorage.getItem('solvedCount'));
     let cureentCount;
 
-    if(prevCount === cureentCount) {
+    if (prevCount === cureentCount) {
       // 문제 풀이 실패 ( 카운트 갯수가 이전과 같음)
       // 로직 작성
     } else {
@@ -215,11 +213,11 @@ const SolvePage = () => {
           roomId: roomId,
           senderId: sessionStorage.getItem('userId'),
           messageType: 'RANK',
-          message: null
+          message: null,
         }),
       });
     }
-  }
+  };
 
   /**************************************************************************/
 
@@ -523,10 +521,7 @@ const SolvePage = () => {
     <>
       <Header
         headerType="solve"
-        text={
-          `${problemData?.problemResponseDto?.number}.` +
-          `${problemData?.language}`
-        }
+        text={`${problemData?.problemResponseDto?.title}`}
         onSelect={handleSelect}
         invite={handleCopyUrl}
         rank={rank}
