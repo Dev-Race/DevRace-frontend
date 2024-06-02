@@ -39,6 +39,15 @@ const ChatComponent = (props) => {
     setOpacity(event.target.value / 100);
   };
 
+  const convertTime = (time) => {
+    const date = new Date(time);
+
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+
+    return `${hours}:${minutes}`;
+  };
+
   return (
     <div
       ref={chatRef}
@@ -70,7 +79,7 @@ const ChatComponent = (props) => {
           chatData.map((chat) =>
             chat.senderId === Number(sessionStorage.getItem('userId')) ? (
               <div className="Chat--MyChat--Container">
-                <div className="Chat--Chat--Time">{`${chat.createdTime[3]}:${chat.createdTime[4]}`}</div>
+                <div className="Chat--Chat--Time">{convertTime(chat.createdTime)}</div>
                 <div className={`Chat--MyChat--TextBox--${mode}`}>
                   {chat.message}
                 </div>
