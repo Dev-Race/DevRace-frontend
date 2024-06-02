@@ -76,28 +76,43 @@ const ChatComponent = (props) => {
       </div>
       <div className="Chat--Content--Container">
         {chatData &&
-          chatData.map((chat) =>
-            chat.senderId === Number(sessionStorage.getItem('userId')) ? (
-              <div className="Chat--MyChat--Container">
-                <div className="Chat--Chat--Time">{convertTime(chat.createdTime)}</div>
-                <div className={`Chat--MyChat--TextBox--${mode}`}>
-                  {chat.message}
+          chatData.map((chat, index) => {
+            if (chat.messageType === 'ENTER' || chat.messageType === 'LEAVE') {
+              return (
+                <div className="Chat--Notification--Container" key={index}>
+                  <span className={`Chat--Notification--Text--${mode}`}>
+                    {`${chat.senderName}님이 입장하셨습니다.`}
+                  </span>
                 </div>
-              </div>
-            ) : (
-              <div className="Chat--OtherChat--Container">
-                <img
-                  src={chat.senderImageUrl}
-                  alt="profileImg"
-                  className="Chat--OtherProfile--Container"
-                />
-                <div className={`Chat--OtherChat--TextBox--${mode}`}>
-                  {chat.message}
+              );
+            } else if (chat.messageType === 'TALK') {
+              return chat.senderId ===
+                Number(sessionStorage.getItem('userId')) ? (
+                <div className="Chat--MyChat--Container" key={index}>
+                  <div className="Chat--Chat--Time">
+                    {convertTime(chat.createdTime)}
+                  </div>
+                  <div className={`Chat--MyChat--TextBox--${mode}`}>
+                    {chat.message}
+                  </div>
                 </div>
-                <div className="Chat--Chat--Time">{`${chat.createdTime[4]}:${chat.createdTime[3]}`}</div>
-              </div>
-            ),
-          )}
+              ) : (
+                <div className="Chat--OtherChat--Container" key={index}>
+                  <img
+                    src={chat.senderImageUrl}
+                    alt="profileImg"
+                    className="Chat--OtherProfile--Container"
+                  />
+                  <div className={`Chat--OtherChat--TextBox--${mode}`}>
+                    {chat.message}
+                  </div>
+                  <div className="Chat--Chat--Time">
+                    {convertTime(chat.createdTime)}
+                  </div>
+                </div>
+              );
+            }
+          })}
       </div>
       <Input
         type="chat"
