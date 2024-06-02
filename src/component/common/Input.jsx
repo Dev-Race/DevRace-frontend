@@ -21,7 +21,7 @@ const Input = (props) => {
         disabled={disable}
         value={value}
         onKeyDown={(e) => {
-          if ((mode === 'chat') && e.keyCode === 13) {
+          if ((type === 'chat') && e.keyCode === 13) {
             sendMessage(e);
           }
         }}
