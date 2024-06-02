@@ -13,7 +13,6 @@ const Toggle = () => {
       dispatch(changeLightMode());
     }
   }
-  console.log(mode)
 
   return (
     <div className="toggle_wrapper" onClick={onChangeMode}>

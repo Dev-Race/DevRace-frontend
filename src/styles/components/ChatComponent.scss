@@ -60,13 +60,14 @@
 .Chat--Content--Container {
   display: flex;
   flex-direction: column;
-  align-items: center;
 
   width: 343px;
   height: 471px;
 
   padding: 24px 0px;
   gap: 24px;
+
+  overflow-y: scroll;
 }
 
 .Chat--Open--Btn--light,
@@ -143,21 +144,21 @@
 
 .Chat--MyChat--Container {
   display: flex;
-
-  width: 343px;
-  justify-content: flex-end;
+  width: max-content;
+  max-width: 250px;
 
   gap: 4px;
+  margin-left : auto;
   margin-right: 24px;
 }
 
 .Chat--OtherChat--Container {
   display: flex;
-
-  width: 343px;
-  justify-content: flex-start;
+  width: max-content;
+  max-width: 250px;
 
   gap: 4px;
+  margin-right : auto;
   margin-left: 24px;
 }
 
@@ -223,4 +224,22 @@
 
   opacity: 0.85;
   background-color: yellow;
+}
+
+.Chat--Notification--Container {
+  display: flex;
+  margin-left : auto;
+  margin-right: auto;
+}
+
+.Chat--Notification--Text--light,
+.Chat--Notification--Text--dark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  padding: 4px 16px;
+  opacity: 0.5;
+  background: var(--gray-200, #E3E4E5);
+  border-radius: 50px;
 }

@@ -18,19 +18,10 @@ import { useNavigate } from 'react-router-dom';
  * headerType : login, main, create, wait, solve, review, mycode, default
  */
 const Header = (props) => {
-  const { headerType, text, setIsLoggedIn, leaveWaitRoom, invite, onSelect } =
-    props;
-  const { mode } = useSelector((state) => state.toggle);
-  const [selectedOption, setSelectedOption] = useState('');
-  const navigate = useNavigate();
+  const { headerType, text, setIsLoggedIn, leaveWaitRoom, invite, onSelect, rank } = props;
 
-  const rankings = [
-    { rank: 1, name: 'qwer' },
-    { rank: 2, name: 'qwer' },
-    { rank: 3, name: 'qwer' },
-    { rank: '4', name: 'qwer' },
-    { rank: '-', name: 'qwer' },
-  ];
+  const { mode } = useSelector((state) => state.toggle);
+  const navigate = useNavigate();
 
   const handleSelect = (select) => {
     onSelect(select);
@@ -144,7 +135,7 @@ const Header = (props) => {
             <div className={`header--${mode}--problemNum`}>{text}</div>
             <div className={`header--${mode}--btn--box`}>
               <Toggle />
-              <RankList rankings={rankings} />
+              <RankList rankings={rank} />
               {headerType === 'solve' && (
                 <Dropdown type="language" onSelect={handleSelect} />
               )}

@@ -23,6 +23,8 @@ import ChatComponent from '../component/chat/ChatComponent';
 import { CSSTransition } from 'react-transition-group';
 import { getProblem, getProblemStatus, getSolvedCount } from '../apis/problem';
 import { useParams } from 'react-router-dom';
+import Apis from '../apis/Api';
+import * as StompJs from '@stomp/stompjs';
 
 const javascriptDefault = `
 `;
@@ -61,6 +63,166 @@ const SolvePage = () => {
   const [solvedExampleCount, setSolvedExampleCount] = useState(0);
   const [problemStatus, setProblemStatus] = useState();
 
+  /**************************************************************************/
+  const CHAT_WS = process.env.REACT_APP_CHAT_WS;
+  const CHAT_SUB = process.env.REACT_APP_CHAT_SUB;
+  const CHAT_PUB = process.env.REACT_APP_CHAT_PUB;
+
+  let [client, setClient] = useState(null);
+  const [chat, setChat] = useState(''); // 입력된 chat을 받을 변수
+  const [chatData, setChatData] = useState([]);
+  const [rank, setRank] = useState([]);
+  const [page, setPage] = useState(0);
+
+  console.log(chatData);
+  
+  if(rank.length < 1) {
+    setRank([
+      { rank: '-', name: 'none' },
+      { rank: '-', name: 'none' },
+      { rank: '-', name: 'none' },
+    ]);
+  }
+
+  // Call Chat Data
+  useEffect(() => {
+    Apis.get(`/rooms/${roomId}/chats`, {
+      params: {
+        page: page,
+      },
+    }).then((response) => {
+      setChatData((prevChatData) => [
+        ...response.data.data.content,
+        ...prevChatData,
+      ]);
+    });
+  }, [page]);
+
+  console.log(localStorage.getItem('hasConnected'))
+
+  useEffect(() => {
+    connect();
+    return () => disConnect();
+  }, []);
+
+  const connect = () => {
+    if (client) disConnect();
+    if (localStorage.getItem('hasConnected') === null) {
+      localStorage.setItem('hasConnected', JSON.stringify(false));
+    }
+
+    try {
+      const clientdata = new StompJs.Client({
+        brokerURL: CHAT_WS,
+        connectHeaders: {
+          Authorization: `Bearer ` + sessionStorage.getItem('accessToken'),
+        },
+        reconnectDelay: 5000, // 자동 재연결
+        heartbeatIncoming: 4000,
+        heartbeatOutgoing: 4000,
+      });
+
+      clientdata.onConnect = function () {
+        clientdata.subscribe(CHAT_SUB + roomId, (message) => {
+          let jsonMessageBody = JSON.parse(message.body);
+          if (jsonMessageBody.messageType === 'TALK') {
+            setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
+          } else if (jsonMessageBody.messageType === 'RANK') {
+            setRank((prevRank) => [...prevRank, jsonMessageBody]);
+          } else if (jsonMessageBody.messageType === 'ENTER') {
+            setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
+          } else if (jsonMessageBody.messageType === 'LEAVE') {
+            // Do something if needed
+          }
+        });
+
+        if (JSON.parse(localStorage.getItem('hasConnected')) === false) {
+          localStorage.setItem('hasConnected', JSON.stringify(true));
+          sendWait(clientdata);
+        }
+      };
+
+      clientdata.activate();
+      setClient(clientdata);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const disConnect = () => {
+    if (client === null) {
+      return;
+    }
+    client.deactivate();
+  };
+
+  const sendWait = (connectedClient) => {
+    connectedClient.publish({
+      destination: CHAT_PUB,
+      headers: {
+        Authorization: `Bearer ` + sessionStorage.getItem('accessToken'),
+      },
+      body: JSON.stringify({
+        roomId: roomId,
+        senderId: sessionStorage.getItem('userId'),
+        messageType: 'ENTER',
+        message: null,
+      }),
+    });
+  };
+
+  // Send Chat to Socket
+  const sendMessage = (e) => {
+    if (chat === '') {
+      return;
+    }
+    client.publish({
+      destination: CHAT_PUB,
+      headers: {
+        Authorization: `Bearer ` + sessionStorage.getItem('accessToken'),
+      },
+      body: JSON.stringify({
+        roomId: roomId,
+        senderId: sessionStorage.getItem('userId'),
+        messageType: 'TALK',
+        message: chat,
+      }),
+    });
+    setChat('');
+    e.preventDefault();
+  };
+
+  const onChangeChat = (e) => {
+    setChat(e.target.value);
+  };
+  /**************************************************************************/
+  const onSuccessCheck = () => {
+    let prevCount = Number(sessionStorage.getItem('solvedCount'));
+    let cureentCount;
+
+    if(prevCount === cureentCount) {
+      // 문제 풀이 실패 ( 카운트 갯수가 이전과 같음)
+      // 로직 작성
+    } else {
+      // 문제 풀이 성공 ( 카운트 갯수가 이전과 다름)
+      // 로직 작성
+      client.publish({
+        destination: CHAT_PUB,
+        headers: {
+          Authorization: `Bearer ` + sessionStorage.getItem('accessToken'),
+        },
+        body: JSON.stringify({
+          roomId: roomId,
+          senderId: sessionStorage.getItem('userId'),
+          messageType: 'RANK',
+          message: null
+        }),
+      });
+    }
+  }
+
+  /**************************************************************************/
+
   const handleSelect = (select) => {
     setSelectedLanguage(select);
   };
@@ -84,10 +246,6 @@ const SolvePage = () => {
         break;
     }
   }, [selectedLanguage]);
-
-  useEffect(() => {
-    console.log(languageId);
-  }, [languageId]);
 
   const handleMouseDownExplain = (e) => {
     setIsDraggingExplain(true);
@@ -187,9 +345,7 @@ const SolvePage = () => {
         checkStatus(token);
       })
       .catch((err) => {
-        let error = err.response ? err.response.data : err;
         setProcessing(false);
-        console.log('catch block...', error);
       });
   };
 
@@ -227,8 +383,6 @@ const SolvePage = () => {
     setIsChatOpen(true);
     setTransitionOpen(true);
     setIsFirstMounted(false);
-    console.log(isFirstMounted);
-    console.log('open');
   };
 
   const handleCloseChat = () => {
@@ -241,7 +395,6 @@ const SolvePage = () => {
       try {
         const data = await getProblem(roomId);
         setProblemData(data);
-        console.log(data);
       } catch (error) {
         console.error(error);
       }
@@ -255,7 +408,6 @@ const SolvePage = () => {
       try {
         const res = await getProblemStatus(roomId);
         setProblemStatus(res);
-        console.log(res);
       } catch (error) {
         console.error(error);
       }
@@ -300,7 +452,7 @@ const SolvePage = () => {
       } catch (err) {
         let error = err.response ? err.response.data : err;
         setProcessing(false);
-        console.log('catch block...', error);
+        console.error(error);
         return null;
       }
     };
@@ -362,11 +514,9 @@ const SolvePage = () => {
   };
 
   const handleCopyUrl = () => {
-    navigator.clipboard
-      .writeText(`https://www.devrace.site/redirect/${problemData?.link}`)
-      .then(() => {
-        console.log('클립보드에 복사되었습니다');
-      });
+    navigator.clipboard.writeText(
+      `https://www.devrace.site/redirect/${problemData?.link}`,
+    );
   };
 
   return (
@@ -379,6 +529,7 @@ const SolvePage = () => {
         }
         onSelect={handleSelect}
         invite={handleCopyUrl}
+        rank={rank}
       />
       <div className={`Solve--Container--${mode}`}>
         <div>
@@ -400,6 +551,12 @@ const SolvePage = () => {
               onClick={handleCloseChat}
               top={top}
               setTop={setTop}
+              chat={chat}
+              chatData={chatData}
+              sendMessage={sendMessage}
+              onChangeChat={onChangeChat}
+              page={page}
+              setPage={setPage}
             />
           </CSSTransition>
         </div>
