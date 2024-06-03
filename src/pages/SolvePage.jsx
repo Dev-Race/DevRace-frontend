@@ -607,14 +607,6 @@ const SolvePage = () => {
 
   return (
     <>
-      <Header
-        headerType="solve"
-        text={`${problemData?.problemResponseDto?.title}`}
-        onSelect={handleSelect}
-        invite={handleCopyUrl}
-        rank={rank}
-        exit={() => setIsExit(true)}
-      />
       {isExit && (
         <div className="Solve--Modal--Wrapper">
           <Modal
@@ -667,6 +659,14 @@ const SolvePage = () => {
           buttons={successButton}
         />
       </div> */}
+      <Header
+        headerType="solve"
+        text={`${problemData?.problemResponseDto?.title}`}
+        onSelect={handleSelect}
+        invite={handleCopyUrl}
+        rank={rank}
+        onClick={() => setIsExit(true)}
+      />
       <div className={`Solve--Container--${mode}`}>
         <div>
           {!isChatOpen && (
@@ -810,7 +810,7 @@ const SolvePage = () => {
         mode={mode}
         handleCompile={handleCompile}
         handleExampleCompile={handleExampleCompile}
-        submit={() => setIsSubmit(true)}
+        onClick={() => setIsSubmit(true)}
       />
     </>
   );

@@ -26,7 +26,7 @@ const Header = (props) => {
     invite,
     onSelect,
     rank,
-    exit,
+    onClick,
   } = props;
 
   const { mode } = useSelector((state) => state.toggle);
@@ -160,7 +160,7 @@ const Header = (props) => {
               {headerType === 'review' && (
                 <div className={`header--${mode}--btn`}>여기에는 언어</div>
               )}
-              <button className={`header--${mode}--btn`} onClick={exit}>
+              <button className={`header--${mode}--btn`} onClick={onClick}>
                 나가기
               </button>
               {headerType === 'solve' && (

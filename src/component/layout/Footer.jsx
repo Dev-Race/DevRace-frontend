@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
  */
 
 const Footer = (props) => {
-  const { type, handleCompile, handleExampleCompile, submit } = props;
+  const { type, handleCompile, handleExampleCompile, onClick } = props;
   const { mode } = useSelector((state) => state.toggle);
   if (type === 'default') {
     return (
@@ -45,7 +45,7 @@ const Footer = (props) => {
           mode={mode}
           shape="angle"
           text="제출 하기"
-          onClick={submit}
+          onClick={onClick}
         />
       </div>
     </div>
