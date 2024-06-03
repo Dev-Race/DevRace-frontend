@@ -18,7 +18,16 @@ import { useNavigate } from 'react-router-dom';
  * headerType : login, main, create, wait, solve, review, mycode, default
  */
 const Header = (props) => {
-  const { headerType, text, setIsLoggedIn, leaveWaitRoom, invite, onSelect, rank } = props;
+  const {
+    headerType,
+    text,
+    setIsLoggedIn,
+    leaveWaitRoom,
+    invite,
+    onSelect,
+    rank,
+    onClick,
+  } = props;
 
   const { mode } = useSelector((state) => state.toggle);
   const navigate = useNavigate();
@@ -151,7 +160,9 @@ const Header = (props) => {
               {headerType === 'review' && (
                 <div className={`header--${mode}--btn`}>여기에는 언어</div>
               )}
-              <button className={`header--${mode}--btn`}>나가기</button>
+              <button className={`header--${mode}--btn`} onClick={onClick}>
+                나가기
+              </button>
               {headerType === 'solve' && (
                 <img
                   src={mode === 'light' ? people_light : people_dark}

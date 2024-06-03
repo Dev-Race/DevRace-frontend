@@ -9,6 +9,9 @@ import Push from '../component/common/Push';
 
 import { memberInfo } from '../apis/member';
 
+import Modal from '../component/common/Modal';
+import errorIcon from '../assets/icons/error_icon.svg';
+
 const MainPage = () => {
   const { mode } = useSelector((state) => state.toggle);
 
@@ -44,13 +47,12 @@ const MainPage = () => {
       memberInfo();
       setIsLoggedIn(true);
       const redirectUrl = localStorage.getItem('redirectUrl');
-      if(redirectUrl) {
-        navigate(redirectUrl)
+      if (redirectUrl) {
+        navigate(redirectUrl);
         localStorage.removeItem('redirectUrl');
       }
     }
-  
-  },[])
+  }, []);
 
   useEffect(() => {
     if (isMounted && mode !== isChangedMode) {
@@ -63,9 +65,34 @@ const MainPage = () => {
     setIsMounted(true);
   }, []);
 
+  /*
+  const rejoinButton = [
+    <Button
+      type="modal"
+      shape="angle"
+      text="확인"
+      onClick={() => {
+        console.log('clicked');
+      }}
+    />,
+  ];
+  */
+
   return (
     <div className={`main_container--${mode}`}>
-      <Header headerType="main" text={isLoggedIn ? '로그아웃' : '로그인'} setIsLoggedIn={setIsLoggedIn}/>
+      <Header
+        headerType="main"
+        text={isLoggedIn ? '로그아웃' : '로그인'}
+        setIsLoggedIn={setIsLoggedIn}
+      />
+      {/* <div className="Main--Modal--Wrapper">
+        <Modal
+          imageSource={errorIcon}
+          title="퇴장하지 않은 방이 있습니다!"
+          content="기존의 문제풀이 페이지로 재참여합니다."
+          buttons={rejoinButton}
+        />
+      </div> */}
       <div className="main_content_container">
         <span className={`main_text_caption--${mode}`}>
           DEV RACE를 이용해서
@@ -78,7 +105,9 @@ const MainPage = () => {
           text="시작하기"
           mode={mode}
           shape="non-angle"
-          onClick={isLoggedIn ? (() => navigate('/create')) : (() => navigate('/login'))}
+          onClick={
+            isLoggedIn ? () => navigate('/create') : () => navigate('/login')
+          }
         />
       </div>
       <div className="main_push_container">

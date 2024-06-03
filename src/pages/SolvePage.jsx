@@ -26,6 +26,13 @@ import { useParams } from 'react-router-dom';
 import Apis from '../apis/Api';
 import * as StompJs from '@stomp/stompjs';
 
+import Modal from '../component/common/Modal';
+import errorIcon from '../assets/icons/error_icon.svg';
+import submitIcon from '../assets/icons/send_icon.svg';
+import retry from '../assets/icons/reset_icon.svg';
+import success from '../assets/icons/twinkle_icon.svg';
+import Button from '../component/common/Button';
+
 const javascriptDefault = `
 `;
 
@@ -63,6 +70,10 @@ const SolvePage = () => {
   const [solvedExampleCount, setSolvedExampleCount] = useState(0);
   const [problemStatus, setProblemStatus] = useState();
 
+  const [isExit, setIsExit] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [checkSubmit, setCheckSubmit] = useState(false);
+
   /**************************************************************************/
   const CHAT_WS = process.env.REACT_APP_CHAT_WS;
   const CHAT_SUB = process.env.REACT_APP_CHAT_SUB;
@@ -75,8 +86,8 @@ const SolvePage = () => {
   const [page, setPage] = useState(0);
 
   console.log(chatData);
-  
-  if(rank.length < 1) {
+
+  if (rank.length < 1) {
     setRank([
       { rank: '-', name: 'none' },
       { rank: '-', name: 'none' },
@@ -98,7 +109,7 @@ const SolvePage = () => {
     });
   }, [page]);
 
-  console.log(localStorage.getItem('hasConnected'))
+  console.log(localStorage.getItem('hasConnected'));
 
   useEffect(() => {
     connect();
@@ -130,9 +141,7 @@ const SolvePage = () => {
           } else if (jsonMessageBody.messageType === 'RANK') {
             setRank((prevRank) => [...prevRank, jsonMessageBody]);
           } else if (jsonMessageBody.messageType === 'ENTER') {
-            
           } else if (jsonMessageBody.messageType === 'LEAVE') {
-            
           }
         });
 
@@ -200,7 +209,7 @@ const SolvePage = () => {
     let prevCount = Number(sessionStorage.getItem('solvedCount'));
     let cureentCount;
 
-    if(prevCount === cureentCount) {
+    if (prevCount === cureentCount) {
       // 문제 풀이 실패 ( 카운트 갯수가 이전과 같음)
       // 로직 작성
     } else {
@@ -215,11 +224,11 @@ const SolvePage = () => {
           roomId: roomId,
           senderId: sessionStorage.getItem('userId'),
           messageType: 'RANK',
-          message: null
+          message: null,
         }),
       });
     }
-  }
+  };
 
   /**************************************************************************/
 
@@ -508,8 +517,8 @@ const SolvePage = () => {
     getSolvedCount();
   }, []);
 
-  const openProblemPage = (problemNumber) => {
-    const link = `https://www.acmicpc.net/submit/${problemNumber}`;
+  const openProblemPage = () => {
+    const link = `https://www.acmicpc.net/submit/${problemData?.problemResponseDto?.number}`;
     window.open(link, '_blank');
   };
 
@@ -519,17 +528,144 @@ const SolvePage = () => {
     );
   };
 
+  const exitButton = [
+    <Button
+      type="modal"
+      shape="angle"
+      text="확인"
+      onClick={() => {
+        setIsExit(false);
+      }}
+    />,
+  ];
+
+  const submitButton = [
+    <Button
+      type="modalBtn1"
+      shape="angle"
+      text="코드 복사하기"
+      onClick={() => {
+        setIsSubmit(false);
+      }}
+    />,
+    <Button
+      type="modalBtn2"
+      shape="angle"
+      text="제출하러가기"
+      onClick={() => {
+        openProblemPage();
+        setIsSubmit(false);
+        setCheckSubmit(true);
+      }}
+    />,
+  ];
+
+  const submittedButton = [
+    <Button
+      type="modalBtn1"
+      shape="angle"
+      text="아니요"
+      onClick={() => {
+        setCheckSubmit(false);
+      }}
+    />,
+    <Button
+      type="modalBtn2"
+      shape="angle"
+      text="제출 완료"
+      onClick={() => {
+        setCheckSubmit(true);
+      }}
+    />,
+  ];
+
+  /*
+   const retryButton = [
+     <Button
+       type="modal"
+       shape="angle"
+       text="확인"
+       onClick={() => {
+         console.log('clicked');
+       }}
+     />
+   ];
+  */
+
+  /*
+   const successButton = [
+     <Button
+       type="modal"
+       shape="angle"
+       text="확인"
+       onClick={() => {
+         console.log('clicked');
+       }}
+     />
+   ];
+  */
+
   return (
     <>
+      {isExit && (
+        <div className="Solve--Modal--Wrapper">
+          <Modal
+            imageSource={errorIcon}
+            title="퇴장하시나요?"
+            content="해당 문제는 코드 목록에 실패로 저장됩니다."
+            buttons={exitButton}
+            isActive={isExit}
+            setIsActive={setIsExit}
+          />
+        </div>
+      )}
+      {isSubmit && (
+        <div className="Solve--Modal--Wrapper">
+          <Modal
+            imageSource={submitIcon}
+            title="백준에 코드를 제출하세요!"
+            content="코드를 붙여넣기하여 제출해요!"
+            buttons={submitButton}
+            isActive={isSubmit}
+            setIsActive={setIsSubmit}
+          />
+        </div>
+      )}
+      {checkSubmit && (
+        <div className="Solve--Modal--Wrapper">
+          <Modal
+            imageSource={submitIcon}
+            title="백준에 코드를 제출하셨나요?"
+            content="코드 제출 여부를 선택해주세요."
+            buttons={submittedButton}
+            isActive={checkSubmit}
+            setIsActive={setCheckSubmit}
+          />
+        </div>
+      )}
+      {/* <div className="Solve--Modal--Wrapper">
+        <Modal
+          imageSource={retry}
+          title="문제풀이에 실패했어요."
+          content="재도전을 위해 문제풀이로 돌아갑니다."
+          buttons={retryButton}
+        />
+      </div> */}
+      {/* <div className="Solve--Modal--Wrapper">
+        <Modal
+          imageSource={success}
+          title={`${1}등으로 성공했어요!`}
+          content="방에서 자동 퇴장됩니다."
+          buttons={successButton}
+        />
+      </div> */}
       <Header
         headerType="solve"
-        text={
-          `${problemData?.problemResponseDto?.number}.` +
-          `${problemData?.language}`
-        }
+        text={`${problemData?.problemResponseDto?.title}`}
         onSelect={handleSelect}
         invite={handleCopyUrl}
         rank={rank}
+        onClick={() => setIsExit(true)}
       />
       <div className={`Solve--Container--${mode}`}>
         <div>
@@ -674,9 +810,7 @@ const SolvePage = () => {
         mode={mode}
         handleCompile={handleCompile}
         handleExampleCompile={handleExampleCompile}
-        openProblemPage={() =>
-          openProblemPage(problemData?.problemResponseDto?.number)
-        }
+        onClick={() => setIsSubmit(true)}
       />
     </>
   );
