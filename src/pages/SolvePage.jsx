@@ -72,7 +72,7 @@ const SolvePage = () => {
 
   const [isExit, setIsExit] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [checkSubmit, setCheckSubmit] = useState(false);
 
   /**************************************************************************/
   const CHAT_WS = process.env.REACT_APP_CHAT_WS;
@@ -555,7 +555,7 @@ const SolvePage = () => {
       onClick={() => {
         openProblemPage();
         setIsSubmit(false);
-        setIsSubmitted(true);
+        setCheckSubmit(true);
       }}
     />,
   ];
@@ -566,7 +566,7 @@ const SolvePage = () => {
       shape="angle"
       text="아니요"
       onClick={() => {
-        setIsSubmitted(false);
+        setCheckSubmit(false);
       }}
     />,
     <Button
@@ -574,7 +574,7 @@ const SolvePage = () => {
       shape="angle"
       text="제출 완료"
       onClick={() => {
-        setIsSubmitted(true);
+        setCheckSubmit(true);
       }}
     />,
   ];
@@ -639,15 +639,15 @@ const SolvePage = () => {
           />
         </div>
       )}
-      {isSubmitted && (
+      {checkSubmit && (
         <div className="Solve--Modal--Wrapper">
           <Modal
             imageSource={submitIcon}
             title="백준에 코드를 제출하셨나요?"
             content="코드 제출 여부를 선택해주세요."
             buttons={submittedButton}
-            isActive={isSubmitted}
-            setIsActive={setIsSubmitted}
+            isActive={checkSubmit}
+            setIsActive={setCheckSubmit}
           />
         </div>
       )}
