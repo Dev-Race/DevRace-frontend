@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import '../styles/pages/SolvePage.scss';
 import Header from '../component/layout/Header';
 import Footer from '../component/layout/Footer';
@@ -21,16 +21,16 @@ import CodeEditor from '../component/editor/CodeEditor';
 import OpenChatBtn from '../component/chat/OpenChatBtn';
 import ChatComponent from '../component/chat/ChatComponent';
 import { CSSTransition } from 'react-transition-group';
-import { getProblem, getProblemStatus, getSolvedCount } from '../apis/problem';
-import { useParams } from 'react-router-dom';
+import { getProblem, getProblemStatus } from '../apis/problem';
+import { useNavigate, useParams } from 'react-router-dom';
 import Apis from '../apis/Api';
 import * as StompJs from '@stomp/stompjs';
 
 import Modal from '../component/common/Modal';
 import errorIcon from '../assets/icons/error_icon.svg';
 import submitIcon from '../assets/icons/send_icon.svg';
-import retry from '../assets/icons/reset_icon.svg';
-import success from '../assets/icons/twinkle_icon.svg';
+import retryIcon from '../assets/icons/reset_icon.svg';
+import successIcon from '../assets/icons/twinkle_icon.svg';
 import Button from '../component/common/Button';
 
 const javascriptDefault = `
@@ -38,6 +38,7 @@ const javascriptDefault = `
 
 const SolvePage = () => {
   const { mode } = useSelector((state) => state.toggle);
+  const navigate = useNavigate();
 
   const explainRef = useRef(null);
   const exampleRef = useRef(null);
@@ -73,6 +74,8 @@ const SolvePage = () => {
   const [isExit, setIsExit] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [checkSubmit, setCheckSubmit] = useState(false);
+  const [retry, setRetry] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   /**************************************************************************/
   const CHAT_WS = process.env.REACT_APP_CHAT_WS;
@@ -84,16 +87,8 @@ const SolvePage = () => {
   const [chatData, setChatData] = useState([]);
   const [rank, setRank] = useState([]);
   const [page, setPage] = useState(0);
-
-  console.log(chatData);
-
-  if (rank.length < 1) {
-    setRank([
-      { rank: '-', name: 'none' },
-      { rank: '-', name: 'none' },
-      { rank: '-', name: 'none' },
-    ]);
-  }
+  const [prevCount, setPrevCount] = useState(null);
+  const [currentCount, setCurrentCount] = useState(null);
 
   // Call Chat Data
   useEffect(() => {
@@ -108,8 +103,6 @@ const SolvePage = () => {
       ]);
     });
   }, [page]);
-
-  console.log(localStorage.getItem('hasConnected'));
 
   useEffect(() => {
     connect();
@@ -204,17 +197,67 @@ const SolvePage = () => {
   const onChangeChat = (e) => {
     setChat(e.target.value);
   };
-  /**************************************************************************/
-  const onSuccessCheck = () => {
-    let prevCount = Number(sessionStorage.getItem('solvedCount'));
-    let cureentCount;
 
-    if (prevCount === cureentCount) {
-      // 문제 풀이 실패 ( 카운트 갯수가 이전과 같음)
-      // 로직 작성
+  const onLeaveChatRoom = (isRetry, code, isPass) => {
+    client.publish({
+      destination: CHAT_PUB,
+      headers: {
+        Authorization: `Bearer ` + sessionStorage.getItem('accessToken'),
+      },
+      body: JSON.stringify({
+        roomId: roomId,
+        senderId: sessionStorage.getItem('userId'),
+        messageType: 'LEAVE',
+        message: null,
+      }),
+    });
+
+    Apis.post('/rooms/' + roomId, {
+      isRetry: isRetry,
+      code: code,
+      isPass: isPass,
+    });
+  };
+
+  /**************************************************************************/
+  const onSuccessCheck = async () => {
+    try {
+      console.log('Calling getCount...');
+      await getCount();
+    } catch (error) {
+      console.error('Failed to process success check', error);
+    }
+  };
+
+  const getCount = async () => {
+    try {
+      const response = await Apis.get('/users/solved-count');
+      const newCount = response.data.data.solvedCount;
+
+      console.log('Received newCount:', newCount);
+
+      setPrevCount((prev) => {
+        const updatedPrevCount = currentCount;
+        setCurrentCount(newCount);
+
+        if(client !== null){
+          compareCounts(updatedPrevCount, newCount);
+        }
+        return updatedPrevCount;
+      });
+    } catch (error) {
+      console.error('Failed to fetch solved count', error);
+    }
+  };
+
+  const compareCounts = (prevCount, currentCount) => {
+    console.log('prevCount:', prevCount);
+    console.log('currentCount:', currentCount);
+
+    if (prevCount === currentCount) {
+      setCheckSubmit(false);
+      setRetry(true);
     } else {
-      // 문제 풀이 성공 ( 카운트 갯수가 이전과 다름)
-      // 로직 작성
       client.publish({
         destination: CHAT_PUB,
         headers: {
@@ -227,7 +270,18 @@ const SolvePage = () => {
           message: null,
         }),
       });
+      setCheckSubmit(false);
+      setSuccess(true);
     }
+  };
+
+  useEffect(() => {
+    getCount();
+  }, []);
+
+  const getMyRanking = (userId) => {
+    const myRankIndex = rank.findIndex((r) => r.senderId === Number(userId));
+    return myRankIndex + 1;
   };
 
   /**************************************************************************/
@@ -513,10 +567,6 @@ const SolvePage = () => {
     setProcessing(false);
   };
 
-  useEffect(() => {
-    getSolvedCount();
-  }, []);
-
   const openProblemPage = () => {
     const link = `https://www.acmicpc.net/submit/${problemData?.problemResponseDto?.number}`;
     window.open(link, '_blank');
@@ -534,7 +584,9 @@ const SolvePage = () => {
       shape="angle"
       text="확인"
       onClick={() => {
+        onLeaveChatRoom(0, code, 0);
         setIsExit(false);
+        navigate('/');
       }}
     />,
   ];
@@ -545,7 +597,7 @@ const SolvePage = () => {
       shape="angle"
       text="코드 복사하기"
       onClick={() => {
-        setIsSubmit(false);
+        navigator.clipboard.writeText(code);
       }}
     />,
     <Button
@@ -567,6 +619,7 @@ const SolvePage = () => {
       text="아니요"
       onClick={() => {
         setCheckSubmit(false);
+        setIsSubmit(true);
       }}
     />,
     <Button
@@ -574,36 +627,35 @@ const SolvePage = () => {
       shape="angle"
       text="제출 완료"
       onClick={() => {
-        setCheckSubmit(true);
+        onSuccessCheck();
       }}
     />,
   ];
 
-  /*
-   const retryButton = [
-     <Button
-       type="modal"
-       shape="angle"
-       text="확인"
-       onClick={() => {
-         console.log('clicked');
-       }}
-     />
-   ];
-  */
+  const retryButton = [
+    <Button
+      type="modal"
+      shape="angle"
+      text="확인"
+      onClick={() => {
+        setRetry(false);
+      }}
+    />,
+  ];
 
-  /*
-   const successButton = [
-     <Button
-       type="modal"
-       shape="angle"
-       text="확인"
-       onClick={() => {
-         console.log('clicked');
-       }}
-     />
-   ];
-  */
+  const successButton = [
+    <Button
+      type="modal"
+      shape="angle"
+      text="확인"
+      onClick={() => {
+        setSuccess(false);
+        localStorage.removeItem('editorValue');
+        onLeaveChatRoom(1, code, 1);
+        navigate('/');
+      }}
+    />,
+  ];
 
   return (
     <>
@@ -643,22 +695,32 @@ const SolvePage = () => {
           />
         </div>
       )}
-      {/* <div className="Solve--Modal--Wrapper">
-        <Modal
-          imageSource={retry}
-          title="문제풀이에 실패했어요."
-          content="재도전을 위해 문제풀이로 돌아갑니다."
-          buttons={retryButton}
-        />
-      </div> */}
-      {/* <div className="Solve--Modal--Wrapper">
-        <Modal
-          imageSource={success}
-          title={`${1}등으로 성공했어요!`}
-          content="방에서 자동 퇴장됩니다."
-          buttons={successButton}
-        />
-      </div> */}
+      {retry && (
+        <div className="Solve--Modal--Wrapper">
+          <Modal
+            imageSource={retryIcon}
+            title="문제풀이에 실패했어요."
+            content="재도전을 위해 문제풀이로 돌아갑니다."
+            buttons={retryButton}
+            isActive={retry}
+            setIsActive={setRetry}
+          />
+        </div>
+      )}
+      {success && (
+        <div className="Solve--Modal--Wrapper">
+          <Modal
+            imageSource={successIcon}
+            title={`${getMyRanking(
+              sessionStorage.getItem('userId'),
+            )}등으로 성공했어요!`}
+            content="방에서 자동 퇴장됩니다."
+            buttons={successButton}
+            isActive={success}
+            setIsActive={setSuccess}
+          />
+        </div>
+      )}
       <Header
         headerType="solve"
         text={`${problemData?.problemResponseDto?.title}`}

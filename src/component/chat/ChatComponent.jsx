@@ -120,7 +120,7 @@ const ChatComponent = (props) => {
       <div className="Chat--Content--Container" ref={contentRef}>
         {chatData &&
           chatData.map((chat, index) => {
-            if (chat.messageType === 'ENTER' || chat.messageType === 'LEAVE') {
+            if (chat.messageType === 'ENTER') {
               return (
                 <div className="Chat--Notification--Container" key={index}>
                   <span className={`Chat--Notification--Text--${mode}`}>
@@ -128,6 +128,12 @@ const ChatComponent = (props) => {
                   </span>
                 </div>
               );
+            } else if (chat.messageType === 'LEAVE') {
+                <div className="Chat--Notification--Container" key={index}>
+                  <span className={`Chat--Notification--Text--${mode}`}>
+                    {`${chat.senderName}님이 퇴장하셨습니다.`}
+                  </span>
+                </div>;
             } else if (chat.messageType === 'TALK') {
               return chat.senderId ===
                 Number(sessionStorage.getItem('userId')) ? (

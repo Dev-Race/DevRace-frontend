@@ -11,6 +11,7 @@ import { memberInfo } from '../apis/member';
 
 import Modal from '../component/common/Modal';
 import errorIcon from '../assets/icons/error_icon.svg';
+import Apis from '../apis/Api';
 
 const MainPage = () => {
   const { mode } = useSelector((state) => state.toggle);
@@ -19,6 +20,8 @@ const MainPage = () => {
   const [isChangedMode, setIsChangedMode] = useState(mode);
   const [isShow, setIsShow] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isExistRoomId, setIsExistRoomId] = useState();
+  const [isActive, setIsActive] = useState(false);
 
   const navigate = useNavigate();
 
@@ -65,18 +68,30 @@ const MainPage = () => {
     setIsMounted(true);
   }, []);
 
-  /*
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      Apis.get('/users/rooms-check').then((response) => {
+        if (response.data.data.roomId) {
+          setIsExistRoomId(response.data.data.roomId);
+          setIsActive(true);
+        }
+      });
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+
   const rejoinButton = [
     <Button
       type="modal"
       shape="angle"
       text="확인"
       onClick={() => {
-        console.log('clicked');
+        navigate('/solve/'+isExistRoomId)
+        setIsActive(false);
       }}
     />,
   ];
-  */
 
   return (
     <div className={`main_container--${mode}`}>
@@ -85,14 +100,18 @@ const MainPage = () => {
         text={isLoggedIn ? '로그아웃' : '로그인'}
         setIsLoggedIn={setIsLoggedIn}
       />
-      {/* <div className="Main--Modal--Wrapper">
-        <Modal
-          imageSource={errorIcon}
-          title="퇴장하지 않은 방이 있습니다!"
-          content="기존의 문제풀이 페이지로 재참여합니다."
-          buttons={rejoinButton}
-        />
-      </div> */}
+      {isActive &&
+        <div className="Main--Modal--Wrapper">
+          <Modal
+            imageSource={errorIcon}
+            title="퇴장하지 않은 방이 있습니다!"
+            content="기존의 문제풀이 페이지로 재참여합니다."
+            isActive={isActive}
+            setIsActive={setIsActive}
+            buttons={rejoinButton}
+          />
+        </div>
+      }
       <div className="main_content_container">
         <span className={`main_text_caption--${mode}`}>
           DEV RACE를 이용해서
