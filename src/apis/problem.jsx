@@ -9,16 +9,6 @@ export const getProblem = async (roomId) => {
   }
 };
 
-export const getSolvedCount = async () => {
-  try {
-    const response = await Apis.get('/users/solved-count');
-    sessionStorage.setItem('solvedCount', response.data.data.solvedCount);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 export const getProblemStatus = async (roomId) => {
   try {
     const response = await Apis.get(`rooms/${roomId}/access-check`);

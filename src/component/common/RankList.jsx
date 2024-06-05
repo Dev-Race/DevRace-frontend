@@ -33,9 +33,21 @@ const RankList = ({ rankings }) => {
                   ranking.rank === '-' ? 'rank-item--inactive' : ''
                 }`}
               >
-                {ranking.rank}
-                <img src={basic_small_image} alt="Basic img" />
-                {ranking.name}
+                {index + 1}
+                <img
+                  src={
+                    ranking.senderImageUrl !== null
+                      ? ranking.senderImageUrl
+                      : basic_small_image
+                  }
+                  alt="Basic img"
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '10px',
+                  }}
+                />
+                <div style={{fontSize: '14px'}}>{ranking.senderName}</div>
               </div>
             ))}
           </div>

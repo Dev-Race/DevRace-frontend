@@ -29,6 +29,7 @@ const RedirectPage = () => {
         })
         .then(response => {
             console.log(response)
+            navigate('/');
         })
     })
     return (
