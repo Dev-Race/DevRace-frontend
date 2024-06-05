@@ -28,8 +28,11 @@ const RedirectPage = () => {
             }
         })
         .then(response => {
-            console.log(response)
-            navigate('/');
+            if(response.data.data.roomState === 'WAIT') {
+                navigate('/wait/'+response.data.data.roomId);
+            } else {
+                navigate('/solve/' + response.data.data.roomId);
+            }
         })
     })
     return (
