@@ -54,6 +54,15 @@ const MainPage = () => {
         navigate(redirectUrl);
         localStorage.removeItem('redirectUrl');
       }
+      const timer = setTimeout(() => {
+        Apis.get('/users/rooms-check').then((response) => {
+          if (response.data.data.roomId) {
+            setIsExistRoomId(response.data.data.roomId);
+            setIsActive(true);
+          }
+        });
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -67,19 +76,6 @@ const MainPage = () => {
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      Apis.get('/users/rooms-check').then((response) => {
-        if (response.data.data.roomId) {
-          setIsExistRoomId(response.data.data.roomId);
-          setIsActive(true);
-        }
-      });
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
 
   const rejoinButton = [
     <Button
