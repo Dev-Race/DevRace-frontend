@@ -124,7 +124,7 @@ const Header = (props) => {
                 src={mode === 'light' ? people_light : people_dark}
                 alt="logo_text"
                 className="header--logo--text"
-                onClick={() => navigate('/profile')}
+                onClick={() => navigate('/mypage')}
               />
             </div>
           </div>

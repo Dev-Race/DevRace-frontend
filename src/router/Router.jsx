@@ -13,6 +13,8 @@ import MyCodePage from '../pages/MyCodePage';
 import WaitPage from '../pages/WaitPage';
 import SolvePage from '../pages/SolvePage';
 import RedirectPage from '../pages/RedirectPage';
+import MyPage from '../pages/MyPage';
+import EditPage from '../pages/EditPage';
 
 /**
  *
@@ -23,10 +25,6 @@ import RedirectPage from '../pages/RedirectPage';
  */
 
 const Router = createBrowserRouter([
-  {
-    path: '/test',
-    element: <SolvePage />,
-  },
   {
     path: '/',
     element: <MainPage />,
@@ -63,6 +61,14 @@ const Router = createBrowserRouter([
     path: '/redirect/:link',
     element: <RedirectPage />,
   },
+  {
+    path: '/mypage',
+    element: <MyPage />,
+  },
+  {
+    path: '/edit',
+    element: <EditPage />
+  }
 ]);
 
 export default Router;

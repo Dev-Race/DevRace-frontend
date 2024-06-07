@@ -1,0 +1,83 @@
+.editpage--container--light,
+.editpage--container--dark {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.editpage--container--light {
+    background: var(--light-cool-gray, #F8F8FF);
+    ;
+}
+
+.editpage--container--dark {
+    background: var(--dark-back, #0D0D0D);
+}
+
+.editpage--modal {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 444px;
+    height: 464px;
+    margin: auto;
+
+    border-radius: 24px;
+    background: var(--white, #FFF);
+    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.06);
+}
+
+.editpage--Modal--Wrapper {
+    display: flex;
+    position: absolute;
+    z-index: 999;
+
+    width: 100%;
+    height : 100vh;
+    background: gray;
+
+    align-items: center;
+    justify-content: center;
+}
+.editpage--edit--text {
+    margin-top : 56px;
+    margin-bottom: 48px;
+    color: var(--black, #000);
+    font-family: "Spoqa Han Sans Neo";
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 48px;
+}
+
+.editpage--InputImage {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin-bottom: 48px;
+}
+
+.editpage--Image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+}
+
+.editpage--EditImage {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+
+    top: 235px;
+    left: 240px;
+}
+
+.editpage--InputBox {
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 16px;
+}
