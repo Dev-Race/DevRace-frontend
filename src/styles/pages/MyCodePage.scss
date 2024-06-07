@@ -1,0 +1,153 @@
+@import '../theme';
+
+.MyCode--Container--light,
+.MyCode--Container--dark {
+  display: flex;
+  height: 100vh;
+
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 80px;
+  gap: 32px;
+}
+
+.MyCode--Container--light {
+  background: var(--light-cool-gray, #f8f8ff);
+}
+
+.MyCode--Container--dark {
+  background: var(--black, #000);
+}
+
+.MyCode--SearchBar--Container--light,
+.MyCode--SearchBar--Container--dark {
+  display: flex;
+  width: 1000px;
+
+  padding: 8px 0;
+  align-items: center;
+  border-radius: 60px;
+  gap: 16px;
+}
+
+.MyCode--SearchBar--Container--light {
+  background: var(--black, #000);
+}
+
+.MyCode--SearchBar--Container--dark {
+  background: var(--white, #fff);
+}
+
+.MyCode--SearchIcon {
+  padding: 0 16px;
+  border-right: 1px solid var(--gray-200, #e3e4e5);
+}
+
+.MyCode--SearchBar--light,
+.MyCode--SearchBar--dark {
+  background: none;
+  border: none;
+
+  font-feature-settings: 'clig' off, 'liga' off;
+  @include font-body3;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.MyCode--SearchBar--light {
+  color: var(--gray-200, #e3e4e5);
+}
+
+.MyCode--SearchBar--dark {
+  color: var(--gray-300, #bdbfc4);
+}
+
+.MyCode--List--Container {
+  display: flex;
+  width: 1000px;
+  min-height: 557px;
+
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 8px;
+
+  background: var(--white, #fff);
+  color: var(--white, #fff);
+}
+
+.MyCode--ListHeader--Container {
+  display: flex;
+
+  gap: 90px;
+  padding: 12px 24px;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 8px 8px 0px 0px;
+
+  background: var(--black, #000);
+  color: var(--white, #fff);
+  font-feature-settings: 'clig' off, 'liga' off;
+  @include font-t3;
+}
+
+.MyCode--Content--Container {
+  display: flex;
+  width: 100%;
+  height: 56px;
+
+  justify-content: space-between;
+  align-items: center;
+
+  background: white;
+  border-bottom: 1px solid var(--gray-200, #e3e4e5);
+
+  &:last-child {
+    border-bottom: none;
+    border-radius: 0px 0px 8px 8px;
+    border-bottom: 1px solid var(--gray-200, #e3e4e5);
+  }
+}
+
+.MyCode--LeftContent--Container {
+  display: flex;
+  gap: 40px;
+  margin-left: 24px;
+}
+
+.MyCode--Date {
+  color: var(--black, #000);
+  font-feature-settings: 'clig' off, 'liga' off;
+  @include font-t4;
+}
+
+.MyCode--Number {
+  color: var(--black, #000);
+  font-feature-settings: 'clig' off, 'liga' off;
+  @include font-t2;
+}
+
+.MyCode--CheckBtn {
+  display: flex;
+  margin-right: 24px;
+
+  width: 108px;
+  height: 38px;
+
+  justify-content: center;
+  align-items: center;
+
+  @include font-body2;
+
+  border-radius: 8px;
+  color: white;
+  border: 2px solid var(--black, #000);
+  background: var(--black, #000);
+
+  &:hover {
+    border: 2px solid var(--gray-600, #5c5f65);
+    background: var(--gray-600, #5c5f65);
+  }
+}
