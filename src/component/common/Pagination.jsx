@@ -11,11 +11,10 @@ import next_page from '../../assets/icons/next_page.svg';
  * - setCurrentPage: Function (페이지 변경 함수)
  */
 const Pagination = (props) => {
-  const { currentPage, setCurrentPage } = props;
+  const { currentPage, setCurrentPage, totalPages } = props;
   const { mode } = useSelector((state) => state.toggle);
 
   const pagesPerGroup = 9;
-  const totalPages = 100;
 
   // 숫자 그룹의 시작과 끝 번호를 게산
   const groupStartNumber =

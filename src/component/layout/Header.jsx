@@ -184,6 +184,7 @@ const Header = (props) => {
                 ? `header--${mode}--container--main`
                 : `header--${mode}--container`
             }
+            style={{ background: 'none' }}
           >
             <div className={`header--${mode}--problemNum`}>{text}</div>
             <div className={`header--${mode}--btn--box`}>
