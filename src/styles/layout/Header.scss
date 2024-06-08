@@ -64,8 +64,16 @@
   color: #000;
 }
 
+.header--light--btn:hover {
+  color : #FFF
+}
+
 .header--dark--btn {
   color: #fff;
+}
+
+.header--dark--btn:hover {
+  color : #000;
 }
 
 .header--light--problemNum,
