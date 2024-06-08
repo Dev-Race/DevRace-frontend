@@ -1,4 +1,5 @@
 import React from 'react';
+import close from '../../assets/icons/modal_close.svg';
 import noProfile from '../../assets/noProfile.png';
 import '../../styles/common/Modal.scss';
 
@@ -9,18 +10,26 @@ const Modal = (props) => {
     <>
       {isActive && (
         <div className="modal--container">
+          <img
+            src={close}
+            alt="close"
+            className="modal--close"
+            onClick={() => setIsActive(!isActive)}
+          />
           <div className="modal--wrapper">
             <img
               src={
-                ((title === undefined) && (content === undefined))
-                  ? (preview ? preview : noProfile)
+                title === undefined && content === undefined
+                  ? preview
+                    ? preview
+                    : noProfile
                   : imageSource
               }
               alt="imageSource"
               className={
-                ((title === undefined) && (content === undefined))
-                  ? "modal--Profile"
-                  : "modal-Icon"
+                title === undefined && content === undefined
+                  ? 'modal--Profile'
+                  : 'modal-Icon'
               }
             />
             {title && <div className="modal--title">{title}</div>}
