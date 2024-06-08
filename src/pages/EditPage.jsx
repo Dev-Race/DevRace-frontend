@@ -105,8 +105,13 @@ const EditPage = () => {
 
     useEffect(() => {
         if (info !== null) {
-            setPreview(info.imageUrl);
-            setImageUrl(convertURLtoFile(info.imageUrl));
+            if(info.imageUrl != null) {
+              setPreview(info.imageUrl);
+              setImageUrl(convertURLtoFile(info.imageUrl));
+            } else {
+              setPreview(null);
+              setImageUrl(null);
+            }
             setName(info.nickname);
         }
     }, [info])

@@ -1,21 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import close from '../../assets/icons/modal_close.svg';
 import noProfile from '../../assets/noProfile.png';
 import '../../styles/common/Modal.scss';
 
 const Modal = (props) => {
   const {imageSource, title, content, buttons, isActive, setIsActive, preview} = props;
-  
+  const [isClose, setIsClose] = useState(false);
+
+  useEffect(() => {
+    switch (title) {
+      case undefined:
+      case '백준에 코드를 제출하세요!':
+      case '퇴장하시나요?':
+      case '문제풀이에 실패했어요.':
+        setIsClose(true);
+        break;
+      default:
+        setIsClose(false);
+        break;
+    }
+  }, [])
   return (
     <>
       {isActive && (
         <div className="modal--container">
-          <img
-            src={close}
-            alt="close"
-            className="modal--close"
-            onClick={() => setIsActive(!isActive)}
-          />
+          {isClose && (
+            <img
+              src={close}
+              alt="close"
+              className="modal--close"
+              onClick={() => setIsActive(!isActive)}
+            />
+          )}
           <div className="modal--wrapper">
             <img
               src={
