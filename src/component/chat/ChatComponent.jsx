@@ -25,6 +25,7 @@ const ChatComponent = (props) => {
   const hasDragged = useRef(false);
   const scrollPosition = useRef(0);
   const initialLoad = useRef(true);
+  const latestChatRef = useRef(null);
 
   const handleScroll = () => {
     if (contentRef.current.scrollTop < 1) {
@@ -52,10 +53,19 @@ const ChatComponent = (props) => {
       initialLoad.current = false;
     } else if (scrollPosition.current) {
       // 이전 내역 불러올 때
+      const previousScrollHeight = scrollPosition.current;
       const newScrollHeight = contentRef.current.scrollHeight;
-      const scrollTo = newScrollHeight - scrollPosition.current;
+      const scrollTo = newScrollHeight - previousScrollHeight;
       contentRef.current.scrollTop = scrollTo;
       scrollPosition.current = 0;
+    } else {
+      // 새로운 메시지를 보낼 때
+      if (latestChatRef.current) {
+        latestChatRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+        });
+      }
     }
   }, [chatData]);
 
@@ -120,24 +130,39 @@ const ChatComponent = (props) => {
       <div className="Chat--Content--Container" ref={contentRef}>
         {chatData &&
           chatData.map((chat, index) => {
+            const isLastChat = index === chatData.length - 1;
             if (chat.messageType === 'ENTER') {
               return (
-                <div className="Chat--Notification--Container" key={index}>
-                  <span className={`Chat--Notification--Text--${mode}`}>
+                <div
+                  className="Chat--Notification--Container"
+                  key={index}
+                  ref={isLastChat ? latestChatRef : null}
+                >
+                  <div className={`Chat--Notification--Text--${mode}`}>
                     {`${chat.senderName}님이 입장하셨습니다.`}
-                  </span>
+                  </div>
                 </div>
               );
             } else if (chat.messageType === 'LEAVE') {
-                <div className="Chat--Notification--Container" key={index}>
-                  <span className={`Chat--Notification--Text--${mode}`}>
+              return (
+                <div
+                  className="Chat--Notification--Container"
+                  key={index}
+                  ref={isLastChat ? latestChatRef : null}
+                >
+                  <div className={`Chat--Notification--Text--${mode}`}>
                     {`${chat.senderName}님이 퇴장하셨습니다.`}
-                  </span>
-                </div>;
+                  </div>
+                </div>
+              );
             } else if (chat.messageType === 'TALK') {
               return chat.senderId ===
                 Number(sessionStorage.getItem('userId')) ? (
-                <div className="Chat--MyChat--Container" key={index}>
+                <div
+                  className="Chat--MyChat--Container"
+                  key={index}
+                  ref={isLastChat ? latestChatRef : null}
+                >
                   <div className="Chat--Chat--Time">
                     {convertTime(chat.createdTime)}
                   </div>
@@ -146,7 +171,11 @@ const ChatComponent = (props) => {
                   </div>
                 </div>
               ) : (
-                <div className="Chat--OtherChat--Container" key={index}>
+                <div
+                  className="Chat--OtherChat--Container"
+                  key={index}
+                  ref={isLastChat ? latestChatRef : null}
+                >
                   <img
                     src={chat.senderImageUrl}
                     alt="profileImg"
