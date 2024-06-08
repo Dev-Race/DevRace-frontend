@@ -10,6 +10,7 @@ import google from '../assets/icons/google_icon.svg';
 import git from '../assets/icons/git_icon.svg';
 import { useNavigate } from 'react-router-dom';
 import Push from '../component/common/Push';
+import Button from '../component/common/Button';
 
 const MyPage = () => {
   const { mode } = useSelector((state) => state.toggle);
@@ -58,6 +59,13 @@ const MyPage = () => {
         <img
           src={info && info.socialType === 'GOOGLE' ? google : git}
           alt="type"
+          className="mypage--edit--loginType"
+        />
+        <Button
+          type="modal"
+          shape="angle"
+          text="홈으로 돌아가기"
+          onClick={() => navigate('/')}
         />
       </div>
       <div className="main_push_container">
