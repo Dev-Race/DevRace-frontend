@@ -13,6 +13,7 @@ import success_light from '../assets/icons/success_light.svg';
 import success_dark from '../assets/icons/success_dark.svg';
 import fail_light from '../assets/icons/fail_light.svg';
 import fail_dark from '../assets/icons/fail_dark.svg';
+import { fetchRoomsData } from '../apis/room';
 
 const MyCodePage = () => {
   const { mode } = useSelector((state) => state.toggle);
@@ -20,6 +21,7 @@ const MyCodePage = () => {
   const [selectedOption, setSelectedOption] = useState('전체');
   const [searchResult, setSearchResult] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [myRoomsData, setMyRoomsData] = useState();
 
   /*
   // 페이지 접근 권한 검사
@@ -35,64 +37,57 @@ const MyCodePage = () => {
   }, []);
   */
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchRoomsData();
+        setMyRoomsData(data);
+      } catch (error) {
+        console.error('Failed to fetch rooms data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    console.log('My Rooms Data:', myRoomsData);
+  }, [myRoomsData]);
+
   const handleSelect = (select) => {
     setSelectedOption(select);
     setCurrentPage(1);
   };
 
-  const data = [
-    { date: '2024.01.03', number: '1203.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1204.cpp', status: 'fail' },
-    { date: '2024.01.03', number: '1205.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1203.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1204.cpp', status: 'fail' },
-    { date: '2024.01.03', number: '1205.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1203.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1204.cpp', status: 'fail' },
-    { date: '2024.01.03', number: '1205.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1203.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1204.cpp', status: 'fail' },
-    { date: '2024.01.03', number: '1205.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1203.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1204.cpp', status: 'fail' },
-    { date: '2024.01.03', number: '1205.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1203.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1204.cpp', status: 'fail' },
-    { date: '2024.01.03', number: '1205.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1203.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1204.cpp', status: 'fail' },
-    { date: '2024.01.03', number: '1205.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1203.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1204.cpp', status: 'fail' },
-    { date: '2024.01.03', number: '1205.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1203.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1204.cpp', status: 'fail' },
-    { date: '2024.01.03', number: '1205.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1203.cpp', status: 'success' },
-    { date: '2024.01.03', number: '1204.cpp', status: 'fail' },
-    { date: '2024.01.03', number: '1205.cpp', status: 'success' },
-  ];
-
-  const filteredData = data.filter((item) => {
-    const matchSearch = item.number
+  const filteredData = myRoomsData?.content.filter((item) => {
+    const numberString = String(item.number);
+    const matchSearch = numberString
       .toLowerCase()
       .includes(searchResult.toLowerCase());
 
     const optionsStatus =
       selectedOption === '전체' ||
-      (selectedOption === '성공' && item.status === 'success') ||
-      (selectedOption === '실패' && item.status === 'fail');
+      (selectedOption === '성공' && item.isPass === 1) ||
+      (selectedOption === '실패' && item.isPass === 0);
 
     return matchSearch && optionsStatus;
   });
 
-  const itemsPerPage = 9;
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const formatDate = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
+  };
 
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
+  const pageSize = myRoomsData?.pageable.pageSize || 9;
+  const totalElements = myRoomsData?.totalElements || 0;
+  const totalPages = Math.ceil(totalElements / pageSize);
+
+  const handleClick = (roomId) => {
+    navigate(`/solve/${roomId}`, { state: { isRetry: 1 } });
+  };
 
   return (
     <>
@@ -118,39 +113,48 @@ const MyCodePage = () => {
           <div className="MyCode--ListHeader--Container">
             <span>날짜</span>
             <span>문제번호</span>
-            <span style={{ marginLeft: '220px' }}>성공여부</span>
+            <span style={{ marginLeft: '200px' }}>성공여부</span>
           </div>
-          {paginatedData.map((item, index) => (
-            <div key={index} className="MyCode--Content--Container">
-              <div className="MyCode--LeftContent--Container">
-                <div className="MyCode--Date">{item.date}</div>
-                <div className="MyCode--Number">{item.number}</div>
+          {filteredData &&
+            filteredData.map((item, index) => (
+              <div key={index} className="MyCode--Content--Container">
+                <div className="MyCode--LeftContent--Container">
+                  <div className="MyCode--Date">
+                    {formatDate(item.createdTime)}
+                  </div>
+
+                  <div className="MyCode--Number">
+                    {item.number}.{item.language}
+                  </div>
+                </div>
+                <div className="MyCode--SuccessOrFail">
+                  <img
+                    src={
+                      item.isPass === 1
+                        ? mode === 'light'
+                          ? success_light
+                          : success_dark
+                        : mode === 'light'
+                        ? fail_light
+                        : fail_dark
+                    }
+                    alt="SuccessOrFail"
+                  />
+                </div>
+                <div
+                  className="MyCode--CheckBtn"
+                  onClick={() => handleClick(item.roomId)}
+                >
+                  문제확인
+                </div>
               </div>
-              <div className="MyCode--SuccessOrFail">
-                <img
-                  src={
-                    item.status === 'success'
-                      ? mode === 'light'
-                        ? success_light
-                        : success_dark
-                      : mode === 'light'
-                      ? fail_light
-                      : fail_dark
-                  }
-                  alt="SuccessOrFail"
-                />
-              </div>
-              <div className="MyCode--CheckBtn">문제확인</div>
-            </div>
-          ))}
+            ))}
         </div>
-        {totalPages > 1 && (
-          <Pagination
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            totalPages={totalPages}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+        />
       </div>
       <Footer type="default" />
     </>

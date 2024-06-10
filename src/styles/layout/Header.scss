@@ -21,7 +21,7 @@
 }
 
 .header--dark--container {
-  background: var(--dark-back, #0D0D0D);
+  background: var(--dark-back, #0d0d0d);
 }
 
 .header--dark--container--main {
@@ -65,7 +65,7 @@
 }
 
 .header--light--btn:hover {
-  color : #FFF
+  color: #fff;
 }
 
 .header--dark--btn {
@@ -73,7 +73,7 @@
 }
 
 .header--dark--btn:hover {
-  color : #000;
+  color: #000;
 }
 
 .header--light--problemNum,
@@ -93,4 +93,34 @@
 
 .header--dark--problemNum {
   color: #fff;
+}
+
+.header--light--review--btn,
+.header--dark--review--btn {
+  display: flex;
+  width: 108px;
+  padding: 8px;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 4px;
+  border-radius: 8px;
+
+  color: #fff;
+
+  font-family: 'Spoqa Han Sans Neo';
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+.header--light--review--btn {
+  border: 2px solid var(--gray-300, #bdbfc4);
+  background: var(--gray-300, #bdbfc4);
+}
+
+.header--dark--review--btn {
+  border: 2px solid var(--gray-700, #45474c);
+  background: var(--gray-700, #45474c);
 }

@@ -81,7 +81,7 @@
 .MyCode--ListHeader--Container {
   display: flex;
 
-  gap: 90px;
+  gap: 100px;
   padding: 12px 24px;
   align-items: center;
   align-self: stretch;
@@ -98,8 +98,9 @@
   width: 100%;
   height: 56px;
 
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+  gap: 312px;
 
   background: white;
   border-bottom: 1px solid var(--gray-200, #e3e4e5);
@@ -118,6 +119,7 @@
 }
 
 .MyCode--Date {
+  min-width: 79px;
   color: var(--black, #000);
   font-feature-settings: 'clig' off, 'liga' off;
   @include font-t4;
