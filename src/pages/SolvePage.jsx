@@ -32,6 +32,7 @@ import submitIcon from '../assets/icons/send_icon.svg';
 import retryIcon from '../assets/icons/reset_icon.svg';
 import successIcon from '../assets/icons/twinkle_icon.svg';
 import Button from '../component/common/Button';
+import SolveExplain from '../component/solve/SolveExplain';
 
 const javascriptDefault = `
 `;
@@ -767,9 +768,10 @@ const SolvePage = () => {
             <span>문제설명</span>
             <div className="Solve--Explain--Contents">
               <span className={`Solve--Explain--Title--${mode}`}>문제</span>
-              <div className={`Solve--Explain--Text--${mode}`}>
-                {stripHTML(problemData?.problemResponseDto?.content)}
-              </div>
+              <SolveExplain
+                htmlContent={problemData?.problemResponseDto?.content}
+                mode={mode}
+              />
               <span className={`Solve--Explain--Title--${mode}`}>입력</span>
               <div className={`Solve--Explain--Text--${mode}`}>
                 {stripHTML(problemData?.problemResponseDto?.problemInput)}

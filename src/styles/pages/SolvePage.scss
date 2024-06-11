@@ -21,6 +21,13 @@ pre {
 
   overflow: scroll;
 }
+table {
+  width: 100%; /* Adjust width to fit container */
+}
+
+td {
+  width: 10%; /* Adjust cell width as needed */
+}
 .mjx-copytext {
   display: none;
 }
