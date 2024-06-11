@@ -22,7 +22,7 @@ import OpenChatBtn from '../component/chat/OpenChatBtn';
 import ChatComponent from '../component/chat/ChatComponent';
 import { CSSTransition } from 'react-transition-group';
 import { getProblem, getProblemStatus } from '../apis/problem';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Apis from '../apis/Api';
 import * as StompJs from '@stomp/stompjs';
 
@@ -32,6 +32,7 @@ import submitIcon from '../assets/icons/send_icon.svg';
 import retryIcon from '../assets/icons/reset_icon.svg';
 import successIcon from '../assets/icons/twinkle_icon.svg';
 import Button from '../component/common/Button';
+import SolveExplain from '../component/solve/SolveExplain';
 
 const javascriptDefault = `
 `;
@@ -55,7 +56,7 @@ const SolvePage = () => {
 
   const [isExampleSuccess, setIsExampleSuccess] = useState([]);
   const [code, setCode] = useState(javascriptDefault);
-  const [selectedLanguage, setSelectedLanguage] = useState('javascript');
+  const [selectedLanguage, setSelectedLanguage] = useState('JavaScript');
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(false);
 
@@ -67,6 +68,8 @@ const SolvePage = () => {
   const [top, setTop] = useState(180);
 
   const { roomId } = useParams();
+  const location = useLocation();
+  const { isRetry } = location.state || {};
   const [problemData, setProblemData] = useState();
   const [solvedExampleCount, setSolvedExampleCount] = useState(0);
   const [problemStatus, setProblemStatus] = useState();
@@ -240,7 +243,7 @@ const SolvePage = () => {
         const updatedPrevCount = currentCount;
         setCurrentCount(newCount);
 
-        if(client !== null){
+        if (client !== null) {
           compareCounts(updatedPrevCount, newCount);
         }
         return updatedPrevCount;
@@ -301,7 +304,7 @@ const SolvePage = () => {
       case 'Python':
         setLanguageId(71);
         break;
-      case 'javascript':
+      case 'JavaScript':
         setLanguageId(63);
         break;
       default:
@@ -327,12 +330,12 @@ const SolvePage = () => {
       const deltaY = e.clientY - startYExplain;
       const newHeight = startHeightExplain + deltaY;
       explainRef.current.style.height = `${newHeight}px`;
-      exampleRef.current.style.height = `calc(100vh - ${newHeight}px - 260px)`;
+      exampleRef.current.style.height = `calc(100vh - ${newHeight}px - 80px)`;
     } else if (isDraggingSolve) {
       const deltaY = e.clientY - startYSolve;
       const newHeight = startHeightSolve + deltaY;
       solvingRef.current.style.height = `${newHeight}px`;
-      outputRef.current.style.height = `calc(100vh - ${newHeight}px - 260px)`;
+      outputRef.current.style.height = `calc(100vh - ${newHeight}px - 80px)`;
     }
   };
 
@@ -458,6 +461,7 @@ const SolvePage = () => {
       try {
         const data = await getProblem(roomId);
         setProblemData(data);
+        console.log(data);
       } catch (error) {
         console.error(error);
       }
@@ -722,12 +726,13 @@ const SolvePage = () => {
         </div>
       )}
       <Header
-        headerType="solve"
+        headerType={isRetry === 1 ? 'review' : 'solve'}
         text={`${problemData?.problemResponseDto?.title}`}
         onSelect={handleSelect}
         invite={handleCopyUrl}
         rank={rank}
         onClick={() => setIsExit(true)}
+        compileLanguage={selectedLanguage}
       />
       <div className={`Solve--Container--${mode}`}>
         <div>
@@ -763,9 +768,10 @@ const SolvePage = () => {
             <span>문제설명</span>
             <div className="Solve--Explain--Contents">
               <span className={`Solve--Explain--Title--${mode}`}>문제</span>
-              <div className={`Solve--Explain--Text--${mode}`}>
-                {stripHTML(problemData?.problemResponseDto?.content)}
-              </div>
+              <SolveExplain
+                htmlContent={problemData?.problemResponseDto?.content}
+                mode={mode}
+              />
               <span className={`Solve--Explain--Title--${mode}`}>입력</span>
               <div className={`Solve--Explain--Text--${mode}`}>
                 {stripHTML(problemData?.problemResponseDto?.problemInput)}
