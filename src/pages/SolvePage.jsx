@@ -329,12 +329,12 @@ const SolvePage = () => {
       const deltaY = e.clientY - startYExplain;
       const newHeight = startHeightExplain + deltaY;
       explainRef.current.style.height = `${newHeight}px`;
-      exampleRef.current.style.height = `calc(100vh - ${newHeight}px - 260px)`;
+      exampleRef.current.style.height = `calc(100vh - ${newHeight}px - 80px)`;
     } else if (isDraggingSolve) {
       const deltaY = e.clientY - startYSolve;
       const newHeight = startHeightSolve + deltaY;
       solvingRef.current.style.height = `${newHeight}px`;
-      outputRef.current.style.height = `calc(100vh - ${newHeight}px - 260px)`;
+      outputRef.current.style.height = `calc(100vh - ${newHeight}px - 80px)`;
     }
   };
 

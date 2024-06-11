@@ -284,6 +284,10 @@ pre {
   display: flex;
   width: 100%;
 
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
   justify-content: center;
   cursor: ns-resize;
 }
