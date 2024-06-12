@@ -10,12 +10,24 @@ export const leaveWaitRoom = async (roomId) => {
   return res.data.data;
 };
 
-export const fetchRoomsData = async () => {
-  try {
-    const response = await Apis.get('users/rooms');
-    return response.data.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
+export const fetchAllRoomsData = async () => {
+  let allData = [];
+  let page = 0;
+  let totalPages = 1;
+
+  while (page < totalPages) {
+    try {
+      const response = await Apis.get(`users/rooms?page=${page}`);
+      const data = response.data.data;
+
+      allData = allData.concat(data.content);
+      totalPages = data.totalPages;
+      page += 1;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
+
+  return allData;
 };

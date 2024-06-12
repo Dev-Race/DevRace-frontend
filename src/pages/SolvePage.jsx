@@ -68,8 +68,6 @@ const SolvePage = () => {
   const [top, setTop] = useState(180);
 
   const { roomId } = useParams();
-  const location = useLocation();
-  const { isRetry } = location.state || {};
   const [problemData, setProblemData] = useState();
   const [solvedExampleCount, setSolvedExampleCount] = useState(0);
   const [problemStatus, setProblemStatus] = useState();
@@ -474,7 +472,8 @@ const SolvePage = () => {
     const fetchProblemStatus = async () => {
       try {
         const res = await getProblemStatus(roomId);
-        setProblemStatus(res);
+        setProblemStatus(res.data.data);
+        console.log(res.data.data);
       } catch (error) {
         console.error(error);
       }
@@ -726,7 +725,7 @@ const SolvePage = () => {
         </div>
       )}
       <Header
-        headerType={isRetry === 1 ? 'review' : 'solve'}
+        headerType={problemStatus?.roomState === 'RETRY' ? 'review' : 'solve'}
         text={`${problemData?.problemResponseDto?.title}`}
         onSelect={handleSelect}
         invite={handleCopyUrl}
@@ -760,6 +759,7 @@ const SolvePage = () => {
               onChangeChat={onChangeChat}
               page={page}
               setPage={setPage}
+              isRetry={problemStatus?.roomState}
             />
           </CSSTransition>
         </div>

@@ -13,7 +13,7 @@ import success_light from '../assets/icons/success_light.svg';
 import success_dark from '../assets/icons/success_dark.svg';
 import fail_light from '../assets/icons/fail_light.svg';
 import fail_dark from '../assets/icons/fail_dark.svg';
-import { fetchRoomsData } from '../apis/room';
+import { fetchAllRoomsData, roomCheck } from '../apis/room';
 
 const MyCodePage = () => {
   const { mode } = useSelector((state) => state.toggle);
@@ -21,26 +21,12 @@ const MyCodePage = () => {
   const [selectedOption, setSelectedOption] = useState('전체');
   const [searchResult, setSearchResult] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [myRoomsData, setMyRoomsData] = useState();
-
-  /*
-  // 페이지 접근 권한 검사
-  useEffect(() => {
-    const accessToken = sessionStorage.getItem('accessToken');
-    const expirationTime = sessionStorage.getItem('expirationTime');
-    const refreshToken = sessionStorage.getItem('refreshToken');
-
-    if (!accessToken || !expirationTime || !refreshToken) {
-      sessionStorage.clear();
-      navigate('/');
-    }
-  }, []);
-  */
+  const [myRoomsData, setMyRoomsData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchRoomsData();
+        const data = await fetchAllRoomsData();
         setMyRoomsData(data);
       } catch (error) {
         console.error('Failed to fetch rooms data:', error);
@@ -59,7 +45,7 @@ const MyCodePage = () => {
     setCurrentPage(1);
   };
 
-  const filteredData = myRoomsData?.content.filter((item) => {
+  const filteredData = myRoomsData.filter((item) => {
     const numberString = String(item.number);
     const matchSearch = numberString
       .toLowerCase()
@@ -81,12 +67,15 @@ const MyCodePage = () => {
     return `${year}.${month}.${day}`;
   };
 
-  const pageSize = myRoomsData?.pageable.pageSize || 9;
-  const totalElements = myRoomsData?.totalElements || 0;
-  const totalPages = Math.ceil(totalElements / pageSize);
+  const pageSize = 9;
+  const totalPages = Math.ceil(filteredData.length / pageSize);
+  const displayedData = filteredData.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
 
   const handleClick = (roomId) => {
-    navigate(`/solve/${roomId}`, { state: { isRetry: 1 } });
+    navigate(`/solve/${roomId}`);
   };
 
   return (
@@ -115,40 +104,39 @@ const MyCodePage = () => {
             <span>문제번호</span>
             <span style={{ marginLeft: '200px' }}>성공여부</span>
           </div>
-          {filteredData &&
-            filteredData.map((item, index) => (
-              <div key={index} className="MyCode--Content--Container">
-                <div className="MyCode--LeftContent--Container">
-                  <div className="MyCode--Date">
-                    {formatDate(item.createdTime)}
-                  </div>
+          {displayedData.map((item, index) => (
+            <div key={index} className="MyCode--Content--Container">
+              <div className="MyCode--LeftContent--Container">
+                <div className="MyCode--Date">
+                  {formatDate(item.createdTime)}
+                </div>
 
-                  <div className="MyCode--Number">
-                    {item.number}.{item.language}
-                  </div>
-                </div>
-                <div className="MyCode--SuccessOrFail">
-                  <img
-                    src={
-                      item.isPass === 1
-                        ? mode === 'light'
-                          ? success_light
-                          : success_dark
-                        : mode === 'light'
-                        ? fail_light
-                        : fail_dark
-                    }
-                    alt="SuccessOrFail"
-                  />
-                </div>
-                <div
-                  className="MyCode--CheckBtn"
-                  onClick={() => handleClick(item.roomId)}
-                >
-                  문제확인
+                <div className="MyCode--Number">
+                  {item.number}.{item.language}
                 </div>
               </div>
-            ))}
+              <div className="MyCode--SuccessOrFail">
+                <img
+                  src={
+                    item.isPass === 1
+                      ? mode === 'light'
+                        ? success_light
+                        : success_dark
+                      : mode === 'light'
+                      ? fail_light
+                      : fail_dark
+                  }
+                  alt="SuccessOrFail"
+                />
+              </div>
+              <div
+                className="MyCode--CheckBtn"
+                onClick={() => handleClick(item.roomId)}
+              >
+                문제확인
+              </div>
+            </div>
+          ))}
         </div>
         <Pagination
           currentPage={currentPage}
