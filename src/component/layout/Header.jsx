@@ -202,10 +202,12 @@ const Header = (props) => {
                 : `header--${mode}--container`
             }
           >
-            <div 
+            <div
               className={`header--${mode}--problemNum`}
-              onClick={()=>navigate('/')}
-              >{text}</div>
+              onClick={() => navigate('/')}
+            >
+              {text}
+            </div>
           </div>
         </>
       );

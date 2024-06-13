@@ -119,7 +119,7 @@ const SolvePage = () => {
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [toast])
+  }, [toast]);
 
   const connect = () => {
     if (client) disConnect();
@@ -144,7 +144,7 @@ const SolvePage = () => {
           if (jsonMessageBody.messageType === 'TALK') {
             setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
           } else if (jsonMessageBody.messageType === 'RANK') {
-            setToast(true)
+            setToast(true);
             setRank((prevRank) => [...prevRank, jsonMessageBody]);
           } else if (jsonMessageBody.messageType === 'ENTER') {
             setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
@@ -305,18 +305,24 @@ const SolvePage = () => {
     setSelectedLanguage(select);
   };
 
+  const retryLanguage = localStorage.getItem('retryLanguage');
+
   useEffect(() => {
     switch (selectedLanguage) {
       case 'C++':
+      case retryLanguage === 'CPP':
         setLanguageId(54);
         break;
       case 'Java':
+      case retryLanguage === 'Java':
         setLanguageId(62);
         break;
       case 'Python':
+      case retryLanguage === 'Python':
         setLanguageId(71);
         break;
       case 'JavaScript':
+      case retryLanguage === 'JavaScript':
         setLanguageId(63);
         break;
       default:
@@ -474,6 +480,8 @@ const SolvePage = () => {
         const data = await getProblem(roomId);
         setProblemData(data);
         console.log(data);
+        localStorage.setItem('retryCode', data?.code);
+        localStorage.setItem('retryLanguage', data?.language);
       } catch (error) {
         console.error(error);
       }
@@ -495,11 +503,6 @@ const SolvePage = () => {
 
     fetchProblemStatus();
   }, [roomId]);
-
-  function stripHTML(html) {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.body.textContent || '';
-  }
 
   const handleExampleCompile = async () => {
     setProcessing(true);
@@ -601,6 +604,8 @@ const SolvePage = () => {
       shape="angle"
       text="확인"
       onClick={() => {
+        localStorage.removeItem('retryCode');
+        localStorage.removeItem('retryLanguage');
         onLeaveChatRoom(0, code, 0);
         setIsExit(false);
         navigate('/');
@@ -747,13 +752,23 @@ const SolvePage = () => {
         </div>
       )}
       <Header
-        headerType={problemStatus?.roomState === 'RETRY' ? 'review' : 'solve'}
+        headerType={
+          problemStatus?.roomState === 'RETRY' ||
+          problemStatus?.roomState === 'FINISH'
+            ? 'review'
+            : 'solve'
+        }
         text={`${problemData?.problemResponseDto?.title}`}
         onSelect={handleSelect}
         invite={handleCopyUrl}
         rank={rank}
         onClick={() => setIsExit(true)}
-        compileLanguage={selectedLanguage}
+        compileLanguage={
+          problemStatus?.roomState === 'RETRY' ||
+          problemStatus?.roomState === 'FINISH'
+            ? localStorage.getItem('retryLanguage')
+            : selectedLanguage
+        }
       />
       <div className={`Solve--Container--${mode}`}>
         <div>
@@ -795,13 +810,24 @@ const SolvePage = () => {
                 mode={mode}
               />
               <span className={`Solve--Explain--Title--${mode}`}>입력</span>
-              <div className={`Solve--Explain--Text--${mode}`}>
-                {stripHTML(problemData?.problemResponseDto?.problemInput)}
-              </div>
+              <SolveExplain
+                htmlContent={problemData?.problemResponseDto?.problemInput}
+                mode={mode}
+              />
               <span className={`Solve--Explain--Title--${mode}`}>출력</span>
-              <div className={`Solve--Explain--Text--${mode}`}>
-                {stripHTML(problemData?.problemResponseDto?.problemOutput)}
-              </div>
+              <SolveExplain
+                htmlContent={problemData?.problemResponseDto?.problemOutput}
+                mode={mode}
+              />
+              {problemData?.problemResponseDto?.problemLimit && (
+                <>
+                  <span className={`Solve--Explain--Title--${mode}`}>제한</span>
+                  <SolveExplain
+                    htmlContent={problemData?.problemResponseDto?.problemLimit}
+                    mode={mode}
+                  />
+                </>
+              )}
             </div>
           </div>
           <div className="Solve--ExampleInput--Container" ref={exampleRef}>
@@ -846,15 +872,14 @@ const SolvePage = () => {
                   </div>
                   <div className={`Solve--ExampleInput--Contents--${mode}`}>
                     <span>입력</span>
-                    <div className={`Solve--ExampleInput--Text--${mode}`}>
-                      {stripHTML(input)}
-                    </div>
+                    <SolveExplain htmlContent={input} mode={mode} />
                     <span>출력</span>
-                    <div className={`Solve--ExampleInput--Text--${mode}`}>
-                      {stripHTML(
-                        problemData?.problemResponseDto?.sampleOutput[index],
-                      )}
-                    </div>
+                    <SolveExplain
+                      htmlContent={
+                        problemData?.problemResponseDto?.sampleOutput[index]
+                      }
+                      mode={mode}
+                    />
                   </div>
                 </div>
               ),
@@ -868,9 +893,15 @@ const SolvePage = () => {
               <CodeEditor
                 code={code}
                 onChange={onChange}
-                language={selectedLanguage}
+                language={
+                  problemStatus?.roomState === 'RETRY' ||
+                  problemStatus?.roomState === 'FINISH'
+                    ? localStorage.getItem('retryLanguage')
+                    : selectedLanguage
+                }
                 theme={mode === 'light' ? 'iPlastic' : 'brilliance-black'}
                 onMount={onMount}
+                isRetry={problemStatus?.roomState}
               />
             </div>
           </div>
