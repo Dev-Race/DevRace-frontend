@@ -33,6 +33,7 @@ import retryIcon from '../assets/icons/reset_icon.svg';
 import successIcon from '../assets/icons/twinkle_icon.svg';
 import Button from '../component/common/Button';
 import SolveExplain from '../component/solve/SolveExplain';
+import Push from '../component/common/Push';
 
 const javascriptDefault = `
 `;
@@ -90,6 +91,7 @@ const SolvePage = () => {
   const [page, setPage] = useState(0);
   const [prevCount, setPrevCount] = useState(null);
   const [currentCount, setCurrentCount] = useState(null);
+  const [toast, setToast] = useState(false);
 
   // Call Chat Data
   useEffect(() => {
@@ -109,6 +111,15 @@ const SolvePage = () => {
     connect();
     return () => disConnect();
   }, []);
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => {
+        setToast(true);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast])
 
   const connect = () => {
     if (client) disConnect();
@@ -133,6 +144,7 @@ const SolvePage = () => {
           if (jsonMessageBody.messageType === 'TALK') {
             setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
           } else if (jsonMessageBody.messageType === 'RANK') {
+            setToast(true)
             setRank((prevRank) => [...prevRank, jsonMessageBody]);
           } else if (jsonMessageBody.messageType === 'ENTER') {
             setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
@@ -579,7 +591,7 @@ const SolvePage = () => {
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.devrace.site/redirect/${problemData?.link}`,
+      `https://www.devrace.site/invite/${problemData?.link}`,
     );
   };
 
@@ -664,6 +676,14 @@ const SolvePage = () => {
 
   return (
     <>
+      {toast && (
+        <div className="Solve--Push--Rank">
+          <Push
+            type="inviteFriend"
+            text="성공한 사용자가 랭킹에 반영되었습니다!"
+          />
+        </div>
+      )}
       {isExit && (
         <div className="Solve--Modal--Wrapper">
           <Modal
