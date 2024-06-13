@@ -29,33 +29,33 @@ const WaitPage = () => {
   const [inviteUrl, setInviteUrl] = useState(null);
   const [toast, setToast] = useState(false);
 
-const handleCopyUrl = () => {
-  navigator.clipboard
-    .writeText('https://www.devrace.site/invite/' + inviteUrl)
-    .then(() => {
-      console.log('클립보드에 복사되었습니다');
-      setToast(true);
-    });
-};
+  const handleCopyUrl = () => {
+    navigator.clipboard
+      .writeText('https://www.devrace.site/invite/' + inviteUrl)
+      .then(() => {
+        console.log('클립보드에 복사되었습니다');
+        setToast(true);
+      });
+  };
 
-  useEffect(()=> {
-    if(toast){
+  useEffect(() => {
+    if (toast) {
       const timer = setTimeout(() => {
         setToast(true);
-      }, 3000)
+      }, 3000);
       return () => {
-        clearTimeout(timer)
+        clearTimeout(timer);
       };
     }
-  }, [toast])
+  }, [toast]);
 
-  console.log(toast)
+  console.log(toast);
 
   useEffect(() => {
     const fetchWaitList = async () => {
       let res = await getWaitList();
       setWaitList(res.waitUserDtoList);
-      setInviteUrl(res.link)
+      setInviteUrl(res.link);
     };
     if (client !== null) {
       fetchWaitList();
@@ -63,10 +63,10 @@ const handleCopyUrl = () => {
   }, [client]);
 
   useEffect(() => {
-    if(waitList.length > 0) {
-        setRoomManager(waitList[0].userId);
+    if (waitList.length > 0) {
+      setRoomManager(waitList[0].userId);
     }
-  }, [waitList])
+  }, [waitList]);
 
   useEffect(() => {
     connect();
@@ -86,9 +86,9 @@ const handleCopyUrl = () => {
 
   const leaveRoom = async () => {
     await leaveWaitRoom(Number(params.roomId));
-    alert('방을 떠났습니다!')
-    navigate('/')
-  }
+    alert('방을 떠났습니다!');
+    navigate('/');
+  };
 
   const connect = () => {
     if (client) disConnect();
@@ -107,9 +107,9 @@ const handleCopyUrl = () => {
       clientdata.onConnect = function () {
         clientdata.subscribe(WAIT_SUB + params.roomId, (message) => {
           let jsonMessageBody = JSON.parse(message.body);
-          if(jsonMessageBody.isEnter === true) {
+          if (jsonMessageBody.isEnter === true) {
             disConnect();
-            navigate('/solve/' + params.roomId)
+            navigate('/solve/' + params.roomId);
           }
           setWaitList((prevWaitList) => {
             const isDuplicate = prevWaitList.some(
@@ -166,7 +166,7 @@ const handleCopyUrl = () => {
         isEnter: true,
       }),
     });
-  }
+  };
 
   useEffect(() => {
     const accessToken = sessionStorage.getItem('accessToken');
