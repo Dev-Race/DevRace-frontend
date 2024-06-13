@@ -10,7 +10,6 @@ import google from '../assets/icons/google_icon.svg';
 import git from '../assets/icons/git_icon.svg';
 import { useNavigate } from 'react-router-dom';
 import Push from '../component/common/Push';
-import Button from '../component/common/Button';
 
 const MyPage = () => {
   const { mode } = useSelector((state) => state.toggle);
@@ -18,6 +17,20 @@ const MyPage = () => {
 
   const [info, setInfo] = useState(null);
   const [isShow, setIsShow] = useState(false);
+
+  useEffect(() => {
+    window.history.pushState(null, '', window.location.href);
+
+    const handleClickBrowserBackBtn = () => {
+      navigate('/');
+    };
+
+    window.addEventListener('popstate', handleClickBrowserBackBtn);
+
+    return () => {
+      window.removeEventListener('popstate', handleClickBrowserBackBtn);
+    };
+  }, [navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,11 +43,15 @@ const MyPage = () => {
     };
     fetchData();
     setIsShow(JSON.parse(sessionStorage.getItem('edit')));
-    setInterval(() =>{
-        setIsShow(false);
-        sessionStorage.removeItem('edit')
-    }, 3000)
+    setTimeout(() => {
+      setIsShow(false);
+      sessionStorage.removeItem('edit');
+    }, 3000);
   }, []);
+
+  const handleEditClick = () => {
+    navigate('/edit');
+  };
 
   return (
     <div className={`mypage--container--${mode}`}>
@@ -44,7 +61,7 @@ const MyPage = () => {
           className="mypage--edit-icon"
           src={edit}
           alt="edit"
-          onClick={() => navigate('/edit')}
+          onClick={handleEditClick}
         />
         <div className="mypage--edit-text">Profile</div>
         <img
@@ -60,12 +77,6 @@ const MyPage = () => {
           src={info && info.socialType === 'GOOGLE' ? google : git}
           alt="type"
           className="mypage--edit--loginType"
-        />
-        <Button
-          type="modal"
-          shape="angle"
-          text="홈으로 돌아가기"
-          onClick={() => navigate('/')}
         />
       </div>
       <div className="main_push_container">
