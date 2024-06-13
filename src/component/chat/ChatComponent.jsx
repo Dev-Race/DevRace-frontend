@@ -15,6 +15,7 @@ const ChatComponent = (props) => {
     chatData,
     page,
     setPage,
+    isRetry,
   } = props;
   const { mode } = useSelector((state) => state.toggle);
   const [opacity, setOpacity] = useState(1);
@@ -199,6 +200,7 @@ const ChatComponent = (props) => {
         value={chat}
         sendMessage={sendMessage}
         onChange={onChangeChat}
+        disable={isRetry === 'RETRY' ? true : false}
       />
     </div>
   );
