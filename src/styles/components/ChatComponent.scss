@@ -162,6 +162,25 @@
   margin-left: 24px;
 }
 
+.Chat--OtherChat--TextBox {
+  display: flex;
+  flex-direction: column;
+}
+
+.Chat--OtherChat--sender--dark,
+.Chat--OtherChat--sender--light {
+  @include font-body4;
+  color: var(--gray-700, #45474c);
+  font-size:11px;
+}
+
+.Chat--OtherChat--sender--dark {
+  color: #FFF;
+}
+.Chat--OtherChat--sender--light {
+  color : #000
+}
+
 .Chat--MyChat--TextBox--light,
 .Chat--MyChat--TextBox--dark {
   display: flex;
@@ -239,8 +258,7 @@
   justify-content: center;
   
   padding: 4px 16px;
-  opacity: 0.5;
-  background: var(--gray-200, #E3E4E5);
+  background: darkgray;
   border-radius: 50px;
 }
 

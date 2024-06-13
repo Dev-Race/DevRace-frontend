@@ -29,7 +29,7 @@ const WaitPage = () => {
   const [inviteUrl, setInviteUrl] = useState(null);
 
   const handleCopyUrl = () => {
-    navigator.clipboard.writeText("https://www.devrace.site/redirect/" + inviteUrl)
+    navigator.clipboard.writeText("https://www.devrace.site/invite/" + inviteUrl)
     .then(() => {
       console.log('클립보드에 복사되었습니다');
     });

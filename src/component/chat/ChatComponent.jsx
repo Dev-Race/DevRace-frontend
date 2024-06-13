@@ -140,7 +140,7 @@ const ChatComponent = (props) => {
                   ref={isLastChat ? latestChatRef : null}
                 >
                   <div className={`Chat--Notification--Text--${mode}`}>
-                    {`${chat.senderName}님이 입장하셨습니다.`}
+                    {`${chat.message}`}
                   </div>
                 </div>
               );
@@ -152,7 +152,7 @@ const ChatComponent = (props) => {
                   ref={isLastChat ? latestChatRef : null}
                 >
                   <div className={`Chat--Notification--Text--${mode}`}>
-                    {`${chat.senderName}님이 퇴장하셨습니다.`}
+                    {`${chat.message}`}
                   </div>
                 </div>
               );
@@ -182,8 +182,13 @@ const ChatComponent = (props) => {
                     alt="profileImg"
                     className="Chat--OtherProfile--Container"
                   />
-                  <div className={`Chat--OtherChat--TextBox--${mode}`}>
-                    {chat.message}
+                  <div className={`Chat--OtherChat--TextBox`}>
+                    <div className={`Chat--OtherChat--sender--${mode}`}>
+                      {chat.senderName}
+                    </div>
+                    <div className={`Chat--OtherChat--TextBox--${mode}`}>
+                      {chat.message}
+                    </div>
                   </div>
                   <div className="Chat--Chat--Time">
                     {convertTime(chat.createdTime)}

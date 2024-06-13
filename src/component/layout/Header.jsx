@@ -10,7 +10,6 @@ import Toggle from '../common/Toggle';
 import '../../styles/layout/Header.scss';
 import { useSelector } from 'react-redux';
 import RankList from '../common/RankList';
-import { useState } from 'react';
 import Dropdown from '../common/DropDown';
 import { useNavigate } from 'react-router-dom';
 
@@ -166,14 +165,6 @@ const Header = (props) => {
               <button className={`header--${mode}--btn`} onClick={onClick}>
                 나가기
               </button>
-              {headerType === 'solve' && (
-                <img
-                  src={mode === 'light' ? people_light : people_dark}
-                  alt="logo_text"
-                  className="header--logo--text"
-                  onClick={() => navigate('/profile')}
-                />
-              )}
             </div>
           </div>
         </>
@@ -189,7 +180,12 @@ const Header = (props) => {
             }
             style={{ background: 'none' }}
           >
-            <div className={`header--${mode}--problemNum`}>{text}</div>
+            <div
+              className={`header--${mode}--problemNum`}
+              onClick={() => navigate('/')}
+            >
+              {text}
+            </div>
             <div className={`header--${mode}--btn--box`}>
               <Dropdown type="status" onSelect={handleSelect} />
             </div>
