@@ -27,13 +27,29 @@ const WaitPage = () => {
   const [waitList, setWaitList] = useState([]);
   const [client, setClient] = useState(null);
   const [inviteUrl, setInviteUrl] = useState(null);
+  const [toast, setToast] = useState(false);
 
-  const handleCopyUrl = () => {
-    navigator.clipboard.writeText("https://www.devrace.site/invite/" + inviteUrl)
+const handleCopyUrl = () => {
+  navigator.clipboard
+    .writeText('https://www.devrace.site/invite/' + inviteUrl)
     .then(() => {
       console.log('클립보드에 복사되었습니다');
+      setToast(true);
     });
-  };
+};
+
+  useEffect(()=> {
+    if(toast){
+      const timer = setTimeout(() => {
+        setToast(true);
+      }, 3000)
+      return () => {
+        clearTimeout(timer)
+      };
+    }
+  }, [toast])
+
+  console.log(toast)
 
   useEffect(() => {
     const fetchWaitList = async () => {
@@ -180,6 +196,14 @@ const WaitPage = () => {
           <Push
             type="leaveWaitRoom"
             text="강제 종료 시 불이익이 있으니, 나가기 버튼을 눌러 대기열을 퇴장해주세요."
+          />
+        </div>
+      )}
+      {toast && (
+        <div className="Wait--Push--Invite">
+          <Push
+            type="inviteFriend"
+            text="초대 링크가 클립보드에 복사되었어요!"
           />
         </div>
       )}
