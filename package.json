@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@monaco-editor/loader": "^1.4.0",
     "@monaco-editor/react": "^4.6.0",
     "@stomp/stompjs": "^7.0.0",
     "@tanstack/react-query": "^5.36.0",

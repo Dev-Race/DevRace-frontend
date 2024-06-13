@@ -10,14 +10,22 @@ export const leaveWaitRoom = async (roomId) => {
   return res.data.data;
 };
 
-export const fetchAllRoomsData = async () => {
+export const fetchAllRoomsData = async (
+  page = 0,
+  isPass = null,
+  number = null,
+) => {
   let allData = [];
-  let page = 0;
   let totalPages = 1;
 
   while (page < totalPages) {
     try {
-      const response = await Apis.get(`users/rooms?page=${page}`);
+      const url =
+        `users/rooms?page=${page}` +
+        (isPass !== null ? `&isPass=${isPass}` : '') +
+        (number !== null ? `&number=${number}` : '');
+
+      const response = await Apis.get(url);
       const data = response.data.data;
 
       allData = allData.concat(data.content);

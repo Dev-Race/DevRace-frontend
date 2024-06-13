@@ -12,6 +12,7 @@ const CodeEditor = ({ onChange, language, code, theme, isRetry }) => {
   useEffect(() => {
     switch (language) {
       case 'C++':
+      case 'CPP':
         setCompileLanguage('cpp');
         break;
       case 'Java':

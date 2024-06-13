@@ -331,6 +331,10 @@ const SolvePage = () => {
     }
   }, [selectedLanguage]);
 
+  useEffect(() => {
+    console.log(languageId);
+  }, [languageId]);
+
   const handleMouseDownExplain = (e) => {
     setIsDraggingExplain(true);
     setStartYExplain(e.clientY);
