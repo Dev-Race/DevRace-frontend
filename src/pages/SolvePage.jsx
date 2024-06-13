@@ -16,6 +16,7 @@ import iPlasticTheme from 'monaco-themes/themes/iPlastic.json';
 import brillianceBlackTheme from 'monaco-themes/themes/Brilliance Black.json';
 import axios from 'axios';
 import Output from '../component/editor/Output';
+import OutputDetails from '../component/editor/OutPutDetails';
 import CodeEditor from '../component/editor/CodeEditor';
 
 import OpenChatBtn from '../component/chat/OpenChatBtn';
@@ -59,7 +60,7 @@ const SolvePage = () => {
   const [code, setCode] = useState(javascriptDefault);
   const [selectedLanguage, setSelectedLanguage] = useState('JavaScript');
   const [outputDetails, setOutputDetails] = useState(null);
-  const [processing, setProcessing] = useState(false);
+  const [processing, setProcessing] = useState(null);
 
   const editorRef = useRef();
   const [languageId, setLanguageId] = useState(63);
@@ -305,6 +306,10 @@ const SolvePage = () => {
     setSelectedLanguage(select);
   };
 
+  const encodeToBase64 = (text) => {
+    return btoa(text);
+  };
+
   const retryLanguage = localStorage.getItem('retryLanguage');
 
   useEffect(() => {
@@ -410,7 +415,7 @@ const SolvePage = () => {
     setProcessing(true);
     const formData = {
       language_id: languageId,
-      source_code: encodeURIComponent(code),
+      source_code: encodeToBase64(code),
       stdin: '',
     };
 
@@ -433,7 +438,9 @@ const SolvePage = () => {
         checkStatus(token);
       })
       .catch((err) => {
+        let error = err.response ? err.response.data : err;
         setProcessing(false);
+        console.log('catch block...', error);
       });
   };
 
@@ -460,9 +467,11 @@ const SolvePage = () => {
       } else {
         setProcessing(false);
         setOutputDetails(response.data);
+        console.log('response.data', response.data);
         return;
       }
     } catch (err) {
+      console.log('err', err);
       setProcessing(false);
     }
   };
