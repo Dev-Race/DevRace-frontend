@@ -58,7 +58,7 @@ const Router = createBrowserRouter([
     element: <SolvePage />,
   },
   {
-    path: '/redirect/:link',
+    path: '/invite/:link',
     element: <RedirectPage />,
   },
   {
@@ -67,8 +67,8 @@ const Router = createBrowserRouter([
   },
   {
     path: '/edit',
-    element: <EditPage />
-  }
+    element: <EditPage />,
+  },
 ]);
 
 export default Router;

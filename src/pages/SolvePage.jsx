@@ -135,7 +135,9 @@ const SolvePage = () => {
           } else if (jsonMessageBody.messageType === 'RANK') {
             setRank((prevRank) => [...prevRank, jsonMessageBody]);
           } else if (jsonMessageBody.messageType === 'ENTER') {
+            setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
           } else if (jsonMessageBody.messageType === 'LEAVE') {
+            setChatData((prevChatData) => [...prevChatData, jsonMessageBody]);
           }
         });
 
