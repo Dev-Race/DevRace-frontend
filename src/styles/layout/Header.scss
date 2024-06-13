@@ -31,10 +31,12 @@
 .header--logo {
   margin-left: 80px;
   margin-right: 8px;
+  cursor: pointer;
 }
 
 .header--logo--text {
   margin-right: auto;
+  cursor: pointer;
 }
 
 .header--light--btn--box,
@@ -58,6 +60,7 @@
   font-size: 16px;
   font-weight: 700;
   line-height: 22px;
+  cursor: pointer;
 }
 
 .header--light--btn {
@@ -85,6 +88,7 @@
   font-size: 24px;
   font-weight: 700;
   line-height: 22px;
+  cursor: pointer;
 }
 
 .header--light--problemNum {

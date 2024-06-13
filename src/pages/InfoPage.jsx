@@ -39,8 +39,6 @@ const InfoPage = () => {
     const [bojIdTouched, setBojIdTouched] = useState(false);
 
     const navigate = useNavigate();
-    const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
 
   const { mode } = useSelector((state) => state.toggle);
 
@@ -86,6 +84,9 @@ const InfoPage = () => {
         sessionStorage.setItem('imageUrl', res.userResponseDto.imageUrl);
         sessionStorage.setItem('nickname', res.userResponseDto.nickname);
         sessionStorage.setItem('userId', res.userResponseDto.userId);
+        sessionStorage.setItem('accessToken', res.tokenResponseDto.accessToken);
+        sessionStorage.setItem('refreshToken', res.tokenResponseDto.refreshToken);
+        sessionStorage.setItem('expirationTime', res.tokenResponseDto.accessTokenExpiresIn);
         setBojActive(true);
       }
     }
@@ -152,17 +153,7 @@ const InfoPage = () => {
   ];
 
   useEffect(() => {
-    const accessToken = searchParams.get('accessToken');
-    const accessTokenExpiresIn = searchParams.get('accessTokenExpiresIn');
-    const refreshToken = searchParams.get('refreshToken');
-
-    if (accessToken && accessTokenExpiresIn && refreshToken) {
-        sessionStorage.setItem('accessToken', accessToken);
-        sessionStorage.setItem('expirationTime', accessTokenExpiresIn);
-        sessionStorage.setItem('refreshToken', refreshToken);
-    }
     memberInfo();
-
     navigate('/info');
     setInfoActive(true); 
   }, []);
