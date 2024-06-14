@@ -21,7 +21,7 @@
     align-items: center;
 
     width: 444px;
-    height: 464px;
+    height: 516px;
     margin: auto;
 
     border-radius: 24px;
@@ -73,9 +73,28 @@
     font-size: 16px;
     font-weight: 400;
     line-height: 20px; /* 125% */
-    margin-bottom: 28px;
+    margin-bottom: 48px;
 }
 
 .mypage--edit--loginType {
     margin-bottom: 28px;
+}
+
+.mypage--delete--btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 4px;
+    background: var(--black, #000);
+
+    width: 72px;
+    padding: 2px 8px;
+
+    color: var(--white, #FFF);
+
+    font-family: "Spoqa Han Sans Neo";
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
 }
