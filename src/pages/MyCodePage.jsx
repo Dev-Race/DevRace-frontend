@@ -70,6 +70,10 @@ const MyCodePage = () => {
     navigate(`/solve/${roomId}`);
   };
 
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
+
   return (
     <>
       <Header

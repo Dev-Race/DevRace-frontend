@@ -46,6 +46,7 @@
 
 .MyCode--SearchBar--light,
 .MyCode--SearchBar--dark {
+  width: 100%;
   background: none;
   border: none;
 
@@ -126,6 +127,7 @@
 }
 
 .MyCode--Number {
+  min-width: 68px;
   color: var(--black, #000);
   font-feature-settings: 'clig' off, 'liga' off;
   @include font-t2;

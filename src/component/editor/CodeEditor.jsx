@@ -39,7 +39,7 @@ const CodeEditor = ({ onChange, language, code, theme, isRetry }) => {
     if (isRetry === 'FINISH' || isRetry === 'RETRY') {
       initialCode = localStorage.getItem('retryCode');
     } else {
-      initialCode = code;
+      initialCode = localStorage.getItem('editorValue');
     }
     console.log(initialCode);
     setValue(initialCode || '');
