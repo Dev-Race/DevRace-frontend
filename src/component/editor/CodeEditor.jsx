@@ -16,12 +16,15 @@ const CodeEditor = ({ onChange, language, code, theme, isRetry }) => {
         setCompileLanguage('cpp');
         break;
       case 'Java':
+      case 'JAVA':
         setCompileLanguage('java');
         break;
       case 'Python':
+      case 'PYTHON':
         setCompileLanguage('python');
         break;
       case 'Javascript':
+      case 'JAVASCRIPT':
         setCompileLanguage('javascript');
         break;
       default:

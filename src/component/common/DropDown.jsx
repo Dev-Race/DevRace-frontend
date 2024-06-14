@@ -5,7 +5,7 @@ import BlackDropdownArrow from '../../assets/icons/black_down_arrow.svg';
 import WhiteDropdownArrow from '../../assets/icons/white_down_arrow.svg';
 
 const optionsData = {
-  language: ['JavaScript', 'C++', 'Java', 'Python'],
+  language: ['C++', 'JavaScript', 'Java', 'Python'],
   status: ['전체', '성공', '실패'],
 };
 
