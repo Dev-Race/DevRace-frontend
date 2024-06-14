@@ -4,11 +4,13 @@ import Editor from '@monaco-editor/react';
 const CodeEditor = ({ onChange, language, code, theme, isRetry }) => {
   const [value, setValue] = useState('');
   const [compileLanguage, setCompileLanguage] = useState('');
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
   const handleEditorChange = (value) => {
     setValue(value);
     onChange('code', value);
   };
+
   useEffect(() => {
     switch (language) {
       case 'C++':
@@ -29,22 +31,21 @@ const CodeEditor = ({ onChange, language, code, theme, isRetry }) => {
         break;
     }
   }, [language]);
-  useEffect(() => {
-    console.log(compileLanguage);
-  }, [compileLanguage]);
 
   useEffect(() => {
-    let initialCode = '';
-
-    if (isRetry === 'FINISH' || isRetry === 'RETRY') {
-      initialCode = localStorage.getItem('retryCode');
+    if (isFirstRender) {
+      if (isRetry === 'FINISH' || isRetry === 'RETRY') {
+        const initialCode = localStorage.getItem('retryCode') || '';
+        setValue(initialCode);
+      } else {
+        const initialCode = localStorage.getItem('editorValue') || '';
+        setValue(initialCode);
+      }
+      setIsFirstRender(false);
     } else {
-      initialCode = code;
+      localStorage.setItem('editorValue', value);
     }
-    console.log(initialCode);
-    setValue(initialCode || '');
-    console.log(value);
-  }, [isRetry]);
+  }, [isRetry, isFirstRender]);
 
   useEffect(() => {
     const unloadHandler = (event) => {
