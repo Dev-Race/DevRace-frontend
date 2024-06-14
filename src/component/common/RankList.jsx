@@ -36,13 +36,13 @@ const RankList = ({ rankings, roomState }) => {
                 {index + 1}
                 <img
                   src={
-                    ranking.senderImageUrl !== null
+                    ranking.senderImageUrl
                       ? ranking.senderImageUrl
-                      : ranking.imageUrl !== null
+                      : ranking.imageUrl
                       ? ranking.imageUrl
                       : basic_small_image
                   }
-                  alt="Basic img"
+                  alt=""
                   style={{
                     width: '20px',
                     height: '20px',
