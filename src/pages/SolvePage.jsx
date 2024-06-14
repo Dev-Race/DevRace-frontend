@@ -58,12 +58,12 @@ const SolvePage = () => {
 
   const [isExampleSuccess, setIsExampleSuccess] = useState([]);
   const [code, setCode] = useState(javascriptDefault);
-  const [selectedLanguage, setSelectedLanguage] = useState('JavaScript');
+  const [selectedLanguage, setSelectedLanguage] = useState();
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
 
   const editorRef = useRef();
-  const [languageId, setLanguageId] = useState(63);
+  const [languageId, setLanguageId] = useState();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [transitionOpen, setTransitionOpen] = useState(false);
   const [isFirstMounted, setIsFirstMounted] = useState(true);
@@ -214,6 +214,25 @@ const SolvePage = () => {
     setChat(e.target.value);
   };
 
+  const changeLanguage = (language) => {
+    switch (language) {
+      case 'JavaScript':
+        return 'JAVASCRIPT'
+        break;
+      case 'C++':
+        return 'CPP'
+        break;
+      case 'Java':
+        return 'JAVA'
+        break;
+      case 'Python':
+        return 'PYTHON'
+        break;
+      default:
+        break;
+    }
+  }
+
   const onLeaveChatRoom = (isRetry, code, isPass) => {
     client.publish({
       destination: CHAT_PUB,
@@ -232,6 +251,7 @@ const SolvePage = () => {
       isRetry: isRetry,
       code: code,
       isPass: isPass,
+      language : changeLanguage(selectedLanguage)
     });
   };
 
@@ -310,24 +330,23 @@ const SolvePage = () => {
     return btoa(text);
   };
 
-  const retryLanguage = localStorage.getItem('retryLanguage');
-
+  console.log(selectedLanguage)
   useEffect(() => {
     switch (selectedLanguage) {
       case 'C++':
-      case retryLanguage === 'CPP':
+      case 'CPP':
         setLanguageId(54);
         break;
       case 'Java':
-      case retryLanguage === 'Java':
+      case 'JAVA':
         setLanguageId(62);
         break;
       case 'Python':
-      case retryLanguage === 'Python':
+      case 'PYTHON':
         setLanguageId(71);
         break;
       case 'JavaScript':
-      case retryLanguage === 'JavaScript':
+      case 'JAVASCRIPT':
         setLanguageId(63);
         break;
       default:
@@ -336,9 +355,7 @@ const SolvePage = () => {
     }
   }, [selectedLanguage]);
 
-  useEffect(() => {
-    console.log(languageId);
-  }, [languageId]);
+  console.log(languageId);
 
   const handleMouseDownExplain = (e) => {
     setIsDraggingExplain(true);
@@ -487,14 +504,31 @@ const SolvePage = () => {
     setTransitionOpen(false);
   };
 
+  const changeRetryLanguage = (language) => {
+    switch (language) {
+      case 'JAVASCRIPT':
+        return 'Javasript';
+      case 'CPP':
+        return 'C++';
+      case 'JAVA':
+        return 'Java';
+      case 'PYTHON':
+        return 'Python';
+      default:
+        break;
+    }
+  };
+
   useEffect(() => {
     const fetchProblemData = async () => {
       try {
         const data = await getProblem(roomId);
         setProblemData(data);
         console.log(data);
+        setCode(data?.code);
         localStorage.setItem('retryCode', data?.code);
         localStorage.setItem('retryLanguage', data?.language);
+        setSelectedLanguage(data?.language ? data?.language : 'JavaScript');
       } catch (error) {
         console.error(error);
       }
@@ -784,7 +818,7 @@ const SolvePage = () => {
         compileLanguage={
           problemStatus?.roomState === 'RETRY' ||
           problemStatus?.roomState === 'FINISH'
-            ? localStorage.getItem('retryLanguage')
+            ? changeRetryLanguage(localStorage.getItem('retryLanguage'))
             : selectedLanguage
         }
         roomState={problemStatus?.roomState}

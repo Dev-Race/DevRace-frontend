@@ -74,6 +74,20 @@ const MyCodePage = () => {
     localStorage.clear();
   }, []);
 
+  const changeLanguage = (language) => {
+    switch (language) {
+      case 'JAVASCRIPT':
+        return 'js';
+      case 'CPP':
+        return 'cpp';
+      case 'JAVA':
+        return 'java';
+      case 'PYTHON':
+        return 'py';
+      default:
+        break;
+    }
+  };
   return (
     <>
       <Header
@@ -107,7 +121,7 @@ const MyCodePage = () => {
                   {formatDate(item.createdTime)}
                 </div>
                 <div className="MyCode--Number">
-                  {item.number}.{item.language}
+                  {item.number}.{changeLanguage(item.language)}
                 </div>
               </div>
               <div className="MyCode--SuccessOrFail">
