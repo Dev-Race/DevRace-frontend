@@ -774,7 +774,12 @@ const SolvePage = () => {
         text={`${problemData?.problemResponseDto?.title}`}
         onSelect={handleSelect}
         invite={handleCopyUrl}
-        rank={rank}
+        rank={
+          problemStatus?.roomState === 'RETRY' ||
+          problemStatus?.roomState === 'FINISH'
+            ? problemData?.rankUserDtoList
+            : rank
+        }
         onClick={() => setIsExit(true)}
         compileLanguage={
           problemStatus?.roomState === 'RETRY' ||
@@ -782,6 +787,7 @@ const SolvePage = () => {
             ? localStorage.getItem('retryLanguage')
             : selectedLanguage
         }
+        roomState={problemStatus?.roomState}
       />
       <div className={`Solve--Container--${mode}`}>
         <div>

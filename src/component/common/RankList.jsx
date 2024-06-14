@@ -10,7 +10,7 @@ import '../../styles/common/RankList.scss';
  * The `rankings` object is passed from the parent component.
  */
 
-const RankList = ({ rankings }) => {
+const RankList = ({ rankings, roomState }) => {
   const { mode } = useSelector((state) => state.toggle);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -38,6 +38,8 @@ const RankList = ({ rankings }) => {
                   src={
                     ranking.senderImageUrl !== null
                       ? ranking.senderImageUrl
+                      : ranking.imageUrl !== null
+                      ? ranking.imageUrl
                       : basic_small_image
                   }
                   alt="Basic img"
@@ -47,7 +49,11 @@ const RankList = ({ rankings }) => {
                     borderRadius: '10px',
                   }}
                 />
-                <div style={{fontSize: '14px'}}>{ranking.senderName}</div>
+                <div style={{ fontSize: '14px' }}>
+                  {roomState === 'RETRY' || roomState === 'FINISH'
+                    ? ranking.nickname
+                    : ranking.senderName}
+                </div>
               </div>
             ))}
           </div>
