@@ -205,7 +205,7 @@ const ChatComponent = (props) => {
         value={chat}
         sendMessage={sendMessage}
         onChange={onChangeChat}
-        disable={isRetry === 'RETRY' ? true : false}
+        disable={isRetry === 'RETRY' || isRetry === 'FINISH' ? true : false}
       />
     </div>
   );

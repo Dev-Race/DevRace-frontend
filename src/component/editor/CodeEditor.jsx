@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Editor from '@monaco-editor/react';
 
-const CodeEditor = ({ onChange, language, code, theme }) => {
-  const savedValue = localStorage.getItem('editorValue');
-  const [value, setValue] = useState(savedValue || code || '');
+const CodeEditor = ({ onChange, language, code, theme, isRetry }) => {
+  const [value, setValue] = useState('');
   const [compileLanguage, setCompileLanguage] = useState('');
 
   const handleEditorChange = (value) => {
     setValue(value);
     onChange('code', value);
   };
-
   useEffect(() => {
     switch (language) {
       case 'C++':
+      case 'CPP':
         setCompileLanguage('cpp');
         break;
       case 'Java':
@@ -30,10 +29,22 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
         break;
     }
   }, [language]);
-
   useEffect(() => {
     console.log(compileLanguage);
   }, [compileLanguage]);
+
+  useEffect(() => {
+    let initialCode = '';
+
+    if (isRetry === 'FINISH' || isRetry === 'RETRY') {
+      initialCode = localStorage.getItem('retryCode');
+    } else {
+      initialCode = code;
+    }
+    console.log(initialCode);
+    setValue(initialCode || '');
+    console.log(value);
+  }, [isRetry]);
 
   useEffect(() => {
     const unloadHandler = (event) => {
@@ -41,9 +52,7 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
       event.preventDefault();
       event.returnValue = '';
     };
-
     window.addEventListener('beforeunload', unloadHandler);
-
     return () => {
       window.removeEventListener('beforeunload', unloadHandler);
     };

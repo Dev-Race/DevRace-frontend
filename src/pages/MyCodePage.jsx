@@ -13,7 +13,7 @@ import success_light from '../assets/icons/success_light.svg';
 import success_dark from '../assets/icons/success_dark.svg';
 import fail_light from '../assets/icons/fail_light.svg';
 import fail_dark from '../assets/icons/fail_dark.svg';
-import { fetchAllRoomsData, roomCheck } from '../apis/room';
+import { fetchAllRoomsData } from '../apis/room';
 
 const MyCodePage = () => {
   const { mode } = useSelector((state) => state.toggle);
@@ -23,41 +23,33 @@ const MyCodePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [myRoomsData, setMyRoomsData] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchAllRoomsData();
-        setMyRoomsData(data);
-      } catch (error) {
-        console.error('Failed to fetch rooms data:', error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const isPass =
+        selectedOption === '성공' ? 1 : selectedOption === '실패' ? 0 : null;
+      const data = await fetchAllRoomsData(0, isPass, searchResult);
+      console.log('Fetched data:', data);
+      setMyRoomsData(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Failed to fetch rooms data:', error);
+      setMyRoomsData([]);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedOption, searchResult]);
 
   useEffect(() => {
     console.log('My Rooms Data:', myRoomsData);
+    console.log('Type of myRoomsData:', typeof myRoomsData);
+    console.log('Is myRoomsData an array:', Array.isArray(myRoomsData));
   }, [myRoomsData]);
 
   const handleSelect = (select) => {
     setSelectedOption(select);
     setCurrentPage(1);
   };
-
-  const filteredData = myRoomsData.filter((item) => {
-    const numberString = String(item.number);
-    const matchSearch = numberString
-      .toLowerCase()
-      .includes(searchResult.toLowerCase());
-
-    const optionsStatus =
-      selectedOption === '전체' ||
-      (selectedOption === '성공' && item.isPass === 1) ||
-      (selectedOption === '실패' && item.isPass === 0);
-
-    return matchSearch && optionsStatus;
-  });
 
   const formatDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
@@ -68,8 +60,8 @@ const MyCodePage = () => {
   };
 
   const pageSize = 9;
-  const totalPages = Math.ceil(filteredData.length / pageSize);
-  const displayedData = filteredData.slice(
+  const totalPages = Math.ceil(myRoomsData.length / pageSize);
+  const displayedData = myRoomsData.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize,
   );
@@ -110,7 +102,6 @@ const MyCodePage = () => {
                 <div className="MyCode--Date">
                   {formatDate(item.createdTime)}
                 </div>
-
                 <div className="MyCode--Number">
                   {item.number}.{item.language}
                 </div>

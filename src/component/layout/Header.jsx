@@ -27,6 +27,7 @@ const Header = (props) => {
     rank,
     onClick,
     compileLanguage,
+    roomState,
   } = props;
 
   const { mode } = useSelector((state) => state.toggle);
@@ -144,7 +145,7 @@ const Header = (props) => {
             <div className={`header--${mode}--problemNum`}>{text}</div>
             <div className={`header--${mode}--btn--box`}>
               <Toggle />
-              <RankList rankings={rank} />
+              <RankList rankings={rank} roomState={roomState} />
               {headerType === 'solve' && (
                 <Dropdown type="language" onSelect={handleSelect} />
               )}
@@ -202,10 +203,12 @@ const Header = (props) => {
                 : `header--${mode}--container`
             }
           >
-            <div 
+            <div
               className={`header--${mode}--problemNum`}
-              onClick={()=>navigate('/')}
-              >{text}</div>
+              onClick={() => navigate('/')}
+            >
+              {text}
+            </div>
           </div>
         </>
       );
