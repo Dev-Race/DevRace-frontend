@@ -525,8 +525,8 @@ const SolvePage = () => {
     const compileExample = async (input) => {
       const formData = {
         language_id: languageId,
-        source_code: encodeURIComponent(code),
-        stdin: encodeURIComponent(input),
+        source_code: encodeToBase64(code),
+        stdin: encodeToBase64(input),
       };
 
       const options = {
