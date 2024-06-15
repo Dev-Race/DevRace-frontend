@@ -13,7 +13,7 @@ import success_light from '../assets/icons/success_light.svg';
 import success_dark from '../assets/icons/success_dark.svg';
 import fail_light from '../assets/icons/fail_light.svg';
 import fail_dark from '../assets/icons/fail_dark.svg';
-import { fetchAllRoomsData } from '../apis/room';
+import { fetchPaginationRoomsData } from '../apis/room';
 
 const MyCodePage = () => {
   const { mode } = useSelector((state) => state.toggle);
@@ -22,14 +22,20 @@ const MyCodePage = () => {
   const [searchResult, setSearchResult] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [myRoomsData, setMyRoomsData] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const fetchData = async () => {
+  const fetchData = async (page) => {
     try {
       const isPass =
         selectedOption === '성공' ? 1 : selectedOption === '실패' ? 0 : null;
-      const data = await fetchAllRoomsData(0, isPass, searchResult);
+      const data = await fetchPaginationRoomsData(
+        page - 1,
+        isPass,
+        searchResult,
+      );
       console.log('Fetched data:', data);
-      setMyRoomsData(Array.isArray(data) ? data : []);
+      setMyRoomsData(data.content || []);
+      setTotalPages(data.totalPages || 1);
     } catch (error) {
       console.error('Failed to fetch rooms data:', error);
       setMyRoomsData([]);
@@ -37,14 +43,8 @@ const MyCodePage = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [selectedOption, searchResult]);
-
-  useEffect(() => {
-    console.log('My Rooms Data:', myRoomsData);
-    console.log('Type of myRoomsData:', typeof myRoomsData);
-    console.log('Is myRoomsData an array:', Array.isArray(myRoomsData));
-  }, [myRoomsData]);
+    fetchData(currentPage);
+  }, [selectedOption, searchResult, currentPage]);
 
   const handleSelect = (select) => {
     setSelectedOption(select);
@@ -58,13 +58,6 @@ const MyCodePage = () => {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}.${month}.${day}`;
   };
-
-  const pageSize = 9;
-  const totalPages = Math.ceil(myRoomsData.length / pageSize);
-  const displayedData = myRoomsData.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  );
 
   const handleClick = (roomId) => {
     navigate(`/solve/${roomId}`);
@@ -114,7 +107,7 @@ const MyCodePage = () => {
             <span>문제번호</span>
             <span style={{ marginLeft: '200px' }}>성공여부</span>
           </div>
-          {displayedData.map((item, index) => (
+          {myRoomsData.map((item, index) => (
             <div key={index} className="MyCode--Content--Container">
               <div className="MyCode--LeftContent--Container">
                 <div className="MyCode--Date">

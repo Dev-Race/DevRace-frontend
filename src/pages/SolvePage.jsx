@@ -35,6 +35,7 @@ import successIcon from '../assets/icons/twinkle_icon.svg';
 import Button from '../component/common/Button';
 import SolveExplain from '../component/solve/SolveExplain';
 import Push from '../component/common/Push';
+import SolveExample from '../component/solve/SolveExample';
 
 const javascriptDefault = `
 `;
@@ -558,8 +559,8 @@ const SolvePage = () => {
     const compileExample = async (input) => {
       const formData = {
         language_id: languageId,
-        source_code: encodeURIComponent(code),
-        stdin: encodeURIComponent(input),
+        source_code: encodeToBase64(code),
+        stdin: encodeToBase64(input),
       };
 
       const options = {
@@ -925,9 +926,9 @@ const SolvePage = () => {
                   </div>
                   <div className={`Solve--ExampleInput--Contents--${mode}`}>
                     <span>입력</span>
-                    <SolveExplain htmlContent={input} mode={mode} />
+                    <SolveExample htmlContent={input} mode={mode} />
                     <span>출력</span>
-                    <SolveExplain
+                    <SolveExample
                       htmlContent={
                         problemData?.problemResponseDto?.sampleOutput[index]
                       }
