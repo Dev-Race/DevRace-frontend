@@ -14,7 +14,7 @@ const ChatComponent = (props) => {
     onChangeChat,
     chatData,
     setPage,
-    isRetry,
+    isLeave,
   } = props;
 
   const { mode } = useSelector((state) => state.toggle);
@@ -132,7 +132,7 @@ const ChatComponent = (props) => {
         {chatData &&
           chatData.map((chat, index) => {
             const isLastChat = index === chatData.length - 1;
-            if (chat.messageType === 'ENTER' && (chat.message!==null)) {
+            if (chat.messageType === 'ENTER' && chat.message !== null) {
               return (
                 <div
                   className="Chat--Notification--Container"
@@ -205,7 +205,7 @@ const ChatComponent = (props) => {
         value={chat}
         sendMessage={sendMessage}
         onChange={onChangeChat}
-        isRetry={isRetry}
+        isLeave={isLeave}
       />
     </div>
   );
