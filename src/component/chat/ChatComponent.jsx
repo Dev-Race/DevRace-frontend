@@ -13,10 +13,10 @@ const ChatComponent = (props) => {
     sendMessage,
     onChangeChat,
     chatData,
-    page,
     setPage,
     isRetry,
   } = props;
+
   const { mode } = useSelector((state) => state.toggle);
   const [opacity, setOpacity] = useState(1);
   const chatRef = useRef(null);
@@ -132,7 +132,7 @@ const ChatComponent = (props) => {
         {chatData &&
           chatData.map((chat, index) => {
             const isLastChat = index === chatData.length - 1;
-            if (chat.messageType === 'ENTER') {
+            if (chat.messageType === 'ENTER' && (chat.message!==null)) {
               return (
                 <div
                   className="Chat--Notification--Container"
@@ -144,7 +144,7 @@ const ChatComponent = (props) => {
                   </div>
                 </div>
               );
-            } else if (chat.messageType === 'LEAVE') {
+            } else if (chat.messageType === 'LEAVE' && chat.message !== null) {
               return (
                 <div
                   className="Chat--Notification--Container"
@@ -205,7 +205,7 @@ const ChatComponent = (props) => {
         value={chat}
         sendMessage={sendMessage}
         onChange={onChangeChat}
-        disable={isRetry === 'RETRY' || isRetry === 'FINISH' ? true : false}
+        isRetry={isRetry}
       />
     </div>
   );

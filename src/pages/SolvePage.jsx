@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import '../styles/pages/SolvePage.scss';
 import Header from '../component/layout/Header';
 import Footer from '../component/layout/Footer';
@@ -16,14 +16,13 @@ import iPlasticTheme from 'monaco-themes/themes/iPlastic.json';
 import brillianceBlackTheme from 'monaco-themes/themes/Brilliance Black.json';
 import axios from 'axios';
 import Output from '../component/editor/Output';
-import OutputDetails from '../component/editor/OutPutDetails';
 import CodeEditor from '../component/editor/CodeEditor';
 
 import OpenChatBtn from '../component/chat/OpenChatBtn';
 import ChatComponent from '../component/chat/ChatComponent';
 import { CSSTransition } from 'react-transition-group';
 import { getProblem, getProblemStatus } from '../apis/problem';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Apis from '../apis/Api';
 import * as StompJs from '@stomp/stompjs';
 
@@ -37,13 +36,12 @@ import SolveExplain from '../component/solve/SolveExplain';
 import Push from '../component/common/Push';
 import SolveExample from '../component/solve/SolveExample';
 
-const javascriptDefault = `
-`;
-
 const SolvePage = () => {
   const { mode } = useSelector((state) => state.toggle);
   const navigate = useNavigate();
 
+  /**************************************************************************/
+  /* 스크롤 관련 비지니스 로직 상태값 및 Ref*/
   const explainRef = useRef(null);
   const exampleRef = useRef(null);
   const solvingRef = useRef(null);
@@ -57,12 +55,16 @@ const SolvePage = () => {
   const [startYSolve, setStartYSolve] = useState(0);
   const [startHeightSolve, setStartHeightSolve] = useState(0);
 
+  /**************************************************************************/
+  /* 코드 에디터 비지니스 로직 관련 상태값 */
   const [isExampleSuccess, setIsExampleSuccess] = useState([]);
-  const [code, setCode] = useState(javascriptDefault);
+  const [code, setCode] = useState();
   const [selectedLanguage, setSelectedLanguage] = useState();
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
 
+  /**************************************************************************/
+  /* 모달 비지니스 로직 관련 상태값 */
   const editorRef = useRef();
   const [languageId, setLanguageId] = useState();
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -70,11 +72,15 @@ const SolvePage = () => {
   const [isFirstMounted, setIsFirstMounted] = useState(true);
   const [top, setTop] = useState(180);
 
+  /**************************************************************************/
+  /* 문제 정보 및 방 상태검사 관련 상태값 */
   const { roomId } = useParams();
   const [problemData, setProblemData] = useState();
   const [solvedExampleCount, setSolvedExampleCount] = useState(0);
   const [problemStatus, setProblemStatus] = useState();
 
+  /**************************************************************************/
+  /* 모달 비지니스 로직 관련 상태값 */
   const [isExit, setIsExit] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [checkSubmit, setCheckSubmit] = useState(false);
@@ -95,20 +101,7 @@ const SolvePage = () => {
   const [currentCount, setCurrentCount] = useState(null);
   const [toast, setToast] = useState(false);
 
-  // Call Chat Data
-  useEffect(() => {
-    Apis.get(`/rooms/${roomId}/chats`, {
-      params: {
-        page: page,
-      },
-    }).then((response) => {
-      setChatData((prevChatData) => [
-        ...response.data.data.content,
-        ...prevChatData,
-      ]);
-    });
-  }, [page]);
-
+  /**************************************************************************/
   useEffect(() => {
     connect();
     return () => disConnect();
@@ -175,7 +168,22 @@ const SolvePage = () => {
     client.deactivate();
   };
 
+  // Call Chat Data
+  useEffect(() => {
+    Apis.get(`/rooms/${roomId}/chats`, {
+      params: {
+        page: page,
+      },
+    }).then((response) => {
+      setChatData((prevChatData) => [
+        ...response.data.data.content,
+        ...prevChatData,
+      ]);
+    });
+  }, [page]);
+
   const sendWait = (connectedClient) => {
+    localStorage.getItem('isPass') === null &&
     connectedClient.publish({
       destination: CHAT_PUB,
       headers: {
@@ -218,23 +226,20 @@ const SolvePage = () => {
   const changeLanguage = (language) => {
     switch (language) {
       case 'JavaScript':
-        return 'JAVASCRIPT'
-        break;
+        return 'JAVASCRIPT';
       case 'C++':
-        return 'CPP'
-        break;
+        return 'CPP';
       case 'Java':
-        return 'JAVA'
-        break;
+        return 'JAVA';
       case 'Python':
-        return 'PYTHON'
-        break;
+        return 'PYTHON';
       default:
         break;
     }
-  }
+  };
 
-  const onLeaveChatRoom = (isRetry, code, isPass) => {
+  const onLeaveChatRoom = (isRetry, code, isPass, language) => {
+    (isRetry === 0) &&
     client.publish({
       destination: CHAT_PUB,
       headers: {
@@ -247,31 +252,31 @@ const SolvePage = () => {
         message: null,
       }),
     });
-
+    console.log(isRetry === 0);
+    // 퇴장 API
     Apis.post('/rooms/' + roomId, {
       isRetry: isRetry,
       code: code,
       isPass: isPass,
-      language : changeLanguage(selectedLanguage)
+      language: language,
     });
   };
 
   /**************************************************************************/
+  // 성공 여부 확인
   const onSuccessCheck = async () => {
     try {
-      console.log('Calling getCount...');
       await getCount();
     } catch (error) {
-      console.error('Failed to process success check', error);
+      console.error(error);
     }
   };
 
+  // 백준 Solve 카운트 Get
   const getCount = async () => {
     try {
       const response = await Apis.get('/users/solved-count');
       const newCount = response.data.data.solvedCount;
-
-      console.log('Received newCount:', newCount);
 
       setPrevCount((prev) => {
         const updatedPrevCount = currentCount;
@@ -287,10 +292,8 @@ const SolvePage = () => {
     }
   };
 
+  // 백준 Solve 카운트 비교 - 성공 여부 비교하기 위함
   const compareCounts = (prevCount, currentCount) => {
-    console.log('prevCount:', prevCount);
-    console.log('currentCount:', currentCount);
-
     if (prevCount === currentCount) {
       setCheckSubmit(false);
       setRetry(true);
@@ -312,106 +315,34 @@ const SolvePage = () => {
     }
   };
 
+  // 초기 렌더링 시, 현재 Solve 카운트 가져옴
   useEffect(() => {
     getCount();
   }, []);
 
+  // 문제 푼 랭킹 반영하는 함수
   const getMyRanking = (userId) => {
     const myRankIndex = rank.findIndex((r) => r.senderId === Number(userId));
     return myRankIndex + 1;
   };
+  /**************************************************************************/
+  /* 사이드 채팅 버튼 로직 */
+  const handleOpenChat = () => {
+    setIsChatOpen(true);
+    setTransitionOpen(true);
+    setIsFirstMounted(false);
+  };
+
+  const handleCloseChat = () => {
+    setIsChatOpen(false);
+    setTransitionOpen(false);
+  };
 
   /**************************************************************************/
 
-  const handleSelect = (select) => {
-    setSelectedLanguage(select);
-  };
-
-  const encodeToBase64 = (text) => {
-    return btoa(text);
-  };
-
-  console.log(selectedLanguage)
-  useEffect(() => {
-    switch (selectedLanguage) {
-      case 'C++':
-      case 'CPP':
-        setLanguageId(54);
-        break;
-      case 'Java':
-      case 'JAVA':
-        setLanguageId(62);
-        break;
-      case 'Python':
-      case 'PYTHON':
-        setLanguageId(71);
-        break;
-      case 'JavaScript':
-      case 'JAVASCRIPT':
-        setLanguageId(63);
-        break;
-      default:
-        setLanguageId(63);
-        break;
-    }
-  }, [selectedLanguage]);
-
-  console.log(languageId);
-
-  const handleMouseDownExplain = (e) => {
-    setIsDraggingExplain(true);
-    setStartYExplain(e.clientY);
-    setStartHeightExplain(explainRef.current.clientHeight);
-  };
-
-  const handleMouseDownSolve = (e) => {
-    setIsDraggingSolve(true);
-    setStartYSolve(e.clientY);
-    setStartHeightSolve(solvingRef.current.clientHeight);
-  };
-
-  const handleMouseMove = (e) => {
-    if (isDraggingExplain) {
-      const deltaY = e.clientY - startYExplain;
-      const newHeight = startHeightExplain + deltaY;
-      explainRef.current.style.height = `${newHeight}px`;
-      exampleRef.current.style.height = `calc(100vh - ${newHeight}px - 80px)`;
-    } else if (isDraggingSolve) {
-      const deltaY = e.clientY - startYSolve;
-      const newHeight = startHeightSolve + deltaY;
-      solvingRef.current.style.height = `${newHeight}px`;
-      outputRef.current.style.height = `calc(100vh - ${newHeight}px - 80px)`;
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDraggingExplain(false);
-    setIsDraggingSolve(false);
-  };
-
-  useEffect(() => {
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDraggingExplain, isDraggingSolve]);
-
-  const onChange = (action, data) => {
-    switch (action) {
-      case 'code': {
-        setCode(data);
-        break;
-      }
-      default: {
-        console.warn('case not handled!', action, data);
-      }
-    }
-  };
-
   const monaco = useMonaco();
+
+  // 코드 에디터 테마 설정 로직
   useEffect(() => {
     if (!monaco) return;
 
@@ -424,11 +355,26 @@ const SolvePage = () => {
     }
   }, [monaco, mode]);
 
+  // 코드 마운트 함수
   const onMount = (editor) => {
     editorRef.current = editor;
     editor.focus();
   };
 
+  // 에디터에 코드 반영
+  const onChange = (action, data) => {
+    switch (action) {
+      case 'code': {
+        setCode(data);
+        break;
+      }
+      default: {
+        console.warn('case not handled!', action, data);
+      }
+    }
+  };
+
+  // 코드를 바탕으로 컴파일을 해주는 비지니스 로직
   const handleCompile = async () => {
     setProcessing(true);
     const formData = {
@@ -456,12 +402,11 @@ const SolvePage = () => {
         checkStatus(token);
       })
       .catch((err) => {
-        let error = err.response ? err.response.data : err;
         setProcessing(false);
-        console.log('catch block...', error);
       });
   };
 
+  // 컴파일 상태 검사 비지니스 로직
   const checkStatus = async (token) => {
     const options = {
       method: 'GET',
@@ -485,72 +430,12 @@ const SolvePage = () => {
       } else {
         setProcessing(false);
         setOutputDetails(response.data);
-        console.log('response.data', response.data);
         return;
       }
     } catch (err) {
-      console.log('err', err);
       setProcessing(false);
     }
   };
-
-  const handleOpenChat = () => {
-    setIsChatOpen(true);
-    setTransitionOpen(true);
-    setIsFirstMounted(false);
-  };
-
-  const handleCloseChat = () => {
-    setIsChatOpen(false);
-    setTransitionOpen(false);
-  };
-
-  const changeRetryLanguage = (language) => {
-    switch (language) {
-      case 'JAVASCRIPT':
-        return 'Javasript';
-      case 'CPP':
-        return 'C++';
-      case 'JAVA':
-        return 'Java';
-      case 'PYTHON':
-        return 'Python';
-      default:
-        break;
-    }
-  };
-
-  useEffect(() => {
-    const fetchProblemData = async () => {
-      try {
-        const data = await getProblem(roomId);
-        setProblemData(data);
-        console.log(data);
-        setCode(data?.code);
-        localStorage.setItem('retryCode', data?.code);
-        localStorage.setItem('retryLanguage', data?.language);
-        setSelectedLanguage(data?.language ? data?.language : 'JavaScript');
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchProblemData();
-  }, [roomId]);
-
-  useEffect(() => {
-    const fetchProblemStatus = async () => {
-      try {
-        const res = await getProblemStatus(roomId);
-        setProblemStatus(res.data.data);
-        console.log(res.data.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchProblemStatus();
-  }, [roomId]);
 
   const handleExampleCompile = async () => {
     setProcessing(true);
@@ -635,6 +520,140 @@ const SolvePage = () => {
     setProcessing(false);
   };
 
+  // 언어 선택
+  const handleSelect = (select) => {
+    localStorage.setItem('language', changeLanguage(select));
+    setSelectedLanguage(select);
+  };
+
+  // Base64 엔코딩 함수
+  const encodeToBase64 = (text) => {
+      return btoa(
+        encodeURIComponent(text).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+          return String.fromCharCode('0x' + p1);
+        }),
+      );
+  };
+
+  // 언어에 따른 컴파일 ID 설정
+  // 의존성 배열은 selectedLanguage
+  // selectedLanguage에 의해 setLanguageId 동작함
+  useEffect(() => {
+    switch (selectedLanguage) {
+      case 'C++':
+      case 'CPP':
+        setLanguageId(54);
+        break;
+      case 'Java':
+      case 'JAVA':
+        setLanguageId(62);
+        break;
+      case 'Python':
+      case 'PYTHON':
+        setLanguageId(71);
+        break;
+      case 'JavaScript':
+      case 'JAVASCRIPT':
+        setLanguageId(63);
+        break;
+      default:
+        setLanguageId(63);
+        break;
+    }
+  }, [selectedLanguage]);
+
+  /**************************************************************************/
+  /* 문제 및 코드 스크롤과 관련된 코드 인듯...? */
+  const handleMouseDownExplain = (e) => {
+    setIsDraggingExplain(true);
+    setStartYExplain(e.clientY);
+    setStartHeightExplain(explainRef.current.clientHeight);
+  };
+
+  const handleMouseDownSolve = (e) => {
+    setIsDraggingSolve(true);
+    setStartYSolve(e.clientY);
+    setStartHeightSolve(solvingRef.current.clientHeight);
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDraggingExplain) {
+      const deltaY = e.clientY - startYExplain;
+      const newHeight = startHeightExplain + deltaY;
+      explainRef.current.style.height = `${newHeight}px`;
+      exampleRef.current.style.height = `calc(100vh - ${newHeight}px - 80px)`;
+    } else if (isDraggingSolve) {
+      const deltaY = e.clientY - startYSolve;
+      const newHeight = startHeightSolve + deltaY;
+      solvingRef.current.style.height = `${newHeight}px`;
+      outputRef.current.style.height = `calc(100vh - ${newHeight}px - 80px)`;
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDraggingExplain(false);
+    setIsDraggingSolve(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDraggingExplain, isDraggingSolve]);
+
+  /**************************************************************************/
+
+  const changeRetryLanguage = (language) => {
+    switch (language) {
+      case 'JAVASCRIPT':
+        return 'Javasript';
+      case 'CPP':
+        return 'C++';
+      case 'JAVA':
+        return 'Java';
+      case 'PYTHON':
+        return 'Python';
+      default:
+        break;
+    }
+  };
+
+  /**************************************************************************/
+  /* 문제 정보 서버로 부터 가져옴*/
+
+  useEffect(() => {
+    const fetchProblemData = async () => {
+      const data = await getProblem(roomId);
+      setProblemData(data);
+      setCode(data.code);
+      setSelectedLanguage(data.language);
+      let language = data.language;
+      localStorage.setItem('language', language);
+    };
+    fetchProblemData();
+  }, []);
+
+  /* 해당 문제를 가지고 있는 방에 관한 방 상태검사 비지니스 로직*/
+  useEffect(() => {
+    const fetchProblemStatus = async () => {
+      try {
+        const res = await getProblemStatus(roomId);
+        console.log(res.data);
+        setProblemStatus(res.data.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchProblemStatus();
+  }, []);
+
+  console.log(localStorage.getItem('isRetry'))
+  /**************************************************************************/
+  /* 모달 관련 비지니스 로직 모음*/
   const openProblemPage = () => {
     const link = `https://www.acmicpc.net/submit/${problemData?.problemResponseDto?.number}`;
     window.open(link, '_blank');
@@ -646,20 +665,36 @@ const SolvePage = () => {
     );
   };
 
-  const exitButton = [
-    <Button
-      type="modal"
-      shape="angle"
-      text="확인"
-      onClick={() => {
-        localStorage.removeItem('retryCode');
-        localStorage.removeItem('retryLanguage');
-        onLeaveChatRoom(0, code, 0);
-        setIsExit(false);
-        navigate('/');
-      }}
-    />,
-  ];
+const exitButton = [
+  <Button
+    type="modal"
+    shape="angle"
+    text="확인"
+    onClick={() => {
+      let isPass = 0; // 기본 값 설정
+      try {
+        const storedValue = localStorage.getItem('isPass');
+        if (storedValue !== null) {
+          isPass = JSON.parse(storedValue);
+        }
+      } catch (error) {
+        console.error('Error parsing isPass from localStorage', error);
+      }
+
+      onLeaveChatRoom(
+        localStorage.getItem('isPass') ? 1 : 0,
+        code,
+        isPass,
+        localStorage.getItem('language'),
+      );
+      setIsExit(false);
+      navigate('/');
+    }}
+  />,
+];
+
+
+  console.log(selectedLanguage)
 
   const submitButton = [
     <Button
@@ -721,12 +756,18 @@ const SolvePage = () => {
       onClick={() => {
         setSuccess(false);
         localStorage.removeItem('editorValue');
-        onLeaveChatRoom(1, code, 1);
+        onLeaveChatRoom(
+          1,
+          code,
+          1,
+          localStorage.getItem('language')
+        );
         navigate('/');
       }}
     />,
   ];
 
+  
   return (
     <>
       {toast && (
@@ -816,12 +857,7 @@ const SolvePage = () => {
             : rank
         }
         onClick={() => setIsExit(true)}
-        compileLanguage={
-          problemStatus?.roomState === 'RETRY' ||
-          problemStatus?.roomState === 'FINISH'
-            ? changeRetryLanguage(localStorage.getItem('retryLanguage'))
-            : selectedLanguage
-        }
+        compileLanguage={changeRetryLanguage(selectedLanguage)}
         roomState={problemStatus?.roomState}
       />
       <div className={`Solve--Container--${mode}`}>
@@ -947,12 +983,7 @@ const SolvePage = () => {
               <CodeEditor
                 code={code}
                 onChange={onChange}
-                language={
-                  problemStatus?.roomState === 'RETRY' ||
-                  problemStatus?.roomState === 'FINISH'
-                    ? localStorage.getItem('retryLanguage')
-                    : selectedLanguage
-                }
+                language={selectedLanguage}
                 theme={mode === 'light' ? 'iPlastic' : 'brilliance-black'}
                 onMount={onMount}
                 isRetry={problemStatus?.roomState}
