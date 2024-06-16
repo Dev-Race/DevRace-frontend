@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import Editor from '@monaco-editor/react';
 
 const CodeEditor = ({ onChange, language, code, theme, isRetry }) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(code || ''); // Initialize with the code prop
   const [compileLanguage, setCompileLanguage] = useState('');
 
   const handleEditorChange = (value) => {
     setValue(value);
     onChange('code', value);
   };
+
   useEffect(() => {
     switch (language) {
       case 'C++':
@@ -32,22 +33,11 @@ const CodeEditor = ({ onChange, language, code, theme, isRetry }) => {
         break;
     }
   }, [language]);
-  useEffect(() => {
-    console.log(compileLanguage);
-  }, [compileLanguage]);
 
+  // Use effect to update the editor value when code prop changes
   useEffect(() => {
-    let initialCode = '';
-
-    if (isRetry === 'FINISH' || isRetry === 'RETRY') {
-      initialCode = localStorage.getItem('retryCode');
-    } else {
-      initialCode = localStorage.getItem('editorValue');
-    }
-    console.log(initialCode);
-    setValue(initialCode || '');
-    console.log(value);
-  }, [isRetry]);
+    setValue(code);
+  }, [code]);
 
   useEffect(() => {
     const unloadHandler = (event) => {
@@ -62,16 +52,14 @@ const CodeEditor = ({ onChange, language, code, theme, isRetry }) => {
   }, [value]);
 
   return (
-    <>
-      <Editor
-        height="532px"
-        width="1100px"
-        language={compileLanguage}
-        value={value}
-        onChange={handleEditorChange}
-        theme={theme}
-      />
-    </>
+    <Editor
+      height="532px"
+      width="1100px"
+      language={compileLanguage}
+      value={value}
+      onChange={handleEditorChange}
+      theme={theme}
+    />
   );
 };
 
