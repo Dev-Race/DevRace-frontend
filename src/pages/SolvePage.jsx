@@ -241,20 +241,6 @@ const SolvePage = () => {
   };
 
   const onLeaveChatRoom = (isRetry, code, isPass, language) => {
-    (isRetry === 0) &&
-    client.publish({
-      destination: CHAT_PUB,
-      headers: {
-        Authorization: `Bearer ` + sessionStorage.getItem('accessToken'),
-      },
-      body: JSON.stringify({
-        roomId: roomId,
-        senderId: sessionStorage.getItem('userId'),
-        messageType: 'LEAVE',
-        message: null,
-      }),
-    });
-    console.log(isRetry === 0);
     // 퇴장 API
     Apis.post('/rooms/' + roomId, {
       isRetry: isRetry,
@@ -262,6 +248,19 @@ const SolvePage = () => {
       isPass: isPass,
       language: language,
     });
+    problemStatus?.isLeave === 0 &&
+      client.publish({
+        destination: CHAT_PUB,
+        headers: {
+          Authorization: `Bearer ` + sessionStorage.getItem('accessToken'),
+        },
+        body: JSON.stringify({
+          roomId: roomId,
+          senderId: sessionStorage.getItem('userId'),
+          messageType: 'LEAVE',
+          message: null,
+        }),
+      });
   };
 
   /**************************************************************************/
