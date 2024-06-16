@@ -241,7 +241,7 @@ const SolvePage = () => {
   };
 
   const onLeaveChatRoom = (isRetry, code, isPass, language) => {
-    (isRetry === 0) &&
+    (problemStatus?.isLeave === 0) &&
     client.publish({
       destination: CHAT_PUB,
       headers: {
