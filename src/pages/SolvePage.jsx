@@ -223,6 +223,7 @@ const SolvePage = () => {
   };
 
   const changeLanguage = (language) => {
+    console.log(language)
     switch (language) {
       case 'JavaScript':
         return 'JAVASCRIPT';
@@ -237,6 +238,7 @@ const SolvePage = () => {
     }
   };
 
+  console.log(selectedLanguage)
   const onLeaveChatRoom = (isRetry, code, isPass) => {
     client.publish({
       destination: CHAT_PUB,
@@ -256,7 +258,7 @@ const SolvePage = () => {
       isRetry: isRetry,
       code: code,
       isPass: isPass,
-      language: changeLanguage(selectedLanguage),
+      language: selectedLanguage,
     });
   };
 
@@ -637,6 +639,7 @@ const SolvePage = () => {
     const fetchProblemStatus = async () => {
       try {
         const res = await getProblemStatus(roomId);
+        console.log(res.data);
         setProblemStatus(res.data.data);
       } catch (error) {
         console.error(error);
@@ -664,9 +667,8 @@ const SolvePage = () => {
       shape="angle"
       text="확인"
       onClick={() => {
-        localStorage.removeItem('retryCode');
-        localStorage.removeItem('retryLanguage');
-        onLeaveChatRoom(0, code, 0);
+        let isPass = localStorage.getItem('isPass');
+        onLeaveChatRoom(isPass !== null ? 1 : 0, code, isPass !== null ? 1 : 0);
         setIsExit(false);
         navigate('/');
       }}

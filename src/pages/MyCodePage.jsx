@@ -33,17 +33,16 @@ const MyCodePage = () => {
         isPass,
         searchResult,
       );
-      console.log('Fetched data:', data);
       setMyRoomsData(data.content || []);
       setTotalPages(data.totalPages || 1);
     } catch (error) {
-      console.error('Failed to fetch rooms data:', error);
       setMyRoomsData([]);
     }
   };
 
   useEffect(() => {
     fetchData(currentPage);
+    console.log(myRoomsData);
   }, [selectedOption, searchResult, currentPage]);
 
   const handleSelect = (select) => {
@@ -59,7 +58,8 @@ const MyCodePage = () => {
     return `${year}.${month}.${day}`;
   };
 
-  const handleClick = (roomId) => {
+  const handleClick = (roomId, isPass) => {
+    localStorage.setItem('isPass', isPass);
     navigate(`/solve/${roomId}`);
   };
 
@@ -133,7 +133,7 @@ const MyCodePage = () => {
               </div>
               <div
                 className="MyCode--CheckBtn"
-                onClick={() => handleClick(item.roomId)}
+                onClick={() => handleClick(item.roomId, item.isPass)}
               >
                 문제확인
               </div>
