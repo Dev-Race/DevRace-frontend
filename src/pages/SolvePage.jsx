@@ -103,9 +103,11 @@ const SolvePage = () => {
 
   /**************************************************************************/
   useEffect(() => {
-    connect();
-    return () => disConnect();
-  }, []);
+    if (problemStatus?.isLeave === 0){
+      connect();
+      return () => disConnect();
+    } 
+  }, [problemStatus]);
 
   useEffect(() => {
     if (toast) {
