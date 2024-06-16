@@ -183,6 +183,7 @@ const SolvePage = () => {
   }, [page]);
 
   const sendWait = (connectedClient) => {
+    localStorage.getItem('isPass') === null &&
     connectedClient.publish({
       destination: CHAT_PUB,
       headers: {
@@ -223,7 +224,6 @@ const SolvePage = () => {
   };
 
   const changeLanguage = (language) => {
-    console.log(language)
     switch (language) {
       case 'JavaScript':
         return 'JAVASCRIPT';
@@ -238,8 +238,8 @@ const SolvePage = () => {
     }
   };
 
-  console.log(selectedLanguage)
-  const onLeaveChatRoom = (isRetry, code, isPass) => {
+  const onLeaveChatRoom = (isRetry, code, isPass, language) => {
+    (isRetry === 0) &&
     client.publish({
       destination: CHAT_PUB,
       headers: {
@@ -252,13 +252,13 @@ const SolvePage = () => {
         message: null,
       }),
     });
-
+    console.log(isRetry === 0);
     // 퇴장 API
     Apis.post('/rooms/' + roomId, {
       isRetry: isRetry,
       code: code,
       isPass: isPass,
-      language: selectedLanguage,
+      language: language,
     });
   };
 
@@ -522,6 +522,7 @@ const SolvePage = () => {
 
   // 언어 선택
   const handleSelect = (select) => {
+    localStorage.setItem('language', changeLanguage(select));
     setSelectedLanguage(select);
   };
 
@@ -630,6 +631,8 @@ const SolvePage = () => {
       setProblemData(data);
       setCode(data.code);
       setSelectedLanguage(data.language);
+      let language = data.language;
+      localStorage.setItem('language', language);
     };
     fetchProblemData();
   }, []);
@@ -648,6 +651,7 @@ const SolvePage = () => {
     fetchProblemStatus();
   }, []);
 
+  console.log(localStorage.getItem('isRetry'))
   /**************************************************************************/
   /* 모달 관련 비지니스 로직 모음*/
   const openProblemPage = () => {
@@ -661,19 +665,36 @@ const SolvePage = () => {
     );
   };
 
-  const exitButton = [
-    <Button
-      type="modal"
-      shape="angle"
-      text="확인"
-      onClick={() => {
-        let isPass = localStorage.getItem('isPass');
-        onLeaveChatRoom(isPass !== null ? 1 : 0, code, isPass !== null ? 1 : 0);
-        setIsExit(false);
-        navigate('/');
-      }}
-    />,
-  ];
+const exitButton = [
+  <Button
+    type="modal"
+    shape="angle"
+    text="확인"
+    onClick={() => {
+      let isPass = 0; // 기본 값 설정
+      try {
+        const storedValue = localStorage.getItem('isPass');
+        if (storedValue !== null) {
+          isPass = JSON.parse(storedValue);
+        }
+      } catch (error) {
+        console.error('Error parsing isPass from localStorage', error);
+      }
+
+      onLeaveChatRoom(
+        localStorage.getItem('isPass') ? 1 : 0,
+        code,
+        isPass,
+        localStorage.getItem('language'),
+      );
+      setIsExit(false);
+      navigate('/');
+    }}
+  />,
+];
+
+
+  console.log(selectedLanguage)
 
   const submitButton = [
     <Button
@@ -735,7 +756,12 @@ const SolvePage = () => {
       onClick={() => {
         setSuccess(false);
         localStorage.removeItem('editorValue');
-        onLeaveChatRoom(1, code, 1);
+        onLeaveChatRoom(
+          1,
+          code,
+          1,
+          localStorage.getItem('language')
+        );
         navigate('/');
       }}
     />,
