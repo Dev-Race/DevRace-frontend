@@ -651,7 +651,6 @@ const SolvePage = () => {
     fetchProblemStatus();
   }, []);
 
-  console.log(localStorage.getItem('isRetry'))
   /**************************************************************************/
   /* 모달 관련 비지니스 로직 모음*/
   const openProblemPage = () => {
@@ -886,7 +885,7 @@ const exitButton = [
               onChangeChat={onChangeChat}
               page={page}
               setPage={setPage}
-              isRetry={problemStatus?.roomState}
+              isLeave={problemStatus?.isLeave}
             />
           </CSSTransition>
         </div>
@@ -986,7 +985,6 @@ const exitButton = [
                 language={selectedLanguage}
                 theme={mode === 'light' ? 'iPlastic' : 'brilliance-black'}
                 onMount={onMount}
-                isRetry={problemStatus?.roomState}
               />
             </div>
           </div>

@@ -9,25 +9,30 @@ import sendIcon from '../../assets/icons/sendIcon.svg';
  */
 
 const Input = (props) => {
-  const { type, placeHolder, onChange, error, value, sendMessage, isRetry } = props;
+  const { type, placeHolder, onChange, error, value, sendMessage, isLeave } =
+    props;
   const { mode } = useSelector((state) => state.toggle);
 
   return (
     <div className={`input--${type}--${mode}--wrapper`}>
       <input
         className={`input--${type}--${mode}${error ? '--error' : ''}`}
-        placeholder={isRetry === 'RETRY' || isRetry === 'FINISH' ? '이미 종료된 채팅입니다.' : placeHolder}
+        placeholder={isLeave === 1 ? '이미 종료된 채팅입니다.' : placeHolder}
         onChange={onChange}
-        disabled={isRetry === 'RETRY' || isRetry === 'FINISH' ? true : false}
+        disabled={isLeave === 1 ? true : false}
         value={value}
         onKeyDown={(e) => {
-          if ((type === 'chat') && e.keyCode === 13) {
+          if (type === 'chat' && e.keyCode === 13) {
             sendMessage(e);
           }
         }}
       />
       {type === 'chat' ? (
-        <img src={sendIcon} alt="sendIcon" onClick={isRetry === 'RETRY' || isRetry === 'FINISH' ? () => {} : (e) => sendMessage(e)} />
+        <img
+          src={sendIcon}
+          alt="sendIcon"
+          onClick={isLeave === 1 ? () => {} : (e) => sendMessage(e)}
+        />
       ) : (
         <></>
       )}
