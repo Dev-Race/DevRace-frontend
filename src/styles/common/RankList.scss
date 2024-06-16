@@ -17,6 +17,8 @@
   border-radius: 8px;
   cursor: pointer;
 
+  z-index : 0;
+
   &--light {
     background: var(--blue-300, #626ce5);
   }
@@ -52,6 +54,8 @@
   &--dark {
     background: var(--dark-blue-500, #569cd6);
   }
+
+  
 }
 
 .rank-item {
