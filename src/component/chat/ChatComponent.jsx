@@ -132,7 +132,7 @@ const ChatComponent = (props) => {
         {chatData &&
           chatData.map((chat, index) => {
             const isLastChat = index === chatData.length - 1;
-            if (chat.messageType === 'ENTER') {
+            if (chat.messageType === 'ENTER' && chat.message) {
               return (
                 <div
                   className="Chat--Notification--Container"
@@ -144,7 +144,7 @@ const ChatComponent = (props) => {
                   </div>
                 </div>
               );
-            } else if (chat.messageType === 'LEAVE') {
+            } else if (chat.messageType === 'LEAVE' && chat.message) {
               return (
                 <div
                   className="Chat--Notification--Container"
