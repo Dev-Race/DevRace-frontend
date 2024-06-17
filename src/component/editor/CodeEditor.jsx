@@ -52,14 +52,16 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
   }, [value]);
 
   return (
-    <Editor
-      height="532px"
-      width="1100px"
-      language={compileLanguage}
-      value={value}
-      onChange={handleEditorChange}
-      theme={theme}
-    />
+    <div style={{display: 'flex', zIndex : '0'}}>
+      <Editor
+        height="532px"
+        width="1100px"
+        language={compileLanguage}
+        value={value}
+        onChange={handleEditorChange}
+        theme={theme}
+      />
+    </div>
   );
 };
 
