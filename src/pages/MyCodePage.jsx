@@ -24,6 +24,16 @@ const MyCodePage = () => {
   const [myRoomsData, setMyRoomsData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
 
+  useEffect(() => {
+    const accessToken = sessionStorage.getItem('accessToken');
+    const expirationTime = sessionStorage.getItem('expirationTime');
+    const refreshToken = sessionStorage.getItem('refreshToken');
+    if (!accessToken || !expirationTime || !refreshToken) {
+      sessionStorage.clear();
+      navigate('/');
+    }
+  }, []);
+
   const fetchData = async (page) => {
     try {
       const isPass =

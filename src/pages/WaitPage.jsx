@@ -49,8 +49,6 @@ const WaitPage = () => {
     }
   }, [toast]);
 
-  console.log(toast);
-
   useEffect(() => {
     const fetchWaitList = async () => {
       let res = await getWaitList();
