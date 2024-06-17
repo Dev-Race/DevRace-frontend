@@ -44,6 +44,7 @@ const Header = (props) => {
           <div
             className={`header--${mode}--container`}
             style={{ background: 'none' }}
+            onClick={()=>navigate('/')}
           >
             <img
               src={mode === 'light' ? logo_icon_light : logo_icon_dark}
