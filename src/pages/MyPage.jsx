@@ -29,7 +29,7 @@ const MyPage = () => {
     const refreshToken = sessionStorage.getItem('refreshToken');
     if (!accessToken || !expirationTime || !refreshToken) {
       sessionStorage.clear();
-      navigate('/');
+      navigate('/login');
     }
   }, []);
 
