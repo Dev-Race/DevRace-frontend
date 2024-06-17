@@ -23,6 +23,16 @@ const MyPage = () => {
   const [isShow, setIsShow] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
+  useEffect(() => {
+    const accessToken = sessionStorage.getItem('accessToken');
+    const expirationTime = sessionStorage.getItem('expirationTime');
+    const refreshToken = sessionStorage.getItem('refreshToken');
+    if (!accessToken || !expirationTime || !refreshToken) {
+      sessionStorage.clear();
+      navigate('/');
+    }
+  }, []);
+
   const deleteUser = () => {
     Apis.delete('/users')
     .then((res) => {
